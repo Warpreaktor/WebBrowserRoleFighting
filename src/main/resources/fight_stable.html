@@ -1,0 +1,255 @@
+<head>
+    <meta charset="UTF-8" />
+    <title>Испытание боем</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .battle-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 700px;
+            position: relative;
+        }
+
+        .hp-bar-container {
+            width: 50px;
+            min-width: 50px;
+            height: 150px;
+            border: 2px solid black;
+            background-color: white;
+            display: flex;
+            flex-direction: column-reverse;
+            position: relative;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .hp-bar {
+            width: 100%;
+            height: 100%;
+            background-color: red;
+            transition: height 0.5s ease-in-out;
+        }
+
+        .player-box {
+            width: 300px;
+            height: 250px;
+            border: 2px solid red;
+            margin: 10px;
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.5s ease-in-out;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Анимация мигания при уроне (красный) */
+        @keyframes damageBlink {
+            0% {
+                background-color: white;
+            }
+
+            50% {
+                background-color: rgba(255, 0, 0, 0.5);
+            }
+
+            100% {
+                background-color: white;
+            }
+        }
+
+        .damageDto {
+            animation: damageBlink 1s ease-in-out 2;
+        }
+
+        /* Анимация мигания при снижении магического щита (голубой) */
+        @keyframes shieldBlink {
+            0% {
+                background-color: white;
+            }
+
+            50% {
+                background-color: rgba(0, 0, 255, 0.5);
+            }
+
+            100% {
+                background-color: white;
+            }
+        }
+
+        .shield {
+            animation: shieldBlink 1s ease-in-out 2;
+        }
+
+        .round-result {
+            margin-top: 20px;
+            border: 2px solid blue;
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Запуск боя</h1>
+
+    <div class="battle-container">
+        <!-- HP игрока 1 (слева) -->
+        <div class="hp-bar-container">
+            <div id="hpBar1" class="hp-bar"></div>
+            <div id="hpValue1">Загрузка...</div>
+        </div>
+
+        <!-- Игроки -->
+        <div>
+            <div class="player-box" id="player1">Загрузка...</div>
+        </div>
+
+        <div>
+            <div class="player-box" id="player2">Загрузка...</div>
+        </div>
+
+        <!-- HP игрока 2 (справа) -->
+        <div class="hp-bar-container">
+            <div id="hpBar2" class="hp-bar"></div>
+            <div id="hpValue2">Загрузка...</div>
+        </div>
+    </div>
+
+    <form id="fightForm">
+        <button type="submit" style="width: 150px; height: 50px;">Бой!</button>
+    </form>
+
+    <!-- Окно с результатом раунда -->
+    <div id="roundResult" class="round-result">Начинается бой</div>
+
+    <script>
+        let player1 = null;
+        let player2 = null;
+
+        let oldPlayer1Hp = null;
+        let oldPlayer2Hp = null;
+        let oldPlayer1Shield = null;
+        let oldPlayer2Shield = null;
+
+        function updateHpBars() {
+            if (player1 && player1.maxHitpoint) {
+                let hpPercent1 = Math.max((player1.hitpoint / player1.maxHitpoint) * 100, 0);
+                document.getElementById("hpBar1").style.height = hpPercent1 + "%";
+                document.getElementById("hpValue1").textContent = `${Math.floor(player1.hitpoint)}`;
+            }
+            if (player2 && player2.maxHitpoint) {
+                let hpPercent2 = Math.max((player2.hitpoint / player2.maxHitpoint) * 100, 0);
+                document.getElementById("hpBar2").style.height = hpPercent2 + "%";
+                document.getElementById("hpValue2").textContent = `${Math.floor(player2.hitpoint)}`;
+            }
+        }
+
+        function loadPlayers() {
+            fetch(`http://localhost:4567/getPlayer/player1`)
+                .then(response => response.json())
+                .then(data => {
+                    let player1Box = document.getElementById("player1");
+
+                    // Проверка снижения HP (мигаем красным)
+                    if (oldPlayer1Hp !== null && data.hitpoint < oldPlayer1Hp) {
+                        player1Box.classList.add("damageDto");
+                        setTimeout(() => player1Box.classList.remove("damageDto"), 2000);
+                    }
+                    oldPlayer1Hp = data.hitpoint;
+
+                    // Проверка снижения магического щита (мигаем голубым)
+                    if (oldPlayer1Shield !== null && data.mageShield < oldPlayer1Shield) {
+                        player1Box.classList.add("shield");
+                        setTimeout(() => player1Box.classList.remove("shield"), 2000);
+                    }
+                    oldPlayer1Shield = data.mageShield;
+
+                    player1 = data;
+                    player1Box.innerHTML =
+                        `
+                ${player1.name} <br> 
+                Класс: ${player1.heroClass} <br> 
+                МагЩит: ${player1.mageShield.toFixed(1)} <br>
+                Перезарядка: ${player1.reloader.toFixed(1)}
+                 `;
+                    // Загрузка картинки
+                    document.getElementById("player1").style.backgroundImage = `url(src/main/resources/images/${player1.heroClass}.jpg)`;
+                    updateHpBars();
+                })
+                .catch(err => console.error("Ошибка загрузки Player1", err));
+
+            fetch(`http://localhost:4567/getPlayer/player2`)
+                .then(response => response.json())
+                .then(data => {
+                    let player2Box = document.getElementById("player2");
+
+                    // Проверка снижения HP (мигаем красным)
+                    if (oldPlayer2Hp !== null && data.hitpoint < oldPlayer2Hp) {
+                        player2Box.classList.add("damageDto");
+                        setTimeout(() => player2Box.classList.remove("damageDto"), 2000);
+                    }
+                    oldPlayer2Hp = data.hitpoint;
+
+                    // Проверка снижения магического щита (мигаем голубым, только если HP не уменьшилось)
+                    if (oldPlayer2Shield !== null && data.mageShield < oldPlayer2Shield && data.hitpoint >= oldPlayer2Hp) {
+                        player2Box.classList.add("shield");
+                        setTimeout(() => player2Box.classList.remove("shield"), 2000);
+                    }
+                    oldPlayer2Shield = data.mageShield;
+
+                    player2 = data;
+                    player2Box.innerHTML =
+                        `
+                ${player2.name} <br> 
+                Класс: ${player2.heroClass} <br> 
+                МагЩит: ${player2.mageShield.toFixed(1)} <br>
+                Перезарядка: ${player2.reloader.toFixed(1)}
+                `;
+                    // Загрузка картинки    
+                    document.getElementById("player2").style.backgroundImage = `url(src/main/resources/images/${player2.heroClass}.jpg)`;
+                    updateHpBars();
+                })
+                .catch(err => console.error("Ошибка загрузки Player2", err));
+        }
+
+        document.getElementById('fightForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            if (!player1 || !player2) {
+                alert("Оба игрока должны быть загружены!");
+                return;
+            }
+
+            fetch(`http://localhost:4567/fight`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('roundResult').innerHTML = `${data.message}`;
+                    setTimeout(loadPlayers, 80);
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById('roundResult').textContent = "Ошибка во время боя!";
+                });
+        });
+
+        window.onload = loadPlayers;
+    </script>
+
+</body>
+
+</html>

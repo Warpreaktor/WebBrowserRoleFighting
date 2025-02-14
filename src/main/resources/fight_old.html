@@ -1,0 +1,173 @@
+<head>
+    <meta charset="UTF-8"/>
+    <title>Испытание боем</title>
+    <style>
+        .player-box {
+            display: inline-block;
+            width: 300px;
+            height: 150px;
+            border: 2px solid red;
+            margin: 10px;
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.5s ease-in-out;
+        }
+
+        /* Анимация мигания при уроне (красный) */
+        @keyframes damageBlink {
+            0% { background-color: white; }
+            50% { background-color: rgba(255, 0, 0, 0.5); } /* Полупрозрачный красный */
+            100% { background-color: white; }
+        }
+
+        .damageDto {
+            animation: damageBlink 1s ease-in-out 2; /* Два раза мигаем */
+        }
+
+        /* Анимация мигания при снижении магического щита (голубой) */
+        @keyframes shieldBlink {
+            0% { background-color: white; }
+            50% { background-color: rgba(0, 0, 255, 0.5); } /* Полупрозрачный голубой */
+            100% { background-color: white; }
+        }
+
+        .shield {
+            animation: shieldBlink 1s ease-in-out 2; /* Два раза мигаем */
+        }
+
+        .round-result {
+            margin-top: 20px;
+            border: 2px solid blue;
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Запуск боя</h1>
+
+<div>
+    <div class="player-box" id="player1">Загрузка...</div>
+    <div class="player-box" id="player2">Загрузка...</div>
+</div>
+
+<form id="fightForm">
+    <button type="submit" style="width: 150px; height: 50px;">Бой!</button>
+</form>
+
+<!-- Окно с результатом раунда -->
+<div id="roundResult" class="round-result">Начинается бой</div>
+
+<script>
+    let player1 = null;
+    let player2 = null;
+    
+    let oldPlayer1Hp = null;
+    let oldPlayer2Hp = null;
+    let oldPlayer1Shield = null;
+    let oldPlayer2Shield = null;
+
+    function loadPlayers() {
+        fetch(`http://localhost:4567/getPlayer/player1`)
+            .then(response => response.json())
+            .then(data => {
+                let player1Box = document.getElementById("player1");
+
+                // Проверка снижения HP (мигаем красным)
+                if (oldPlayer1Hp !== null && data.hitpoint < oldPlayer1Hp) {
+                    player1Box.classList.add("damageDto");
+                    setTimeout(() => player1Box.classList.remove("damageDto"), 2000);
+                }
+                oldPlayer1Hp = data.hitpoint; // Обновляем старое значение HP
+
+                // Проверка снижения магического щита (мигаем голубым)
+                if (oldPlayer1Shield !== null && data.mageShield < oldPlayer1Shield) {
+                    player1Box.classList.add("shield");
+                    setTimeout(() => player1Box.classList.remove("shield"), 2000);
+                }
+                oldPlayer1Shield = data.mageShield; // Обновляем старое значение магического щита
+
+                player1 = data;
+                player1Box.innerHTML = 
+                `
+                ${player1.name} <br> 
+                Класс: ${player1.heroClass} <br> 
+                HP: ${player1.hitpoint} <br>
+                МагЩит: ${player1.mageShield} <br>
+                Перезарядка: ${player1.reloader}
+                 `;
+            })
+            .catch(err => {
+                console.error("Ошибка загрузки Player1", err);
+            });
+
+        fetch(`http://localhost:4567/getPlayer/player2`)
+            .then(response => response.json())
+            .then(data => {
+                let player2Box = document.getElementById("player2");
+
+                // Проверка снижения HP (мигаем красным)
+                if (oldPlayer2Hp !== null && data.hitpoint < oldPlayer2Hp) {
+                    player2Box.classList.add("damageDto");
+                    setTimeout(() => player2Box.classList.remove("damageDto"), 2000);
+                }
+                oldPlayer2Hp = data.hitpoint; // Обновляем старое значение HP
+
+                // Проверка снижения магического щита (мигаем голубым, только если HP не уменьшилось)
+                if (oldPlayer2Shield !== null && data.mageShield < oldPlayer2Shield && data.hitpoint >= oldPlayer2Hp) {
+                    player2Box.classList.add("shield");
+                    setTimeout(() => player2Box.classList.remove("shield"), 2000);
+                }
+                oldPlayer2Shield = data.mageShield; // Обновляем старое значение магического щита
+
+
+                player2 = data;
+                player2Box.innerHTML = 
+                `
+                ${player2.name} <br> 
+                Класс: ${player2.heroClass} <br> 
+                HP: ${player2.hitpoint} <br>
+                МагЩит: ${player2.mageShield} <br>
+                Перезарядка: ${player2.reloader}
+                `;
+            })
+            .catch(err => {
+                console.error("Ошибка загрузки Player2", err);
+            });
+    }
+
+    document.getElementById('fightForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if (!player1 || !player2) {
+            alert("Оба игрока должны быть загружены!");
+            return;
+        }
+
+        fetch(`http://localhost:4567/fight`)
+            .then(response => response.json())
+            .then(data => {
+                // Выводим результат боя в окно результата раунда
+                document.getElementById('roundResult').innerHTML = `${data.message}`;
+
+                // После получения результатов запрашиваем обновленные данные игроков
+                setTimeout(loadPlayers, 80);
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('roundResult').textContent = "Ошибка во время боя!";
+            });
+    });
+
+    // Загружаем игроков при открытии страницы
+    window.onload = loadPlayers;
+</script>
+
+</body>
+</html>
