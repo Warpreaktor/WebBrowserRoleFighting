@@ -1,6 +1,9 @@
 package character;
 
-import character.dto.HeroInfoDto;
+import dto.damage.DamageResponseDto;
+import dto.hero.HeroInfoDto;
+import dto.hero.HeroStatisticDto;
+import dto.damage.DamageDto;
 import mechanic.Health;
 import mechanic.Shield;
 import spec.HeroClass;
@@ -17,6 +20,14 @@ public interface HeroInfo {
 
     Shield getShield();
 
+    Double getAccuracy();
+
+    Double getAgility();
+
+    Double getEvasion();
+
+    DamageDto getDamage();
+
     default HeroInfoDto getInfo() {
         return HeroInfoDto
                 .builder()
@@ -27,6 +38,27 @@ public interface HeroInfo {
                 .mageShield(getShield().getValue())
                 .maxMageShield(getShield().getMaxValue())
                 .reloader(getReloader())
+                .build();
+    }
+
+    default HeroStatisticDto getStatistic() {
+        return HeroStatisticDto
+                .builder()
+                .name(getName())
+                .heroClass(getHeroClass().name())
+                .health(getHealth().getValue())
+                .maxHealth(getHealth().getMaxValue())
+                .shield(getShield().getValue())
+                .maxShield(getShield().getMaxValue())
+                .accuracy(getAccuracy())
+                .agility(getAgility())
+                .evasion(getEvasion())
+                .damage(DamageResponseDto
+                        .builder()
+                        .fullDamage(getDamage().getFullDamage())
+                        .physicalDamage(getDamage().getPhysicalDamage())
+                        .fireDamage(getDamage().getFireDamage())
+                        .build())
                 .build();
     }
 }

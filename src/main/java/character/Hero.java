@@ -2,7 +2,7 @@ package character;
 
 import lombok.Getter;
 import lombok.Setter;
-import mechanic.DamageDto;
+import dto.damage.DamageDto;
 import mechanic.Dexterity;
 import mechanic.Health;
 import mechanic.Intelligence;

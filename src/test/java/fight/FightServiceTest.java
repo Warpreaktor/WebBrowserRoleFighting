@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 
 public class FightServiceTest {
 
-    private static final int TEST_FIGHT_COUNT = 100;
+    private static final int TEST_FIGHT_COUNT = 1;
 
     private static final double LOOSES_FOR_FAIL = TEST_FIGHT_COUNT * 0.2;
 

@@ -1,4 +1,4 @@
-package character.dto;
+package dto.hero;
 
 import lombok.Builder;
 import lombok.ToString;

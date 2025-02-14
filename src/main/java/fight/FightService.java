@@ -101,11 +101,6 @@ public class FightService {
         return result.getResultDto();
     }
 
-    private boolean isAnyBodyDeath(Hero player1, Hero player2) {
-        return player1.getHealth().getIsDead()
-                || player2.getHealth().getIsDead();
-    }
-
     public void combat(Hero attacker, Hero defender) {
 
         combatMoves(attacker, defender);
@@ -128,14 +123,15 @@ public class FightService {
         AttackDto attackResult = attackPhase(attacker, defender);
         result.addEventAndLog(attackResult.getMessage());
 
-        if (!attackResult.isFail()) {
-
-            DefenseDto defenseResult = defensePhase(attackResult, defender);
-
-            gameMaster.block(defender.getShield().getIsBlocked(), 1);
-
-            result.addEventAndLog(defenseResult.getMessage());
+        if (attackResult.isFail()) {
+            return;
         }
+
+        DefenseDto defenseResult = defensePhase(attackResult, defender);
+
+        gameMaster.block(defender.getShield().getIsBlocked(), 1);
+
+        result.addEventAndLog(defenseResult.getMessage());
     }
 
 //==================================================//
@@ -187,5 +183,10 @@ public class FightService {
         } else {
             return "";
         }
+    }
+
+    private boolean isAnyBodyDeath(Hero player1, Hero player2) {
+        return player1.getHealth().getIsDead()
+                || player2.getHealth().getIsDead();
     }
 }
