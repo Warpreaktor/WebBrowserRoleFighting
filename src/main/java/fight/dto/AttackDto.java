@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
-import mechanic.DamageDto;
+import dto.damage.DamageDto;
 import mechanic.interfaces.Attackable;
 
 /**

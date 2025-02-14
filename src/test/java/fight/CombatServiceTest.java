@@ -5,6 +5,7 @@ import character.HeroService;
 import character.classes.Archer;
 import character.classes.Mage;
 import core.GameMaster;
+import fight.dto.AttackDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,6 +17,10 @@ import java.util.stream.Collectors;
 
 import static character.constants.HeroConstants.PLAYER1;
 import static character.constants.HeroConstants.PLAYER2;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -184,5 +189,61 @@ public class CombatServiceTest {
 
         verify(mockResult, times(1)).setWinner(player1);
     }
+
+    /**
+     * Проверяется, что щит после удара не будет регенерировать 1 ход, ни меньше ни больше.
+     */
+    @Test
+    void shieldRecoveryAfterBlock() {
+        // Создаем заглушки сервисов
+        heroService = mock(HeroService.class);
+
+        // Создаем двух магов
+        Hero player1 = new Mage(PLAYER1);
+        Hero player2 = new Mage(PLAYER2);
+        when(heroService.get(PLAYER1)).thenReturn(player1);
+        when(heroService.get(PLAYER2)).thenReturn(player2);
+
+        FightResult mockResult = mock(FightResult.class);
+        GameMaster gameMaster = new GameMaster();
+
+        fightService = new FightService(heroService, mockResult, gameMaster);
+
+        //Чтобы точно попал
+        player1.setAccuracy(100D);
+        player1.setReloader(1D);
+        player1.getDamage().setPhysicalDamage(1D);
+
+        player2.getShield().setMaxValue(10D);
+        player2.getShield().setValue(10D);
+
+        // Маг атакует, у противника падает маг. щит и блокируется его восстановление
+        while (player2.getShield().getValue() >= 10){
+            fightService.fight();
+        }
+
+        assertTrue(player2.getShield().getIsBlocked().get(), "Щит должен быть заблокирован на 1 ход");
+
+        player1.setAccuracy(0.0);
+        player1.setReloader(0.0);
+
+        var shieldValue = player2.getShield().getValue();
+        //Щит должен быть заблокирован
+        fightService.fight();
+
+        // Щит всё ещё заблокирован, т.к. был только 1 ход после атаки
+        assertTrue(player2.getShield().getIsBlocked().get(), "Щит должен быть всё еще заблокирован");
+        assertEquals(shieldValue, player2.getShield().getValue(), "Щит не должен восстанавливаться");
+
+        player1.setAccuracy(0.0);
+        player1.setReloader(0.0);
+        //Щит должен разблокироваться и восстановиться в конце раунда
+        fightService.fight();
+
+        assertFalse(player2.getShield().getIsBlocked().get(), "Щит должен разблокироваться");
+        assertTrue(shieldValue < player2.getShield().getValue(), "Щит должен немного восстановиться после удара");
+    }
+
+
 
 }
