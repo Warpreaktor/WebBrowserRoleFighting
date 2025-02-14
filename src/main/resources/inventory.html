@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Создание Персонажа</title>
+    <link rel="stylesheet" href="inventory.css">
+</head>
+<body>
+<div class="container">
+    <h1>Создание Персонажа</h1>
+
+    <!-- Информация о персонаже -->
+    <div class="character-info">
+        <h2>Статистика</h2>
+        <table>
+            <tr><td>Имя:</td><td id="char-name">Загрузка...</td></tr>
+            <tr><td>Класс:</td><td id="char-class">Загрузка...</td></tr>
+            <tr><td>HP:</td><td id="char-hp">Загрузка...</td></tr>
+            <tr><td>Макс. HP:</td><td id="char-max-hp">Загрузка...</td></tr>
+            <tr><td>Маг. Щит:</td><td id="char-mage-shield">Загрузка...</td></tr>
+            <tr><td>Макс. Маг. Щит:</td><td id="char-max-mage-shield">Загрузка...</td></tr>
+            <tr><td>Меткость:</td><td id="char-accuracy">Загрузка...</td></tr>
+            <tr><td>Скорость атаки:</td><td id="char-agility">Загрузка...</td></tr>
+            <tr><td>Уклонение:</td><td id="char-evasion">Загрузка...</td></tr>
+            <tr><td>Физический урон:</td><td id="char-fullDamage">Загрузка...</td></tr>
+            <tr><td>Физический урон:</td><td id="char-physicalDamage">Загрузка...</td></tr>
+            <tr><td>Огненный урон:</td><td id="char-fireDamage">Загрузка...</td></tr>
+        </table>
+    </div>
+
+    <div class="character-inventory">
+        <!-- Силуэт персонажа -->
+        <div class="character-panel">
+            <div class="slot weapon-slot left-hand" data-slot="left-hand"></div>
+            <div class="slot weapon-slot right-hand" data-slot="right-hand"></div>
+
+            <div class="slot head-slot" data-slot="head"></div>
+            <div class="slot body-slot" data-slot="body"></div>
+            <div class="slot gloves-slot" data-slot="gloves"></div>
+            <div class="slot boots-slot" data-slot="boots"></div>
+            <div class="slot belt-slot" data-slot="belt"></div>
+            <div class="slot left-ring-slot" data-slot="left-ring"></div>
+            <div class="slot right-ring-slot" data-slot="right-ring"></div>
+        </div>
+
+        <!-- Инвентарь -->
+        <div class="inventory-grid">
+            <div class="inventory-slot" data-slot="inventory"><img src="static/images/knife.jpg" alt="Нож" class="item" draggable="true" data-id="knife"></div>
+            <div class="inventory-slot" data-slot="inventory"></div>
+            <div class="inventory-slot" data-slot="inventory"></div>
+            <div class="inventory-slot" data-slot="inventory"></div>
+            <div class="inventory-slot" data-slot="inventory"></div>
+            <div class="inventory-slot" data-slot="inventory"></div>
+            <div class="inventory-slot" data-slot="inventory"></div>
+            <div class="inventory-slot" data-slot="inventory"></div>
+            <div class="inventory-slot" data-slot="inventory"></div>
+            <div class="inventory-slot" data-slot="inventory"></div>
+            <div class="inventory-slot" data-slot="inventory"></div>
+            <div class="inventory-slot" data-slot="inventory"></div>
+        </div>
+    </div>
+</div>
+
+<script src="inventory.js"></script>
+</body>
+</html>
