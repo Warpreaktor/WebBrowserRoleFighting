@@ -4,7 +4,7 @@ import character.Hero;
 import fight.dto.AttackDto;
 import fight.dto.DefenseDto;
 import lombok.Getter;
-import mechanic.DamageDto;
+import dto.damage.DamageDto;
 import spec.HeroClass;
 
 import java.util.List;
