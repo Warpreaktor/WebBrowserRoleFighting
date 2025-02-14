@@ -1,0 +1,176 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.battle-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 900px;
+    position: relative;
+}
+
+.hp-shield-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px; /* Отступ между столбцами HP и Магического Щита */
+    align-items: center;
+}
+/* Контейнеры HP и магического щита */
+.hp-bar-container, 
+.shield-bar-container {
+    width: 50px;
+    height: 150px;
+    border: 2px solid black;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end; /* Заполнение снизу */
+    font-size: 14px;
+    font-weight: bold;
+    position: relative;
+}
+
+.hp-bar {
+    width: 100%;
+    height: 100%;
+    background-color: red;
+    transition: height 0.5s ease-in-out;
+}
+
+.shield-bar {
+    width: 100%;
+    background-color: green;
+    transition: height 0.5s ease-in-out;
+}
+
+/* Полоса перезарядки */
+.reload-bar-container {
+    width: 300px;
+    height: 10px;
+    background-color: #ddd;
+    border: 1px solid black;
+    margin-top: 5px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Заполняемая часть перезарядки */
+.reload-bar {
+    width: 0%;
+    height: 100%;
+    background-color: rgb(74, 198, 243);
+    transition: width 0.3s ease-in-out;
+}
+
+/* Картинка персонажа */
+.player-box {
+    width: 300px;
+    height: 250px;
+    border: 2px solid red;
+    text-align: center;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.stats-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Контейнер игрока */
+.player-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Имя игрока */
+.player-name {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+/* Кнопка боя */
+.fight-button {
+    width: 150px;
+    height: 50px;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    margin-top: 20px;
+}
+
+.fight-button:hover {
+    background-color: darkred;
+}
+
+/* Анимация мигания при уроне (красный) */
+@keyframes damageBlink {
+    0% {
+        background-color: white;
+    }
+
+    50% {
+        background-color: rgba(255, 0, 0, 0.5);
+    }
+
+    100% {
+        background-color: white;
+    }
+}
+
+.damage {
+    animation: damageBlink 1s ease-in-out 2;
+}
+
+/* Анимация мигания при снижении магического щита (голубой) */
+@keyframes shieldBlink {
+    0% {
+        background-color: white;
+    }
+
+    50% {
+        background-color: rgba(0, 0, 255, 0.5);
+    }
+
+    100% {
+        background-color: white;
+    }
+}
+
+.shield {
+    animation: shieldBlink 1s ease-in-out 2;
+}
+
+.round-result {
+    margin-top: 20px;
+    border: 2px solid blue;
+    padding: 10px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: rgb(16, 16, 17);
+}
+
+/* Выравнивание кнопки по центру */
+#fightForm {
+    display: flex;
+    justify-content: center; /* Центрирование по горизонтали */
+    align-items: center; /* Центрирование по вертикали (если нужно) */
+    margin-top: 20px;
+}
