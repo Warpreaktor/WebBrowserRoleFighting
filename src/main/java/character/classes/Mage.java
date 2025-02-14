@@ -5,7 +5,7 @@ import fight.dto.AttackDto;
 import fight.dto.DefenseDto;
 import lombok.Getter;
 import lombok.NonNull;
-import mechanic.DamageDto;
+import dto.damage.DamageDto;
 import mechanic.Intelligence;
 import spec.HeroClass;
 
@@ -32,7 +32,7 @@ public class Mage extends Hero {
         super();
 
         setName(name);
-        setDamage(new DamageDto(6.0, 0.0));
+        setDamage(new DamageDto(0.0, 6.0));
 
         //STATS
         var intelligence = new Intelligence(INTELLIGENCE);
@@ -50,7 +50,6 @@ public class Mage extends Hero {
 
         getHealth().fillUp();
     }
-
 
     @Override
     public AttackDto doReloadEvent() {

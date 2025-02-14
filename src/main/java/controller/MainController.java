@@ -1,7 +1,7 @@
 package controller;
 
 import character.HeroService;
-import character.dto.HeroRequestDto;
+import dto.hero.HeroRequestDto;
 import com.google.gson.Gson;
 import fight.FightService;
 import spark.Route;
