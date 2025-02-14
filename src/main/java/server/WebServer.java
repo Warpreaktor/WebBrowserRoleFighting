@@ -10,6 +10,7 @@ public class WebServer {
 
     public static void main(String[] args) {
         port(4567);
+        staticFiles.location("/static");
 
         // Разрешаем CORS для всех запросов
         options("/*", (req, res) -> {
