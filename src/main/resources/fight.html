@@ -1,7 +1,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>Испытание боем</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Подключение CSS -->
+    <link rel="stylesheet" href="fight.css"> <!-- Подключение CSS -->
 </head>
 
 <body>
@@ -20,7 +20,7 @@
                 <div id="hpValue1">Загрузка...</div>
             </div>
         </div>
-    
+
         <!-- Игрок 1 -->
         <div class="player-container">
             <div class="player-name" id="player1Name">Имя героя</div>
@@ -29,7 +29,7 @@
             </div>
             <div class="player-box" id="player1"></div>
         </div>
-    
+
         <!-- Игрок 2 -->
         <div class="player-container">
             <div class="player-name" id="player2Name">Имя героя</div>
@@ -39,7 +39,7 @@
             <div class="player-box" id="player2"></div>
         </div>
     
-        <!-- Правая панель (HP и Маг. щит) -->
+        <!-- Правая панель (HP и щит) -->
         <div class="stats-container">
             <div class="hp-bar-container">
                 <div id="hpBar2" class="hp-bar"></div>
@@ -51,7 +51,6 @@
             </div>
         </div>
     </div>
-    
     <!-- Кнопка боя -->
     <form id="fightForm">
         <button type="submit" class="fight-button">Бой!</button>
@@ -60,151 +59,7 @@
     <!-- Окно с результатом раунда -->
     <div id="roundResult" class="round-result">Начинается бой</div>
     
-    <script>
-        let player1 = null;
-        let player2 = null;
-
-        let oldPlayer1Hp = null;
-        let oldPlayer2Hp = null;
-        let oldPlayer1Shield = null;
-        let oldPlayer2Shield = null;
-
-        function loadPlayers() {
-            fetch(`http://localhost:4567/getPlayer/player1`)
-                .then(response => response.json())
-                .then(data => {
-                    let player1Box = document.getElementById("player1");
-
-                    // Проверка снижения HP (мигаем красным)
-                    if (oldPlayer1Hp !== null && data.hitpoint < oldPlayer1Hp) {
-                        player1Box.classList.add("damageDto");
-                        setTimeout(() => player1Box.classList.remove("damageDto"), 2000);
-                    }
-                    oldPlayer1Hp = data.hitpoint;
-
-                    // Проверка снижения магического щита (мигаем голубым)
-                    if (oldPlayer1Shield !== null && data.mageShield < oldPlayer1Shield) {
-                        player1Box.classList.add("shield");
-                        setTimeout(() => player1Box.classList.remove("shield"), 2000);
-                    }
-                    oldPlayer1Shield = data.mageShield;
-
-                    player1 = data;
-                    player1Box.innerHTML =
-                        ` 
-                }
-                 `;
-                    // Загрузка картинки
-                    document.getElementById("player1Name").textContent = data.name;
-
-                    updateHpBars();
-                    updateReloadBars();
-
-                    if (player1.hitpoint > 0) {
-                        document.getElementById("player1").style.backgroundImage = `url(src/main/resources/images/${player1.heroClass}.jpg)`;
-                    } else {
-                        document.getElementById("player1").style.backgroundImage = `url(src/main/resources/images/DEAD.jpg)`;
-                    }
-
-                })
-                .catch(err => console.error("Ошибка загрузки Player1", err));
-
-            fetch(`http://localhost:4567/getPlayer/player2`)
-                .then(response => response.json())
-                .then(data => {
-                    let player2Box = document.getElementById("player2");
-
-                    // Проверка снижения HP (мигаем красным)
-                    if (oldPlayer2Hp !== null && data.hitpoint < oldPlayer2Hp) {
-                        player2Box.classList.add("damageDto");
-                        setTimeout(() => player2Box.classList.remove("damageDto"), 2000);
-                    }
-                    oldPlayer2Hp = data.hitpoint;
-
-                    // Проверка снижения магического щита (мигаем голубым, только если HP не уменьшилось)
-                    if (oldPlayer2Shield !== null && data.mageShield < oldPlayer2Shield && data.hitpoint >= oldPlayer2Hp) {
-                        player2Box.classList.add("shield");
-                        setTimeout(() => player2Box.classList.remove("shield"), 2000);
-                    }
-                    oldPlayer2Shield = data.mageShield;
-
-                    player2 = data;
-                    player2Box.innerHTML =
-                        `
-                }
-                `;
-                    document.getElementById("player2Name").textContent = data.name;
-                    updateReloadBars();
-                    updateHpBars();
-
-                    // Загрузка картинки персонажа
-                    if (player2.hitpoint > 0) {
-                        document.getElementById("player2").style.backgroundImage = `url(src/main/resources/images/${player2.heroClass}.jpg)`;
-                    } else {
-                        document.getElementById("player2").style.backgroundImage = `url(src/main/resources/images/DEAD.jpg)`;
-                    }
-                })
-                .catch(err => console.error("Ошибка загрузки Player2", err));
-        }
-
-        document.getElementById('fightForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            if (!player1 || !player2) {
-                alert("Оба игрока должны быть загружены!");
-                return;
-            }
-
-            fetch(`http://localhost:4567/fight`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('roundResult').innerHTML = `${data.message}`;
-                    setTimeout(loadPlayers, 80);
-                })
-                .catch(err => {
-                    console.error(err);
-                    document.getElementById('roundResult').textContent = "Ошибка во время боя!";
-                });
-        });
-
-        function updateHpBars() {
-            if (player1 && player1.maxHitpoint) {
-                let hpPercent1 = Math.max((player1.hitpoint / player1.maxHitpoint) * 100, 0);
-                document.getElementById("hpBar1").style.height = hpPercent1 + "%";
-                document.getElementById("hpValue1").textContent = `${Math.floor(player1.hitpoint)}`;
-            }
-            if (player2 && player2.maxHitpoint) {
-                let hpPercent2 = Math.max((player2.hitpoint / player2.maxHitpoint) * 100, 0);
-                document.getElementById("hpBar2").style.height = hpPercent2 + "%";
-                document.getElementById("hpValue2").textContent = `${Math.floor(player2.hitpoint)}`;
-            }
-
-            if (player1 && player1.maxMageShield) {
-                let shieldPercent1 = Math.max((player1.mageShield / player1.maxMageShield) * 100, 0);
-                document.getElementById("shieldBar1").style.height = shieldPercent1 + "%";
-                document.getElementById("shieldValue1").textContent = `${player1.mageShield.toFixed(1)}`;
-            }
-            if (player2 && player2.maxMageShield) {
-                let shieldPercent2 = Math.max((player2.mageShield / player2.maxMageShield) * 100, 0);
-                document.getElementById("shieldBar2").style.height = shieldPercent2 + "%";
-                document.getElementById("shieldValue2").textContent = `${player2.mageShield.toFixed(1)}`;
-            }
-        }
-
-        function updateReloadBars() {
-            if (player1) {
-                let reloadPercent1 = Math.min(player1.reloader * 100, 100);
-                document.getElementById("reloadBar1").style.width = reloadPercent1 + "%";
-            }
-            if (player2) {
-                let reloadPercent2 = Math.min(player2.reloader * 100, 100);
-                document.getElementById("reloadBar2").style.width = reloadPercent2 + "%";
-            }
-        }
-
-
-        window.onload = loadPlayers;
-    </script>
+    <script src="fight.js"></script>
 
 </body>
 

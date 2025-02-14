@@ -72,10 +72,17 @@ body {
     width: 300px;
     height: 250px;
     border: 2px solid red;
+    margin: 10px;
+    padding: 10px;
     text-align: center;
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+    position: relative; /* Добавляем, чтобы фон не выходил за границы */
+    background-size: cover; /* Подгоняем картинку под размер блока */
+    background-position: center; /* Центрируем */
+    background-repeat: no-repeat; /* Отключаем повторения */
+    overflow: hidden; /* Если вдруг фон выходит за пределы */
 }
 
 .stats-container {
