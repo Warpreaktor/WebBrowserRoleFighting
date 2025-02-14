@@ -1,0 +1,84 @@
+/* Общий стиль страницы */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to bottom, #1a1a1a, #3a3a3a);
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* Контейнер для выравнивания */
+.container {
+    width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+}
+
+/* Заголовки */
+h1 {
+    font-size: 32px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+/* Поля ввода */
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    text-align: center;
+}
+
+/* Стили кнопок */
+.button {
+    width: 100%;
+    padding: 12px;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.3s;
+    color: white;
+    background: linear-gradient(to right, #ff6600, #ff3300);
+    text-transform: uppercase;
+}
+
+.button:hover {
+    background: linear-gradient(to right, #ff3300, #ff0000);
+}
+
+/* Большая кнопка */
+.large {
+    margin-top: 15px;
+    font-size: 22px;
+}
+
+/* Кнопка старта */
+.start-button {
+    margin-top: 20px;
+    font-size: 24px;
+    background: linear-gradient(to right, #33cc33, #009900);
+}
+
+.start-button:hover {
+    background: linear-gradient(to right, #009900, #006600);
+}
+
+/* Блок с результатом */
+.result-box {
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #00ff00;
+}
