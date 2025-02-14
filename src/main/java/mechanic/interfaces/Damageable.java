@@ -1,6 +1,6 @@
 package mechanic.interfaces;
 
-import mechanic.DamageDto;
+import dto.damage.DamageDto;
 
 public interface Damageable {
 

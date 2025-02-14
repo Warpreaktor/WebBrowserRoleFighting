@@ -1,4 +1,4 @@
-package mechanic;
+package dto.damage;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

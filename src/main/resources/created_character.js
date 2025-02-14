@@ -22,7 +22,7 @@ function redirectToFight() {
     .then(response => response.json())
     .then(data => {
         console.log("Персонаж отправлен на сервер:", data);
-        window.location.href = "fight.html";
+        window.location.href = "inventory.html";
     })
     .catch(err => {
         console.error("Ошибка при отправке персонажа:", err);
@@ -31,23 +31,36 @@ function redirectToFight() {
 
 document.getElementById("startButton").addEventListener("click", redirectToFight);
 
-// Форма ручного создания героя
+// ✅ Вешаем обработчик на форму, а не на кнопку!
 document.getElementById('createForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+    e.preventDefault(); // Останавливаем стандартное поведение формы
+
+    // ✅ Получаем значения полей
     const name = document.getElementById('name').value;
     const heroClass = document.getElementById('heroClass').value;
 
-    fetch(`http://localhost:4567/createCharacter`)
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('creationResult').textContent = `✅ Создан герой: ${data.name} (${data.heroClass}) HP: ${data.hitpoint}`;
-            createdPlayer = data;
-            enableStartButton();
-        })
-        .catch(err => {
-            console.error(err);
-            document.getElementById('creationResult').textContent = "❌ Ошибка при создании!";
-        });
+    const requestBody = JSON.stringify({ name: name, heroClass: heroClass });
+
+    console.log("Отправка запроса:", requestBody);
+
+    fetch(`http://localhost:4567/createCharacter`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: requestBody
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Ответ сервера:", data);
+        document.getElementById('creationResult').textContent = `✅ Создан герой: ${data.name} (${data.heroClass}) HP: ${data.hitpoint}`;
+        createdPlayer = data;
+        enableStartButton();
+    })
+    .catch(err => {
+        console.error("Ошибка при создании персонажа:", err);
+        document.getElementById('creationResult').textContent = "❌ Ошибка при создании!";
+    });
 });
 
 // Кнопка случайного героя
