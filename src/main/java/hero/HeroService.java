@@ -1,8 +1,8 @@
-package character;
+package hero;
 
-import character.classes.Archer;
-import character.classes.Mage;
-import character.classes.Warrior;
+import hero.classes.Archer;
+import hero.classes.Mage;
+import hero.classes.Warrior;
 import spec.HeroClass;
 
 import java.util.List;
@@ -57,6 +57,9 @@ public class HeroService {
         this.heroTable = HeroTable.getInstance();
     }
 
+    /**
+     * Синглтончик
+     */
     public static HeroService getInstance() {
         if (instance == null) {
             instance = new HeroService();
@@ -108,5 +111,4 @@ public class HeroService {
     public Hero get(String key) {
         return heroTable.get(key);
     }
-
 }

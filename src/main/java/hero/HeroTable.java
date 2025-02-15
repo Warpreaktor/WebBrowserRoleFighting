@@ -1,4 +1,4 @@
-package character;
+package hero;
 
 import java.util.HashMap;
 

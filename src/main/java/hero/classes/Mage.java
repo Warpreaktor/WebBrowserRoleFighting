@@ -1,6 +1,6 @@
-package character.classes;
+package hero.classes;
 
-import character.Hero;
+import hero.Hero;
 import fight.dto.AttackDto;
 import fight.dto.DefenseDto;
 import lombok.Getter;
@@ -32,7 +32,6 @@ public class Mage extends Hero {
         super();
 
         setName(name);
-        setDamage(new DamageDto(0.0, 6.0));
 
         //STATS
         var intelligence = new Intelligence(INTELLIGENCE);

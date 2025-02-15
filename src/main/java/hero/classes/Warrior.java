@@ -1,6 +1,6 @@
-package character.classes;
+package hero.classes;
 
-import character.Hero;
+import hero.Hero;
 import fight.dto.AttackDto;
 import fight.dto.DefenseDto;
 import lombok.Getter;
@@ -33,7 +33,6 @@ public class Warrior extends Hero {
         super();
 
         setName(name);
-        setDamage(new DamageDto(4.0, 0.0));
 
         //STATS
         setIntelligence(INTELLIGENCE);

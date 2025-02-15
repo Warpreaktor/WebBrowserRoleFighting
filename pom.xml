@@ -6,7 +6,7 @@
     <!-- Укажите groupId, artifactId и версию вашего проекта -->
     <groupId>com.example</groupId>
     <artifactId>my-project</artifactId>
-    <version>0.7.1</version>
+    <version>0.7.3</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -63,7 +63,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>RELEASE</version>
+            <version>5.10.2</version>
             <scope>test</scope>
         </dependency>
 

@@ -1,4 +1,4 @@
-package character;
+package hero;
 
 import dto.damage.DamageResponseDto;
 import dto.hero.HeroInfoDto;

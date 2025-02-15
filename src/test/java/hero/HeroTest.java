@@ -1,8 +1,8 @@
-package character;
+package hero;
 
-import character.classes.Archer;
-import character.classes.Mage;
-import character.classes.Warrior;
+import hero.classes.Archer;
+import hero.classes.Mage;
+import hero.classes.Warrior;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;

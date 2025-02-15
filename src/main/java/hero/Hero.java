@@ -1,5 +1,9 @@
-package character;
+package hero;
 
+import equip.EquipSlot;
+import equip.Equipement;
+import item.Inventory;
+import item.weapon.Knife;
 import lombok.Getter;
 import lombok.Setter;
 import dto.damage.DamageDto;
@@ -9,6 +13,7 @@ import mechanic.Intelligence;
 import mechanic.Shield;
 import mechanic.Strength;
 import mechanic.interfaces.Heroic;
+import item.weapon.Weapon;
 
 @Getter
 @Setter
@@ -28,13 +33,10 @@ public abstract class Hero implements Heroic {
 
     private Intelligence intelligence;
 
+
 //==================================================//
 //                  Характеристики                  //
 //==================================================//
-    /**
-     * Вся информация об уроне персонажа.
-     */
-    private DamageDto damage;
 
     /**
      * Магический щит. Постепенно увеличивается и уменьшает весь входящий урон.
@@ -79,6 +81,10 @@ public abstract class Hero implements Heroic {
         agility = 0.0;
         evasion = 0.0;
         reloader = 0.0;
+        equipement = new Equipement();
+        inventory = new Inventory();
+
+        inventory.add(new Knife());
     }
 
     public void setIntelligence(Integer value) {
@@ -167,5 +173,29 @@ public abstract class Hero implements Heroic {
 
     public void shieldGrow() {
         shield.shieldGrow();
+    }
+
+    /**
+     * Метод, который должен пересчитывать все характеристики персонажа.
+     * Если какая-то экипировка влияет на статы значит этот метод должен узнать об этом первый,
+     * и предпринять необходимые пересчёты в связи с этим.
+     * Должен вызываться всегда при экипировке и снятии любого предмета.
+     * Логика одинаковая в обоих случаях.
+     */
+    private void refresh() {
+    }
+
+    public DamageDto getDamage() {
+        return getEquipement().getRightHand().getDamage();
+    }
+
+    public void equipped(EquipSlot slot, Weapon weapon) {
+        equipement.equipped(slot, weapon);
+        refresh();
+    }
+
+    public void unequipped(EquipSlot slot, String itemId) {
+        getEquipement().unequipped(slot, itemId);
+        refresh();
     }
 }
