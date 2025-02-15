@@ -1,6 +1,6 @@
 package fight;
 
-import character.Hero;
+import hero.Hero;
 import fight.dto.FightResultDto;
 import lombok.Getter;
 

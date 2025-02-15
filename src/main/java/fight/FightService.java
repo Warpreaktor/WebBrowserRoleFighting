@@ -1,7 +1,7 @@
 package fight;
 
-import character.Hero;
-import character.HeroService;
+import hero.Hero;
+import hero.HeroService;
 import commentator.CommentatorService;
 import core.GameMaster;
 import fight.dto.AttackDto;
@@ -9,8 +9,8 @@ import fight.dto.DefenseDto;
 import fight.dto.FightResultDto;
 import tools.Dice;
 
-import static character.constants.HeroConstants.PLAYER1;
-import static character.constants.HeroConstants.PLAYER2;
+import static hero.constants.HeroConstants.PLAYER1;
+import static hero.constants.HeroConstants.PLAYER2;
 
 public class FightService {
 

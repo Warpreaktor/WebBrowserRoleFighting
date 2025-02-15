@@ -1,4 +1,4 @@
-const HOST = "http://localhost:4567";
+const HOST = "http://localhost:4568";
 
 let player1 = null;
 let player2 = null;

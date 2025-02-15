@@ -1,11 +1,10 @@
 package fight;
 
-import character.Hero;
-import character.HeroService;
-import character.classes.Archer;
-import character.classes.Mage;
+import hero.Hero;
+import hero.HeroService;
+import hero.classes.Archer;
+import hero.classes.Mage;
 import core.GameMaster;
-import fight.dto.AttackDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -15,8 +14,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static character.constants.HeroConstants.PLAYER1;
-import static character.constants.HeroConstants.PLAYER2;
+import static hero.constants.HeroConstants.PLAYER1;
+import static hero.constants.HeroConstants.PLAYER2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

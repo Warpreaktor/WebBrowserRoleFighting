@@ -1,4 +1,4 @@
-package character.constants;
+package hero.constants;
 
 public class HeroConstants {
 

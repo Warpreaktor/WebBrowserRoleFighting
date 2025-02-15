@@ -1,3 +1,5 @@
+const HOST = "http://localhost:4568";
+
 let createdPlayer = null;
 
 function enableStartButton() {
@@ -12,7 +14,7 @@ function redirectToFight() {
         return;
     }
 
-    fetch(`http://localhost:4567/start`, {
+    fetch(`${HOST}/start`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -31,11 +33,9 @@ function redirectToFight() {
 
 document.getElementById("startButton").addEventListener("click", redirectToFight);
 
-// ✅ Вешаем обработчик на форму, а не на кнопку!
 document.getElementById('createForm').addEventListener('submit', function(e) {
-    e.preventDefault(); // Останавливаем стандартное поведение формы
+    e.preventDefault(); // Останавливаем стандартное поведение формы чтобы не слал get запрос
 
-    // ✅ Получаем значения полей
     const name = document.getElementById('name').value;
     const heroClass = document.getElementById('heroClass').value;
 
@@ -43,7 +43,7 @@ document.getElementById('createForm').addEventListener('submit', function(e) {
 
     console.log("Отправка запроса:", requestBody);
 
-    fetch(`http://localhost:4567/createCharacter`, {
+    fetch(`${HOST}/createCharacter`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -67,7 +67,7 @@ document.getElementById('createForm').addEventListener('submit', function(e) {
 document.getElementById('randomButton').addEventListener('click', function(e) {
     e.preventDefault();
 
-    fetch(`http://localhost:4567/createRandomCharacter`)
+    fetch(`${HOST}/createRandomCharacter`)
         .then(response => response.json())
         .then(data => {
             document.getElementById('creationResult').textContent = `✅ Создан герой: ${data.name} (${data.heroClass}) HP: ${data.hitpoint}`;

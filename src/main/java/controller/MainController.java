@@ -1,6 +1,6 @@
 package controller;
 
-import character.HeroService;
+import hero.HeroService;
 import dto.hero.HeroRequestDto;
 import com.google.gson.Gson;
 import fight.FightService;
@@ -8,8 +8,8 @@ import spark.Route;
 import spark.Spark;
 import spec.HeroClass;
 
-import static character.constants.HeroConstants.PLAYER1;
-import static character.constants.HeroConstants.PLAYER2;
+import static hero.constants.HeroConstants.PLAYER1;
+import static hero.constants.HeroConstants.PLAYER2;
 
 public class MainController {
 

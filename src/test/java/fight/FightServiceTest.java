@@ -1,14 +1,13 @@
 package fight;
 
-import character.HeroService;
-import character.Hero;
+import hero.HeroService;
+import hero.Hero;
 import core.GameMaster;
 import fight.dto.FightResultDto;
-import character.classes.Archer;
-import character.classes.Mage;
-import character.classes.Warrior;
+import hero.classes.Archer;
+import hero.classes.Mage;
+import hero.classes.Warrior;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -17,14 +16,14 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static character.constants.HeroConstants.PLAYER1;
-import static character.constants.HeroConstants.PLAYER2;
+import static hero.constants.HeroConstants.PLAYER1;
+import static hero.constants.HeroConstants.PLAYER2;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class FightServiceTest {
 
-    private static final int TEST_FIGHT_COUNT = 1;
+    private static final int TEST_FIGHT_COUNT = 10;
 
     private static final double LOOSES_FOR_FAIL = TEST_FIGHT_COUNT * 0.2;
 

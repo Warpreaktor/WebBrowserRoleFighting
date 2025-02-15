@@ -1,6 +1,6 @@
 package server;
 
-import character.Hero;
+import hero.Hero;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,10 +1,10 @@
 package mechanic;
 
-import character.Hero;
-import character.HeroService;
-import character.classes.Archer;
-import character.classes.Mage;
-import character.classes.Warrior;
+import hero.Hero;
+import hero.HeroService;
+import hero.classes.Archer;
+import hero.classes.Mage;
+import hero.classes.Warrior;
 import dto.damage.DamageDto;
 import fight.dto.AttackDto;
 import org.junit.jupiter.api.Assertions;

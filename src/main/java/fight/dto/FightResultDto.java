@@ -2,7 +2,7 @@ package fight.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import character.Hero;
+import hero.Hero;
 
 import java.util.ArrayList;
 
