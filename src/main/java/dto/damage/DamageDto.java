@@ -1,14 +1,10 @@
 package dto.damage;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@Builder
 public class DamageDto {
 
     /**
@@ -20,6 +16,11 @@ public class DamageDto {
      * Огненный урон
      */
     private Double fireDamage;
+
+    public DamageDto() {
+        physicalDamage = 0.0;
+        fireDamage = 0.0;
+    }
 
     public double getFullDamage() {
         return physicalDamage + fireDamage;
