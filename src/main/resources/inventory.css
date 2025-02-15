@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background: url('images/background.jpg') no-repeat center center;
+    background: url('http://localhost:4568/images/background_edit_hero.jpg') no-repeat center center;
     background-size: cover;
     color: white;
     text-align: center;
@@ -33,7 +33,7 @@ h1 {
     width: 100%; /* Делаем ширину 100% для адаптации */
     max-width: 300px; /* Ограничение по ширине */
     height: 500px; /* Даем фиксированную высоту */
-    background: url('http://localhost:4567/images/invBackground.jpg') no-repeat center center;
+    background: url('http://localhost:4568/images/invBackground.jpg') no-repeat center center;
     background-size: cover; /* Делаем так, чтобы картинка занимала весь контейнер */
     border: 2px solid white; /* Временно добавим границу, чтобы видеть контейнер */
     border-radius: 10px;

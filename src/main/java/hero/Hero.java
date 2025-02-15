@@ -24,6 +24,16 @@ public abstract class Hero implements Heroic {
      */
     private String name;
 
+    /**
+     * Экипировка. То что надето на персонажа.
+     */
+    private Equipement equipement;
+
+    /**
+     * Инвентарь персонажа. То что он носит в мешке за спиной.
+     */
+    private Inventory inventory;
+
 //==================================================//
 //                  СТАТЫ                           //
 //==================================================//

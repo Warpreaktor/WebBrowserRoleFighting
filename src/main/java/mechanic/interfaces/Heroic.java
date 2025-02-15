@@ -1,6 +1,6 @@
 package mechanic.interfaces;
 
-import character.HeroInfo;
+import hero.HeroInfo;
 
 public interface Heroic extends
         Attackable,

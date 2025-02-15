@@ -43,14 +43,11 @@ public class WebServer {
         });
 
         // Регистрируем контроллеры
-        HeroController heroController = new HeroController();
-        heroController.registerRoutes();
-
-        FightController fightController = new FightController();
-        fightController.registerRoutes();
-
-        MainController mainController = new MainController();
-        mainController.registerRoutes();
+        new HeroController().registerRoutes();
+        new FightController().registerRoutes();
+        new MainController().registerRoutes();
+        new ItemController().registerRoutes();
+        new InventoryController().registerRoutes();
     }
 }
 
