@@ -1,15 +1,21 @@
 package server;
 
+import config.ApplicationProperties;
 import controller.HeroController;
 import controller.FightController;
+import controller.InventoryController;
 import controller.MainController;
+import controller.ItemController;
 
 import static spark.Spark.*;
 
 public class WebServer {
 
     public static void main(String[] args) {
-        port(4567);
+        ApplicationProperties.initializeProperties();
+
+        port(ApplicationProperties.getPort());
+
         staticFiles.location("/static");
 
         // Разрешаем CORS для всех запросов
@@ -31,6 +37,9 @@ public class WebServer {
             res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
             res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
             res.type("application/json");
+
+            //Лог всех запросов
+            System.out.println("Обрабатывается запрос: " + req.requestMethod() + " " + req.pathInfo());
         });
 
         // Регистрируем контроллеры
