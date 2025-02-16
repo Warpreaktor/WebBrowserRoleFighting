@@ -3,6 +3,7 @@ package hero;
 import equip.EquipSlot;
 import equip.Equipement;
 import item.Inventory;
+import item.Item;
 import item.weapon.Knife;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,9 @@ import mechanic.Shield;
 import mechanic.Strength;
 import mechanic.interfaces.Heroic;
 import item.weapon.Weapon;
+
+import java.util.Objects;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -33,6 +37,8 @@ public abstract class Hero implements Heroic {
      * Инвентарь персонажа. То что он носит в мешке за спиной.
      */
     private Inventory inventory;
+
+    private Item bufferHand;
 
 //==================================================//
 //                  СТАТЫ                           //
@@ -207,5 +213,46 @@ public abstract class Hero implements Heroic {
     public void unequipped(EquipSlot slot, String itemId) {
         getEquipement().unequipped(slot, itemId);
         refresh();
+    }
+
+    public boolean takeItem(String objectId, EquipSlot slot) {
+        if (bufferHand != null) {
+            return false;
+        }
+
+        getItemByIdAndSlot(objectId, slot)
+                .ifPresent(value -> bufferHand = value);
+
+        return true;
+    }
+
+    /**
+     * Метод возвращает объект по его идентификатору и слоту в котором он находится.
+     * Метод ищет предмет только в инвентаре героя и его слотах экипировки.
+     * Главным образом метод действительно проверяет, а находится ли у меня на сервере
+     * вот в таком то слоте вот такой то предмет исключая возможность ложного запроса с фронта.
+     */
+    private Optional<? extends Item> getItemByIdAndSlot(String objectId, EquipSlot slot) {
+
+        if (slot.name().startsWith("INVENTORY")) {
+            int cell = Integer.parseInt(slot.getValue());
+            Item item = inventory.getCells()[cell];
+
+            if (item != null
+                    && Objects.equals(objectId, item.getId())) {
+                return Optional.of(item);
+            }
+        }
+
+        switch (slot) {
+
+            case RIGHT_HAND -> {
+                return Optional.of(equipement.getRightHand());
+            }
+
+            default -> {
+                return Optional.empty();
+            }
+        }
     }
 }
