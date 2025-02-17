@@ -4,16 +4,13 @@ import item.Item;
 import lombok.Getter;
 import item.weapon.Fist;
 import item.weapon.Weapon;
-
-import java.util.HashMap;
+import lombok.Setter;
 
 /**
  * Экипировка персонажа
  */
 @Getter
-public class Equipement {
-
-    private HashMap<String, Item> itemPool;
+public class Equipment {
 
     private Item buffer;
 
@@ -26,9 +23,10 @@ public class Equipement {
     /**
      * В правой руки может быть только оружие.
      */
+    @Setter
     private Weapon rightHand;
 
-    public Equipement() {
+    public Equipment() {
         fist = new Fist();
         rightHand = fist;
     }
@@ -36,16 +34,22 @@ public class Equipement {
     /**
      * Установить предмет в слот
      */
-    public void equipped(EquipSlot slot, Item item) {
+    public boolean equipped(EquipSlot slot, Item item) {
+        if (item == null){
+            return false;
+        }
 
         switch (slot) {
             case RIGHT_HAND:
                 if (item instanceof Weapon) {
                     rightHand = (Weapon) item;
+                    break;
             } else {
-                    throw new RuntimeException("Это не вставить в правую руку");
+                    System.out.println("Это не вставить в правую руку");
+                    return false;
                 }
         }
+        return true;
     }
 
     /**
@@ -53,10 +57,10 @@ public class Equipement {
      * Концепция такая: любой предмет прежде чем переместиться куда-то должен попасть в буфер.
      * Это имитация поведения пользовательского интерфейса,
      * Когда предмет хватают мышкой он как бы подвисает нигде не находясь.
-     * Чтобы предмет не потерять совсем будем помещать его в буфер указывая сооветсвующий ключ в ite
+     * Чтобы предмет не потерять совсем будем помещать его в буфер.
      */
     public void unequipped(EquipSlot slot, String itemId) {
-        var item = itemPool.get(itemId + slot);
+        var item = buffer;
 
         if (item == null) {
             throw new RuntimeException("Неизвестный предмет");

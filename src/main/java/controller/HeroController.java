@@ -1,6 +1,7 @@
 package controller;
 
 import equip.EquipSlot;
+import equip.Equipment;
 import hero.Hero;
 import hero.HeroService;
 import com.google.gson.Gson;
@@ -32,9 +33,9 @@ public class HeroController {
         Spark.post("/hero/equipped/", equipped);
         Spark.post("/hero/unequipped/", unequipped);
 
-        Spark.post("/hero/inventory/move/", itemMove);
+        Spark.post("/hero/dropItem/", dropItem);
 
-        Spark.post("/hero/takeItem/", itemMove);
+        Spark.post("/hero/takeItem/", takeItem);
 
     }
 
@@ -148,14 +149,13 @@ public class HeroController {
         return gson.toJson("Предмет снят из " + objectSlot);
     };
 
-    private final Route itemMove = (req, res) -> {
+    private final Route dropItem = (req, res) -> {
         Gson gson = new Gson();
         JsonObject jsonObject = gson.fromJson(req.body(), JsonObject.class);
 
         if (jsonObject == null || !jsonObject.has("playerId")
-                || !jsonObject.has("objectId")
-                || !jsonObject.has("oldSlot")
                 || !jsonObject.has("newSlot")
+                || !jsonObject.has("objectId")
         ) {
 
             res.status(400);
@@ -164,12 +164,20 @@ public class HeroController {
 
         String playerId = jsonObject.get("playerId").getAsString();
         String objectId = jsonObject.get("objectId").getAsString();
-        Integer oldSlot = jsonObject.get("oldSlot").getAsInt();
-        Integer newSlot = jsonObject.get("newSlot").getAsInt();
+
+        EquipSlot oldSlot = EquipSlot.valueOf(
+                jsonObject.get("oldSlot")
+                        .getAsString()
+                        .toUpperCase());
+
+        EquipSlot newSlot = EquipSlot.valueOf(
+                jsonObject.get("newSlot")
+                        .getAsString()
+                        .toUpperCase());
 
         Hero hero = heroService.get(playerId);
 
-        if (hero.getInventory().moveItem(objectId, oldSlot, newSlot)) {
+        if (hero.dropItem(objectId, oldSlot, newSlot)) {
             res.status(200);
             return gson.toJson("Предмет перемещен в ячейку инвентаря [" + newSlot + "]");
         } else {
@@ -178,6 +186,7 @@ public class HeroController {
         }
     };
 
+    @Deprecated
     private final Route takeItem = (req, res) -> {
         Gson gson = new Gson();
         JsonObject jsonObject = gson.fromJson(req.body(), JsonObject.class);
@@ -196,13 +205,14 @@ public class HeroController {
         String oldSlot = jsonObject.get("oldSlot").getAsString();
 
         Hero hero = heroService.get(playerId);
+        EquipSlot equipSlot = EquipSlot.valueOf(oldSlot.toUpperCase());
 
-        if (hero.takeItem(objectId, EquipSlot.valueOf(oldSlot))) {
+        if (hero.takeItem(objectId, equipSlot)) {
             res.status(200);
             return gson.toJson("Предмет схвачен");
         } else {
             res.status(400);
-            return gson.toJson("Предмет не перемещён");
+            return gson.toJson("Предмет не схвачен");
         }
     };
 }

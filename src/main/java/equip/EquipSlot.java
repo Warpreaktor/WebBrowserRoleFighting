@@ -2,24 +2,17 @@ package equip;
 
 public enum EquipSlot {
 
-    HEAD("голова"),
+    RIGHT_HAND("правая рука"),
+    LEFT_HAND("LEFT-HAND"),
+    HEAD("HEAD"),
+    BODY("BODY"),
+    BOOTS("BOOTS"),
+    GLOVES("GLOVES"),
+    BELT("BELT"),
+    LEFT_RING("LEFT-RING"),
+    RIGHT_RING("RIGHT-RING"),
 
-    LEFT_HAND("левая рука"),
-
-    RIGHT_HAND("right-hand"),
-
-    BODY("тело"),
-
-    GLOVES("перчатки"),
-
-    BOOTS("сапоги"),
-
-    BELT("пояс"),
-
-    LEFT_RING("левое кольцо"),
-
-    RIGHT_RING("правое кольцо"),
-
+    INVENTORY_0("0"),
     INVENTORY_1("1"),
     INVENTORY_2("2"),
     INVENTORY_3("3"),
@@ -30,10 +23,10 @@ public enum EquipSlot {
     INVENTORY_8("8"),
     INVENTORY_9("9"),
     INVENTORY_10("10"),
-    INVENTORY_11("11"),
-    INVENTORY_12("12");
+    INVENTORY_11("11");
 
     private final String value;
+
     EquipSlot(String value) {
         this.value = value;
     }
@@ -41,5 +34,4 @@ public enum EquipSlot {
     public String getValue() {
         return value;
     }
-
 }

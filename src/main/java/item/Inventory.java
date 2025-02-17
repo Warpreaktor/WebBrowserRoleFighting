@@ -2,8 +2,6 @@ package item;
 
 import lombok.Getter;
 
-import java.util.Objects;
-
 @Getter
 public class Inventory {
 
@@ -26,16 +24,12 @@ public class Inventory {
         return false;
     }
 
-    public boolean moveItem(String objectId, int oldSlot, int newSlot) {
-        if (cells[newSlot] != null) {
+    public boolean put(Item item, int slot) {
+        if (cells[slot] != null) {
             return false;
         }
 
-        if (Objects.equals(cells[oldSlot].getId(), objectId)) {
-            cells[newSlot] = cells[oldSlot];
-            cells[oldSlot] = null;
-        }
-
+        cells[slot] = item;
         return true;
     }
 }

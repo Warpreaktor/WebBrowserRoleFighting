@@ -1,7 +1,7 @@
 package hero;
 
 import equip.EquipSlot;
-import equip.Equipement;
+import equip.Equipment;
 import item.Inventory;
 import item.Item;
 import item.weapon.Knife;
@@ -19,6 +19,8 @@ import item.weapon.Weapon;
 import java.util.Objects;
 import java.util.Optional;
 
+import static equip.EquipSlot.RIGHT_HAND;
+
 @Getter
 @Setter
 public abstract class Hero implements Heroic {
@@ -31,14 +33,12 @@ public abstract class Hero implements Heroic {
     /**
      * Экипировка. То что надето на персонажа.
      */
-    private Equipement equipement;
+    private Equipment equipment;
 
     /**
      * Инвентарь персонажа. То что он носит в мешке за спиной.
      */
     private Inventory inventory;
-
-    private Item bufferHand;
 
 //==================================================//
 //                  СТАТЫ                           //
@@ -97,8 +97,9 @@ public abstract class Hero implements Heroic {
         agility = 0.0;
         evasion = 0.0;
         reloader = 0.0;
-        equipement = new Equipement();
+        equipment = new Equipment();
         inventory = new Inventory();
+        bufferHand = new BufferHand();
 
         inventory.add(new Knife());
     }
@@ -202,35 +203,97 @@ public abstract class Hero implements Heroic {
     }
 
     public DamageDto getDamage() {
-        return getEquipement().getRightHand().getDamage();
+        return getEquipment().getRightHand().getDamage();
     }
 
     public void equipped(EquipSlot slot, Weapon weapon) {
-        equipement.equipped(slot, weapon);
+        equipment.equipped(slot, weapon);
         refresh();
     }
 
     public void unequipped(EquipSlot slot, String itemId) {
-        getEquipement().unequipped(slot, itemId);
+        getEquipment().unequipped(slot, itemId);
         refresh();
     }
 
     public boolean takeItem(String objectId, EquipSlot slot) {
-        if (bufferHand != null) {
-            return false;
+        if (bufferHand != null || bufferHand.getItem() != null) {
+            throw new RuntimeException("произошел какой-то исключительный пиздец");
         }
 
         getItemByIdAndSlot(objectId, slot)
-                .ifPresent(value -> bufferHand = value);
+                .ifPresent(value -> bufferHand.setItem(value));
 
         return true;
+    }
+
+    /**
+     * Метод выбрасывает предмет из буфера в указанное место.
+     * Местом может быть инвентарь, экипировочный слот или пространство уровня.
+     * Метод буквально копирует предмет из одного места в другое, а в старом удаляет.
+     */
+    public boolean dropItem(String objectId, EquipSlot from, EquipSlot to) {
+        //TODO Ебаный код. Надо удалить этот bufferHand Как то с ним плохо получилось.
+        if (bufferHand == null || bufferHand.getItem() == null) {
+            throw new RuntimeException("Какая-то хуйня");
+        }
+
+        try {
+
+            if (to.name().startsWith("INVENTORY")) {
+                int cell = Integer.parseInt(to.getValue());
+
+                if (inventory.getCells()[cell] == null) {
+
+                    inventory.getCells()[cell] = bufferHand.getItem();
+
+                    clearSlotByObjectIdAndSlot(objectId, from);
+
+                    return true;
+
+                } else if (!Objects.equals(inventory.getCells()[cell], bufferHand.getItem())){
+
+                    throw new RuntimeException("Ячейка занята");
+
+                } else {
+                    bufferHand.setItem(null);
+                    return false;
+                }
+            }
+
+            //Проверяем, что предмет правда лежит там откуда его берут.
+            var item = getItemByIdAndSlot(objectId, from)
+                    .orElseThrow(
+                            () -> new RuntimeException("Читер, такого предмета у тебя нет!"));
+
+            switch (to) {
+
+                case RIGHT_HAND -> {
+                    if (equipment.equipped(RIGHT_HAND, item)) {
+
+                        clearSlotByObjectIdAndSlot(objectId, from);
+                        bufferHand.setItem(null);
+
+                        return true;
+
+                    } else {
+                        bufferHand.setItem(null);
+                        return false;
+                    }
+                }
+
+                default -> throw new RuntimeException("Слот экипировки [" + to + "] не определён");
+            }
+        } finally {
+            bufferHand.setItem(null);
+        }
     }
 
     /**
      * Метод возвращает объект по его идентификатору и слоту в котором он находится.
      * Метод ищет предмет только в инвентаре героя и его слотах экипировки.
      * Главным образом метод действительно проверяет, а находится ли у меня на сервере
-     * вот в таком то слоте вот такой то предмет исключая возможность ложного запроса с фронта.
+     * вот в таком-то слоте вот такой-то предмет исключая возможность ложного запроса с фронта.
      */
     private Optional<? extends Item> getItemByIdAndSlot(String objectId, EquipSlot slot) {
 
@@ -240,6 +303,7 @@ public abstract class Hero implements Heroic {
 
             if (item != null
                     && Objects.equals(objectId, item.getId())) {
+
                 return Optional.of(item);
             }
         }
@@ -247,11 +311,45 @@ public abstract class Hero implements Heroic {
         switch (slot) {
 
             case RIGHT_HAND -> {
-                return Optional.of(equipement.getRightHand());
+                return Optional.of(equipment.getRightHand());
             }
 
             default -> {
                 return Optional.empty();
+            }
+        }
+    }
+
+    /**
+     * Метод очищает местонахождения от объекта который там находится.
+     * Навсегда.
+     * Безвозвратно.
+     * Метод ищет предмет только в инвентаре героя и его слотах экипировки.
+     * Если в очищаемой ячейке хранится предмет с идентификатором не соответствующим переданному,
+     * то метод не будет производить очистку и выбросит исключение.
+     *
+     */
+    private void clearSlotByObjectIdAndSlot(String objectId, EquipSlot slot) {
+
+        if (slot.name().startsWith("INVENTORY")) {
+
+            int cell = Integer.parseInt(slot.getValue());
+
+            if (Objects.equals(objectId, inventory.getCells()[cell].getId())) {
+                inventory.getCells()[cell] = null;
+            }
+        }
+
+        switch (slot) {
+
+            case RIGHT_HAND -> {
+                if (Objects.equals(equipment.getRightHand(), objectId)) {
+                    equipment.setRightHand(null);
+                }
+            }
+
+            default -> {
+                new RuntimeException("Слот экипировки [" + slot + "] не определён");
             }
         }
     }
