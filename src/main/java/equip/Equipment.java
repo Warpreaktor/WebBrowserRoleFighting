@@ -21,7 +21,7 @@ public class Equipment {
     private final Fist fist;
 
     /**
-     * В правой руки может быть только оружие.
+     * В правой руке может быть только оружие.
      */
     @Setter
     private Weapon rightHand;

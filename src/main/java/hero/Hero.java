@@ -99,7 +99,6 @@ public abstract class Hero implements Heroic {
         reloader = 0.0;
         equipment = new Equipment();
         inventory = new Inventory();
-        bufferHand = new BufferHand();
 
         inventory.add(new Knife());
     }
@@ -216,76 +215,51 @@ public abstract class Hero implements Heroic {
         refresh();
     }
 
-    public boolean takeItem(String objectId, EquipSlot slot) {
-        if (bufferHand != null || bufferHand.getItem() != null) {
-            throw new RuntimeException("произошел какой-то исключительный пиздец");
-        }
-
-        getItemByIdAndSlot(objectId, slot)
-                .ifPresent(value -> bufferHand.setItem(value));
-
-        return true;
-    }
-
     /**
      * Метод выбрасывает предмет из буфера в указанное место.
      * Местом может быть инвентарь, экипировочный слот или пространство уровня.
      * Метод буквально копирует предмет из одного места в другое, а в старом удаляет.
      */
-    public boolean dropItem(String objectId, EquipSlot from, EquipSlot to) {
-        //TODO Ебаный код. Надо удалить этот bufferHand Как то с ним плохо получилось.
-        if (bufferHand == null || bufferHand.getItem() == null) {
-            throw new RuntimeException("Какая-то хуйня");
+    public boolean moveItem(String objectId, EquipSlot from, EquipSlot to) {
+
+        Item item = getItemByIdAndSlot(objectId, from)
+                .orElseThrow( () -> new RuntimeException("Предмета не существует"));
+
+        if (to.name().startsWith("INVENTORY")) {
+            int cell = Integer.parseInt(to.getValue());
+
+            if (inventory.getCells()[cell] == null) {
+
+                inventory.getCells()[cell] = item;
+
+                clearSlotByObjectIdAndSlot(objectId, from);
+
+                return true;
+
+            } else if (!Objects.equals(inventory.getCells()[cell], item)) {
+
+                throw new RuntimeException("Ячейка занята");
+
+            } else {
+                return false;
+            }
         }
 
-        try {
+        switch (to) {
 
-            if (to.name().startsWith("INVENTORY")) {
-                int cell = Integer.parseInt(to.getValue());
-
-                if (inventory.getCells()[cell] == null) {
-
-                    inventory.getCells()[cell] = bufferHand.getItem();
+            case RIGHT_HAND -> {
+                if (equipment.equipped(RIGHT_HAND, item)) {
 
                     clearSlotByObjectIdAndSlot(objectId, from);
 
                     return true;
 
-                } else if (!Objects.equals(inventory.getCells()[cell], bufferHand.getItem())){
-
-                    throw new RuntimeException("Ячейка занята");
-
                 } else {
-                    bufferHand.setItem(null);
                     return false;
                 }
             }
 
-            //Проверяем, что предмет правда лежит там откуда его берут.
-            var item = getItemByIdAndSlot(objectId, from)
-                    .orElseThrow(
-                            () -> new RuntimeException("Читер, такого предмета у тебя нет!"));
-
-            switch (to) {
-
-                case RIGHT_HAND -> {
-                    if (equipment.equipped(RIGHT_HAND, item)) {
-
-                        clearSlotByObjectIdAndSlot(objectId, from);
-                        bufferHand.setItem(null);
-
-                        return true;
-
-                    } else {
-                        bufferHand.setItem(null);
-                        return false;
-                    }
-                }
-
-                default -> throw new RuntimeException("Слот экипировки [" + to + "] не определён");
-            }
-        } finally {
-            bufferHand.setItem(null);
+            default -> throw new RuntimeException("Слот экипировки [" + to + "] не определён");
         }
     }
 

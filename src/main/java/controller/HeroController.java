@@ -1,7 +1,6 @@
 package controller;
 
 import equip.EquipSlot;
-import equip.Equipment;
 import hero.Hero;
 import hero.HeroService;
 import com.google.gson.Gson;
@@ -34,8 +33,6 @@ public class HeroController {
         Spark.post("/hero/unequipped/", unequipped);
 
         Spark.post("/hero/dropItem/", dropItem);
-
-        Spark.post("/hero/takeItem/", takeItem);
 
     }
 
@@ -177,42 +174,13 @@ public class HeroController {
 
         Hero hero = heroService.get(playerId);
 
-        if (hero.dropItem(objectId, oldSlot, newSlot)) {
+
+        if (hero.moveItem(objectId, oldSlot, newSlot)) {
             res.status(200);
             return gson.toJson("Предмет перемещен в ячейку инвентаря [" + newSlot + "]");
         } else {
             res.status(400);
             return gson.toJson("Предмет не перемещён");
-        }
-    };
-
-    @Deprecated
-    private final Route takeItem = (req, res) -> {
-        Gson gson = new Gson();
-        JsonObject jsonObject = gson.fromJson(req.body(), JsonObject.class);
-
-        if (jsonObject == null || !jsonObject.has("playerId")
-                || !jsonObject.has("objectId")
-                || !jsonObject.has("oldSlot")
-        ) {
-
-            res.status(400);
-            return gson.toJson("Ошибка: отсутствуют обязательные поля!");
-        }
-
-        String playerId = jsonObject.get("playerId").getAsString();
-        String objectId = jsonObject.get("objectId").getAsString();
-        String oldSlot = jsonObject.get("oldSlot").getAsString();
-
-        Hero hero = heroService.get(playerId);
-        EquipSlot equipSlot = EquipSlot.valueOf(oldSlot.toUpperCase());
-
-        if (hero.takeItem(objectId, equipSlot)) {
-            res.status(200);
-            return gson.toJson("Предмет схвачен");
-        } else {
-            res.status(400);
-            return gson.toJson("Предмет не схвачен");
         }
     };
 }

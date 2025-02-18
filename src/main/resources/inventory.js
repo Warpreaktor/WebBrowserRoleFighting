@@ -16,10 +16,26 @@ function loadInventory() {
     fetch(`${HOST}/inventory`)
         .then(response => response.json())
         .then(data => {
-            console.log("Инвентарь получен:", data);
-            renderInventory(data.cells); // Отправляем `cells`, а не весь объект
+            console.log("Инвентарь и экипировка получены:", data);
+
+            renderInventory(data.inventory.cells); // Обновляем инвентарь
+            renderEquipment(data.equipment); // Обновляем экипировку
         })
         .catch(error => console.error("Ошибка загрузки инвентаря:", error));
+}
+
+function renderEquipment(equipment) {
+    document.querySelector(".right-hand").innerHTML = ""; // Очищаем слот
+    if (equipment.rightHand) {
+        const weapon = document.createElement("img");
+        weapon.src = equipment.rightHand.picture;
+        weapon.alt = equipment.rightHand.name;
+        weapon.classList.add("item");
+        weapon.setAttribute("draggable", "true");
+        weapon.dataset.id = equipment.rightHand.id;
+
+        document.querySelector(".right-hand").appendChild(weapon);
+    }
 }
 
 //Отрисовка инвентаря и добавление обработчика drop
@@ -88,12 +104,8 @@ function dragStart(event, itemData) {
     const oldSlot = previousSlot ?
         (previousSlot.dataset.slot || `INVENTORY_${previousSlot.dataset.index}`)
         : null;
-
-    console.log("Предмет схвачен:", itemData);
-    console.log(`Отправка запроса /hero/takeItem: itemId ${objectId}, oldSlot ${oldSlot}`);
-
-    takeItem("player1", objectId, oldSlot);
 }
+
 
 // Обработка при отпускании предмета
 function drop(event) {
@@ -251,37 +263,6 @@ function returnItemToPreviousSlot(event) {
     }
 }
 
-function takeItem(playerId, objectId, oldSlot) {
-    if (!oldSlot) {
-        console.error("Ошибка: oldSlot не определён!");
-        return;
-    }
-
-    console.log(`Отправка запроса /hero/takeItem: itemId ${objectId}, oldSlot ${oldSlot}`);
-
-    fetch(`${HOST}/hero/takeItem/`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            playerId: playerId,
-            objectId: objectId,
-            oldSlot: oldSlot
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Ошибка при захвате предмета!");
-        }
-        return response.json();
-    })
-    .then(data => console.log("Ответ сервера (takeItem):", data))
-    .catch(error => {
-        console.error("Ошибка запроса takeItem:", error);
-    });
-}
-
 function drop(event) {
     event.preventDefault();
 
@@ -290,20 +271,31 @@ function drop(event) {
     const targetSlot = event.target;
     const previousSlot = document.querySelector(`[data-id="${objectId}"]`)?.closest(".slot, .inventory-slot");
 
-    // Определяем `oldSlot`
-    let oldSlot = previousSlot ? previousSlot.dataset.slot || `INVENTORY_${previousSlot.dataset.index}` : null;
+    let oldSlot = previousSlot ?
+        (previousSlot.dataset.slot || `INVENTORY_${previousSlot.dataset.index}`)
+        : null;
     let newSlot = null;
 
-    // Определяем `newSlot`
     if (targetSlot.classList.contains("inventory-slot") && targetSlot.dataset.index) {
         newSlot = `INVENTORY_${targetSlot.dataset.index}`;
     } else if (targetSlot.classList.contains("slot") && targetSlot.dataset.slot) {
         newSlot = targetSlot.dataset.slot;
+    } else if (targetSlot.parentElement && targetSlot.parentElement.classList.contains("inventory-slot")) {
+        // Проверяем, если `event.target` указывает на вложенный элемент
+        newSlot = `INVENTORY_${targetSlot.parentElement.dataset.index}`;
+    } else if (targetSlot.parentElement && targetSlot.parentElement.classList.contains("slot")) {
+        newSlot = targetSlot.parentElement.dataset.slot;
     }
 
-    if (!oldSlot || !newSlot) {
-        console.error("Ошибка: oldSlot или newSlot не определён!");
+    // Проверяем, если `newSlot` всё равно не найден
+    if (!newSlot) {
+        console.error(`Ошибка: Не удалось определить новый слот! oldSlot: ${oldSlot}, newSlot: ${newSlot}`);
         returnItemToPreviousSlot(event);
+        return;
+    }
+
+    // Проверяем, не бросили ли предмет в то же место
+    if (oldSlot === newSlot) {
         return;
     }
 
@@ -329,8 +321,6 @@ function drop(event) {
     })
     .then(data => {
         console.log("Ответ сервера (dropItem):", data);
-
-        // Если сервер подтвердил перемещение, визуально переносим предмет
         targetSlot.appendChild(document.querySelector(`[data-id="${objectId}"]`));
     })
     .catch(error => {
@@ -338,5 +328,4 @@ function drop(event) {
         returnItemToPreviousSlot(event);
     });
 }
-
 

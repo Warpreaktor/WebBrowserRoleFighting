@@ -1,6 +1,8 @@
 package controller;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import hero.Hero;
 import hero.HeroService;
 import item.weapon.ItemService;
 import spark.Route;
@@ -22,9 +24,17 @@ public class InventoryController {
         Spark.get("/inventory", getInventory);
     }
     private final Route getInventory = (req, res) -> {
+        Hero hero = heroService.get(PLAYER1);
+
+        JsonObject jsonResponse = new JsonObject();
+
+        Gson gson = new Gson();
+        jsonResponse.add("inventory", gson.toJsonTree(hero.getInventory()));
+
+        jsonResponse.add("equipment", gson.toJsonTree(hero.getEquipment()));
 
         res.status(200);
-        return new Gson().toJson(heroService.get(PLAYER1).getInventory());
+        return gson.toJson(jsonResponse);
     };
 
 }

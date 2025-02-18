@@ -8,6 +8,7 @@ import hero.classes.Warrior;
 import item.Inventory;
 import item.Item;
 import item.weapon.Knife;
+import item.weapon.Weapon;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,9 +19,6 @@ import java.lang.reflect.Field;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -77,10 +75,9 @@ public class HeroTest {
     @Test
     void dropItem1() {
         Hero hero = heroService.createHero(null, null);
-        hero.setBufferHand(null);
 
-        Exception exception = assertThrows(RuntimeException.class,
-                () -> hero.dropItem("пофигчто",
+        assertThrows(RuntimeException.class,
+                () -> hero.moveItem("пофигчто",
                         EquipSlot.INVENTORY_0, EquipSlot.INVENTORY_1));
     }
 
@@ -102,18 +99,15 @@ public class HeroTest {
         Item[] cells = new Item[12];
         cells[0] = knife1;
 
-        hero.setBufferHand(new BufferHand(knife1));
-
         when(inventoryMock.getCells())
                 .thenReturn(cells);
 
-        boolean result = hero.dropItem(knife1.getId(),
+        boolean result = hero.moveItem(knife1.getId(),
                 EquipSlot.INVENTORY_0, EquipSlot.INVENTORY_1);
 
         Assertions.assertTrue(result);
         Assertions.assertNull(inventoryMock.getCells()[0]);
         Assertions.assertEquals(knife1, inventoryMock.getCells()[1]);
-        Assertions.assertNull(hero.getBufferHand().getItem());
     }
 
     /**
@@ -141,13 +135,10 @@ public class HeroTest {
         when(inventoryMock.getCells())
                 .thenReturn(cells);
 
-        hero.setBufferHand(new BufferHand(knife1));
-
         assertThrows(RuntimeException.class,
-                () -> hero.dropItem(knife1.getId(),
+                () -> hero.moveItem(knife1.getId(),
                         EquipSlot.INVENTORY_0, EquipSlot.INVENTORY_1));
 
-        Assertions.assertNull(hero.getBufferHand().getItem());
         Assertions.assertEquals(knife1, cells[0]);
     }
 
@@ -168,15 +159,11 @@ public class HeroTest {
 
         hero.getInventory().getCells()[0] = knife1;
 
-        hero.setBufferHand(new BufferHand(knife1));
-
-
         assertDoesNotThrow(
-                () -> hero.dropItem(knife1.getId(),
+                () -> hero.moveItem(knife1.getId(),
                         EquipSlot.INVENTORY_0, EquipSlot.INVENTORY_0));
 
-        assertNull(hero.getBufferHand().getItem());
-        assertEquals(knife1, hero.getInventory().getCells()[0]);
+        Assertions.assertEquals(knife1, hero.getInventory().getCells()[0]);
     }
 
     /**
@@ -195,14 +182,10 @@ public class HeroTest {
 
         hero.getInventory().getCells()[0] = knife1;
 
-        hero.setBufferHand(new BufferHand(knife1));
-
-        boolean result = hero.dropItem(knife1.getId(),
+        boolean result = hero.moveItem(knife1.getId(),
                 EquipSlot.INVENTORY_0, EquipSlot.RIGHT_HAND);
 
         Assertions.assertTrue(result);
-
-        Assertions.assertNull(hero.getBufferHand().getItem());
 
         Assertions.assertNull(hero.getInventory().getCells()[0]);
 
@@ -229,19 +212,16 @@ public class HeroTest {
 
         cells[0] = knife1;
 
-        hero.setBufferHand(new BufferHand(knife1));
-
         when(inventoryMock.getCells())
                 .thenReturn(cells);
 
         when(equipmentMock.equipped(EquipSlot.RIGHT_HAND, testItem))
                 .thenReturn(false);
 
-        boolean result = hero.dropItem(knife1.getId(),
+        boolean result = hero.moveItem(knife1.getId(),
                 EquipSlot.INVENTORY_0, EquipSlot.RIGHT_HAND);
 
         Assertions.assertFalse(result);
-        Assertions.assertNull(hero.getBufferHand().getItem());
         verify(equipmentMock, times(1))
                 .equipped(EquipSlot.RIGHT_HAND, knife1);
     }
@@ -266,17 +246,14 @@ public class HeroTest {
 
         cells[0] = knife1;
 
-        hero.setBufferHand(new BufferHand(knife1));
-
         when(inventoryMock.getCells())
                 .thenReturn(cells);
 
-        Exception exception = assertThrows(RuntimeException.class,
-                () -> hero.dropItem(knife1.getId(),
+        assertThrows(RuntimeException.class,
+                () -> hero.moveItem(knife1.getId(),
                         EquipSlot.INVENTORY_0, EquipSlot.HEAD));
 
-        assertNull(hero.getBufferHand().getItem());
-        assertEquals(knife1, cells[0]);
+        Assertions.assertEquals(knife1, cells[0]);
     }
 
     /**
@@ -300,16 +277,37 @@ public class HeroTest {
 
         cells[0] = knife1;
 
-        hero.setBufferHand(new BufferHand(knife1));
-
         when(inventoryMock.getCells())
                 .thenReturn(cells);
 
-        Exception exception = Assertions.assertThrows(RuntimeException.class,
-                () -> hero.dropItem(UUID.randomUUID().toString(),
+        Assertions.assertThrows(RuntimeException.class,
+                () -> hero.moveItem(UUID.randomUUID().toString(),
                         EquipSlot.INVENTORY_0, EquipSlot.RIGHT_HAND));
 
-        Assertions.assertNull(hero.getBufferHand().getItem());
         Assertions.assertEquals(knife1, cells[0]);
+    }
+
+    /**
+     * Если предмет из экипировки перемещается в другой экипировочный слот
+     * не подходящий под этот предмет.
+     * Предмет возвращается на прежнее место.
+     * На новом месте ничего не появляется.
+     */
+    @Test
+    void dropItem9() {
+        Hero hero = heroService.createHero(null, null);
+
+        Weapon knife1 = new Knife();
+        hero.getEquipment().setRightHand(knife1);
+
+
+        Assertions.assertThrows(RuntimeException.class,
+                () -> hero.moveItem(knife1.getId(),
+                        EquipSlot.RIGHT_HAND, EquipSlot.HEAD));
+
+        Assertions.assertEquals(
+                hero.getEquipment().getRightHand(),
+                knife1);
+
     }
 }
