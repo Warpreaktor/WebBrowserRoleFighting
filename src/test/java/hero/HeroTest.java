@@ -228,7 +228,6 @@ public class HeroTest {
 
     /**
      * Если передан неподходящий слот, выбрасывается исключение.
-     * Рука очищается.
      * Предмет возвращается на прежнее место.
      */
     @Test
@@ -258,7 +257,6 @@ public class HeroTest {
 
     /**
      * Если передан неизвестный предмет, выбрасывается исключение.
-     * Рука очищается.
      * Предмет возвращается на прежнее место.
      * На новом месте ничего не появляется.
      */
@@ -298,7 +296,7 @@ public class HeroTest {
         Hero hero = heroService.createHero(null, null);
 
         Weapon knife1 = new Knife();
-        hero.getEquipment().setRightHand(knife1);
+        hero.getEquipment().takeWeapon(knife1);
 
 
         Assertions.assertThrows(RuntimeException.class,
@@ -308,6 +306,33 @@ public class HeroTest {
         Assertions.assertEquals(
                 hero.getEquipment().getRightHand(),
                 knife1);
+
+    }
+
+    /**
+     * Предмет из экипировки перемещается в пустую ячейку инвентаря
+     * Предмет появляется в новой ячейки.
+     * Предмет исчезает из экипировки.
+     */
+    @Test
+    void dropItem10() {
+        Hero hero = heroService.createHero(null, null);
+        hero.setInventory(new Inventory());
+
+        Weapon knife1 = new Knife();
+        hero.getInventory().getCells()[4] = knife1;
+
+        Assertions.assertDoesNotThrow( () -> hero.moveItem(knife1.getId(),
+                        EquipSlot.INVENTORY_4, EquipSlot.RIGHT_HAND));
+
+        Assertions.assertNull(
+                hero.getInventory().getCells()[4]);
+
+        Assertions.assertDoesNotThrow(() -> hero.moveItem(knife1.getId(),
+                EquipSlot.RIGHT_HAND, EquipSlot.INVENTORY_4));
+
+        Assertions.assertNull(
+                hero.getEquipment().getRightHand());
 
     }
 }

@@ -4,15 +4,14 @@ import item.Item;
 import lombok.Getter;
 import item.weapon.Fist;
 import item.weapon.Weapon;
-import lombok.Setter;
+
+import java.util.Objects;
 
 /**
  * Экипировка персонажа
  */
 @Getter
 public class Equipment {
-
-    private Item buffer;
 
     /**
      * Кулак всегда один и он сохраняется как объект на персонаже.
@@ -23,7 +22,6 @@ public class Equipment {
     /**
      * В правой руке может быть только оружие.
      */
-    @Setter
     private Weapon rightHand;
 
     public Equipment() {
@@ -32,7 +30,7 @@ public class Equipment {
     }
 
     /**
-     * Установить предмет в слот
+     * Абстрактный метод, позволяющий установить какой-то предмет в какой-то слот.
      */
     public boolean equipped(EquipSlot slot, Item item) {
         if (item == null){
@@ -42,7 +40,7 @@ public class Equipment {
         switch (slot) {
             case RIGHT_HAND:
                 if (item instanceof Weapon) {
-                    rightHand = (Weapon) item;
+                    takeWeapon((Weapon) item);
                     break;
             } else {
                     System.out.println("Это не вставить в правую руку");
@@ -53,23 +51,17 @@ public class Equipment {
     }
 
     /**
-     * Вытащить предмет из слота.
-     * Концепция такая: любой предмет прежде чем переместиться куда-то должен попасть в буфер.
-     * Это имитация поведения пользовательского интерфейса,
-     * Когда предмет хватают мышкой он как бы подвисает нигде не находясь.
-     * Чтобы предмет не потерять совсем будем помещать его в буфер.
+     * Взять оружие в правую руку
      */
-    public void unequipped(EquipSlot slot, String itemId) {
-        var item = buffer;
+    public void takeWeapon(Weapon weapon) {
+        rightHand = Objects.requireNonNullElse(weapon, fist);
+    }
 
-        if (item == null) {
-            throw new RuntimeException("Неизвестный предмет");
-        } else {
-            buffer = item;
-        }
+    public EquipmentDto getEquipmentDto() {
 
-        switch (slot) {
-            case RIGHT_HAND -> rightHand = fist;
-        }
+        return EquipmentDto
+                .builder()
+                .rightHand(rightHand == fist ? null : rightHand)
+                .build();
     }
 }

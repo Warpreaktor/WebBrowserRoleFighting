@@ -29,9 +29,6 @@ public class HeroController {
         Spark.get("/getPlayer/:id", getPlayer);
         Spark.get("/getPlayer/statistic/:id", getPlayerStatistic);
 
-        Spark.post("/hero/equipped/", equipped);
-        Spark.post("/hero/unequipped/", unequipped);
-
         Spark.post("/hero/dropItem/", dropItem);
 
     }
@@ -84,66 +81,6 @@ public class HeroController {
 
         Hero player = heroService.get(id);
         return new Gson().toJson(player.getStatistic());
-    };
-
-    /**
-     * Одеть предмет на персонажа
-     */
-    private final Route equipped = (req, res) -> {
-        Gson gson = new Gson();
-        JsonObject jsonObject = gson.fromJson(req.body(), JsonObject.class);
-
-        if (jsonObject == null || !jsonObject.has("playerId")
-                || !jsonObject.has("objectId")
-                || !jsonObject.has("oldSlot")
-                || !jsonObject.has("newSlot")
-        ) {
-
-            res.status(400);
-            return gson.toJson("Ошибка: отсутствуют обязательные поля!");
-        }
-
-        String playerId = jsonObject.get("playerId").getAsString();
-        String objectId = jsonObject.get("objectId").getAsString();
-        Integer oldSlot = jsonObject.get("oldSlot").getAsInt();
-        String newSlot = jsonObject.get("newSlot").getAsString();
-
-        Weapon weapon = itemService.get(objectId).orElseThrow();
-        Hero hero = heroService.get(playerId);
-        EquipSlot objectSlot = EquipSlot.valueOf(newSlot);
-
-        hero.equipped(objectSlot, weapon);
-
-        res.status(200);
-        return gson.toJson("Предмет экипирован в " + objectSlot);
-    };
-
-    /**
-     * Снятие предмета с персонажа
-     */
-    private final Route unequipped = (req, res) -> {
-        Gson gson = new Gson();
-        JsonObject jsonObject = gson.fromJson(req.body(), JsonObject.class);
-
-        if (jsonObject == null || !jsonObject.has("playerId")
-                || !jsonObject.has("objectId")
-                || !jsonObject.has("slot")) {
-
-            res.status(400);
-            return gson.toJson("Ошибка: отсутствуют обязательные поля!");
-        }
-
-        String playerId = jsonObject.get("playerId").getAsString();
-        String objectId = jsonObject.get("objectId").getAsString();
-        String slot = jsonObject.get("slot").getAsString();
-
-        Hero hero = heroService.get(playerId);
-        EquipSlot objectSlot = EquipSlot.valueOf(slot);
-
-        hero.unequipped(objectSlot, objectId);
-
-        res.status(200);
-        return gson.toJson("Предмет снят из " + objectSlot);
     };
 
     private final Route dropItem = (req, res) -> {

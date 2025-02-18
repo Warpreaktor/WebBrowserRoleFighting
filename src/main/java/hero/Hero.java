@@ -2,6 +2,7 @@ package hero;
 
 import equip.EquipSlot;
 import equip.Equipment;
+import equip.EquipmentDto;
 import item.Inventory;
 import item.Item;
 import item.weapon.Knife;
@@ -205,16 +206,6 @@ public abstract class Hero implements Heroic {
         return getEquipment().getRightHand().getDamage();
     }
 
-    public void equipped(EquipSlot slot, Weapon weapon) {
-        equipment.equipped(slot, weapon);
-        refresh();
-    }
-
-    public void unequipped(EquipSlot slot, String itemId) {
-        getEquipment().unequipped(slot, itemId);
-        refresh();
-    }
-
     /**
      * Метод выбрасывает предмет из буфера в указанное место.
      * Местом может быть инвентарь, экипировочный слот или пространство уровня.
@@ -312,18 +303,21 @@ public abstract class Hero implements Heroic {
             if (Objects.equals(objectId, inventory.getCells()[cell].getId())) {
                 inventory.getCells()[cell] = null;
             }
-        }
 
-        switch (slot) {
+        } else {
+            switch (slot) {
 
-            case RIGHT_HAND -> {
-                if (Objects.equals(equipment.getRightHand(), objectId)) {
-                    equipment.setRightHand(null);
+                case RIGHT_HAND -> {
+                    if (Objects.equals(equipment.getRightHand().getId(), objectId)) {
+                        equipment.takeWeapon(this.getEquipment().getFist());
+                    } else {
+                        throw new RuntimeException("Предмет не найден по идентификатору: [" + objectId + "]" );
+                    }
                 }
-            }
 
-            default -> {
-                new RuntimeException("Слот экипировки [" + slot + "] не определён");
+                default -> {
+                    new RuntimeException("Слот экипировки [" + slot + "] не определён");
+                }
             }
         }
     }

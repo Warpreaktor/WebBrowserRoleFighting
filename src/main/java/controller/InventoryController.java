@@ -31,7 +31,7 @@ public class InventoryController {
         Gson gson = new Gson();
         jsonResponse.add("inventory", gson.toJsonTree(hero.getInventory()));
 
-        jsonResponse.add("equipment", gson.toJsonTree(hero.getEquipment()));
+        jsonResponse.add("equipment", gson.toJsonTree(hero.getEquipment().getEquipmentDto()));
 
         res.status(200);
         return gson.toJson(jsonResponse);
