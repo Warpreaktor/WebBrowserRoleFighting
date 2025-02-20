@@ -11,8 +11,7 @@ public interface Healthy {
 
     default void takeDamage(double pain) {
         getHealth()
-                .takeDamage(
-                getHealth().getValue() - pain);
+                .takeDamage(pain);
     }
 
     default void setHeal(Double value) {

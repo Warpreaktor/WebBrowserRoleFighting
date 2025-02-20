@@ -82,21 +82,20 @@ public class Shield {
      * @return остаточный урон, который не был поглощен щитом.
      */
     public double takeDamage(double damage) {
-        double pain;
-        value -= damage;
 
-        if (value < 0) {
-            //Инвертируем - на +
-            pain = 0D - value;
-        } else {
-            pain = 0D;
+        if (damage <= 0) {
+            return 0.0;
         }
 
-        //Уровень щита не может упасть ниже ноля
-        if (value < 0) {
-            value = 0D;
+        // Весь урон поглощен щитом
+        if (damage <= value) {
+            value -= damage;
+            return 0.0;
         }
 
-        return pain;
+        // Вычисляем остаток урона
+        double remainingDamage = damage - value;
+        value = 0.0;
+        return remainingDamage;
     }
 }

@@ -17,7 +17,7 @@ public class Fist extends Weapon {
 
     public Fist() {
         super(UUID.randomUUID().toString(), "кулак", picturePath);
-        getDamage().setPhysicalDamage(1.0);
+        getDamage().setPhysicalDamage(4.0);
         setThrowing(false);
         setTwoHand(false);
     }

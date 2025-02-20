@@ -237,3 +237,14 @@ function returnItemToPreviousSlot(event) {
         console.error("Ошибка: невозможно вернуть предмет в предыдущее место!");
     }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const startButton = document.getElementById("start-button");
+
+    if (startButton) {
+        startButton.addEventListener("click", () => {
+            console.log("🚀 Переход на экран боя!");
+            window.location.href = "fight.html"; // Укажи путь к файлу боя
+        });
+    }
+});

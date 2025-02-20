@@ -1,5 +1,3 @@
-const HOST = "http://localhost:4568";
-
 let player1 = null;
 let player2 = null;
 
@@ -7,6 +5,8 @@ let oldPlayer1Hp = null;
 let oldPlayer2Hp = null;
 let oldPlayer1Shield = null;
 let oldPlayer2Shield = null;
+
+window.onload = loadPlayers;
 
 function loadPlayers() {
     fetch(`${HOST}/getPlayer/player1`)
@@ -90,7 +90,7 @@ document.getElementById('fightForm').addEventListener('submit', function (e) {
     fetch(`${HOST}/fight`)
         .then(response => response.json())
         .then(data => {
-            document.getElementById('roundResult').innerHTML = `${data.message}`;
+            document.getElementById('roundResult').innerHTML = data.log.map(line => `<p>${line}</p>`).join("");
             setTimeout(loadPlayers, 80);
         })
         .catch(err => {
@@ -134,4 +134,73 @@ function updateReloadBars() {
     }
 }
 
-window.onload = loadPlayers;
+document.getElementById('fightForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    fetch(`${HOST}/fight`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('roundResult').textContent = data.message;
+
+            if (data.isOver) {
+                showRewardModal(data.winner);
+            }
+
+            setTimeout(loadPlayers, 80);
+        })
+        .catch(err => {
+            console.error(err);
+            document.getElementById('roundResult').textContent = "Ошибка во время боя!";
+        });
+});
+
+// Функция отображения модального окна с наградами
+function showRewardModal(winner) {
+    if (winner.name !== player1.name) return; // Если победил не player1, награды не показываем
+
+    fetch(`http://localhost:4567/get-rewards?winner=${winner.name}`)
+        .then(response => response.json())
+        .then(rewards => {
+            let rewardContainer = document.getElementById("rewardOptions");
+            rewardContainer.innerHTML = ""; // Очищаем старые кнопки
+
+            rewards.forEach(reward => {
+                let button = document.createElement("button");
+                button.classList.add("reward-button");
+                button.textContent = reward.name;
+                button.onclick = () => selectReward(reward);
+                rewardContainer.appendChild(button);
+            });
+
+            document.getElementById("rewardModal").style.display = "flex"; // Показываем окно
+        })
+        .catch(err => console.error("Ошибка загрузки наград:", err));
+}
+
+// Функция отправки выбранной награды на сервер
+function selectReward(reward) {
+    fetch(`http://localhost:4567/claim-reward`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ player: player1.name, reward: reward.name })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Награда получена:", data);
+        updateInventoryUI(); // Обновляем инвентарь
+        document.getElementById("rewardModal").style.display = "none"; // Закрываем окно
+    })
+    .catch(err => console.error("Ошибка получения награды:", err));
+}
+
+// Закрытие модалки без выбора награды
+document.getElementById("closeRewardModal").addEventListener("click", function () {
+    document.getElementById("rewardModal").style.display = "none";
+});
+
+function updateFightLog(logs) {
+    let logContainer = document.getElementById("roundResult");
+
+    // Объединяем массив строк в единый HTML-блок
+    logContainer.innerHTML = logs.map(line => `<p>${line}</p>`).join("");
+}

@@ -139,3 +139,22 @@ h1 {
     border-bottom: 1px solid gray;
 }
 
+.start-btn {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    background: #8B0000;
+    border: 2px solid #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+.start-btn:hover {
+    background: #B22222;
+}

@@ -5,6 +5,7 @@ import fight.dto.FightResultDto;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 @Getter
 public class FightResult {
@@ -13,7 +14,7 @@ public class FightResult {
 
     private Hero winner;
 
-    private StringBuilder message;
+    private LinkedList<String> message;
 
     private ArrayList<String> log;
 
@@ -23,7 +24,7 @@ public class FightResult {
     }
     public FightResult() {
         isOver = false;
-        this.message = new StringBuilder();
+        this.message = new LinkedList<>();
         this.log = new ArrayList<>();
     }
 
@@ -37,12 +38,12 @@ public class FightResult {
 
     public String addEventAndLog(String message) {
         log(message);
-        this.message.append("<p>").append(message).append("<p>");
+        this.message.add(message);
         return getMessage();
     }
 
     public void clear() {
-        message.setLength(0);
+        message.clear();
     }
 
     public FightResultDto getResultDto() {

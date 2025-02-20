@@ -12,7 +12,7 @@ public class Knife extends Weapon {
 
     public Knife() {
         super(UUID.randomUUID().toString(), "Нож", picturePath);
-        getDamage().setPhysicalDamage(2.0);
+        getDamage().setPhysicalDamage(8.0);
         setThrowing(false);
         setTwoHand(false);
     }

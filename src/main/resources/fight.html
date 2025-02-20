@@ -59,8 +59,19 @@
     <!-- Окно с результатом раунда -->
     <div id="roundResult" class="round-result">Начинается бой</div>
     
-    <script src="fight.js"></script>
 
+    <!-- Модальное окно выбора награды -->
+    <div id="rewardModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>Выберите награду</h2>
+            <div id="rewardOptions" class="reward-options"></div>
+            <button id="closeRewardModal" class="close-button">Закрыть</button>
+        </div>
+    </div>
+
+    <!--ВАЖНО чтобы загрузка скриптов была в конце, после прогрузки всего документа html-->
+    <script src="config.js"></script>
+    <script src="fight.js"></script>
 </body>
 
 </html>
