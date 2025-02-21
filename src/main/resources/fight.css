@@ -188,7 +188,7 @@ body {
 }
 
 
-//Модальное окно награды начало
+/* Модальное окно награды начало */
 /* Оверлей, перекрывающий весь экран */
 .modal-overlay {
     position: fixed;
@@ -248,7 +248,7 @@ body {
 
 /* кнопочка закрытия модального окна */
 .modalClose {
-    font-family: var(--font-regular);
+    font-family: var('--font-regular');
     position: absolute;
     right: 5px;
     top: 5px;
@@ -268,9 +268,9 @@ body {
 .modalWindow {
     position: relative;
 }
-//Модальное окно конец
+/* Модальное окно конец */
 
-//Содержимое окна наград
+/* Содержимое окна наград */
 
 .loot-box-container {
     display: flex;
@@ -308,7 +308,7 @@ body {
     font-weight: bold;
     color: black;
 }
-// конец наград
+/* конец наград */
 
 .rest-button {
     display: inline-block;
