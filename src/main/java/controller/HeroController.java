@@ -8,7 +8,6 @@ import com.google.gson.JsonObject;
 import spark.Route;
 import spark.Spark;
 import spec.HeroClass;
-import item.weapon.Weapon;
 import item.weapon.ItemService;
 
 public class HeroController {
@@ -80,7 +79,14 @@ public class HeroController {
         String id = req.params("id");
 
         Hero player = heroService.get(id);
-        return new Gson().toJson(player.getStatistic());
+
+        JsonObject jsonResponse = new JsonObject();
+        var gson = new Gson();
+        jsonResponse.add("characteristic", gson.toJsonTree(player.getCharacteristic()));
+        jsonResponse.add("statistic", gson.toJsonTree(player.getStatistic()));
+
+        res.status(200);
+        return gson.toJson(jsonResponse);
     };
 
     private final Route dropItem = (req, res) -> {

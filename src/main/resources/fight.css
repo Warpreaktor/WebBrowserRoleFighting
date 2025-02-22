@@ -182,65 +182,151 @@ body {
     margin-top: 20px;
 }
 
+#roundResult {
+    white-space: normal; /* Вместо nowrap */
+    word-wrap: break-word;
+}
+
+
 //Модальное окно награды начало
-.modal {
+/* Оверлей, перекрывающий весь экран */
+.modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.7); /* Полупрозрачный черный фон */
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 1000; /* Достаточно высокий, чтобы перекрывать остальной контент */
 }
 
+/* Содержимое модального окна */
 .modal-content {
-    background: rgba(20, 20, 20, 0.9);
+    background: #fff;
     padding: 20px;
     border-radius: 10px;
     text-align: center;
-    color: white;
-    width: 300px;
+    max-width: 90%; /* Адаптивная ширина */
+    max-height: 90%; /* Адаптивная высота */
+    overflow-y: auto; /* Прокрутка при переполнении */
 }
 
-.reward-options {
+/* Отключение прокрутки страницы при открытом модальном окне */
+/* убираем нижний ползунок прокрутки */
+body {
+    overflow-x: hidden;
+}
+
+/* фон нашего модального окна */
+.modalBackground {
+    display: none;
+    background: rgba(0, 0, 0, 0.8);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    /* указываем z-индекс для корректного наслаивания */
+    z-index: 1;
+}
+
+/* позиционирование самого модального окна */
+.modalActive {
+    position: absolute;
+    width: 800px;
+    height: 495px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Центрируем по середине */
+    border-radius: 10px;
+    background-color: rgb(255, 255, 255);
+    cursor: default;
+    padding: 40px 20px;
+}
+
+/* кнопочка закрытия модального окна */
+.modalClose {
+    font-family: var(--font-regular);
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+/* сама картинка кнопочки закрытия */
+.modalClose img {
+    margin: 3px;
+    width: 24px;
+    height: 24px;
+}
+
+/* делаем позиционирование внутренних элементов относительно модального окна */
+.modalWindow {
+    position: relative;
+}
+//Модальное окно конец
+
+//Содержимое окна наград
+
+.loot-box-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.loot-item {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
 }
 
-.reward-button {
-    padding: 10px;
-    background: linear-gradient(to right, #ffcc00, #ff6600);
-    border: none;
+.loot-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
     border-radius: 5px;
-    color: black;
+    background: white;
+}
+
+.loot-item:hover {
+    transform: scale(1.1);
+}
+
+.loot-item p {
+    margin-top: 5px;
+    font-size: 14px;
     font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-    width: 100%;
+    color: black;
 }
+// конец наград
 
-.reward-button:hover {
-    background: linear-gradient(to right, #ff9900, #ff3300);
-}
-
-.close-button {
-    margin-top: 15px;
-    padding: 10px;
-    background: #444;
-    border: none;
-    border-radius: 5px;
+.rest-button {
+    display: inline-block;
+    text-align: center;
+    width: 150px;
+    height: 50px;
+    font-size: 20px;
+    font-weight: bold;
     color: white;
+    background-color: #28a745 !important; /* Форсируем зелёный цвет, почему-то браузер может сбрасывать стили, если кнопка изначально скрыта */
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
-    width: 100%;
+    transition: background-color 0.3s ease-in-out;
 }
 
-.close-button:hover {
-    background: #666;
+/* При наведении цвет становится темнее */
+.rest-button:hover {
+    background-color: #218838 !important;
 }
 
-//Модальное окно конец

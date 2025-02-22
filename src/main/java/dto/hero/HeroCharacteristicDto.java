@@ -3,11 +3,10 @@ package dto.hero;
 import dto.damage.DamageResponseDto;
 import lombok.Builder;
 import lombok.ToString;
-import dto.damage.DamageDto;
 
 @ToString
 @Builder
-public class HeroStatisticDto {
+public class HeroCharacteristicDto {
 
     private String name;
 

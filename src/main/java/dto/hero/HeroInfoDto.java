@@ -1,5 +1,6 @@
 package dto.hero;
 
+import hero.Statistic;
 import lombok.Builder;
 import lombok.ToString;
 
@@ -20,4 +21,6 @@ public class HeroInfoDto {
     private double reloader;
 
     private double maxHitpoint;
+
+    private Statistic statistic;
 }

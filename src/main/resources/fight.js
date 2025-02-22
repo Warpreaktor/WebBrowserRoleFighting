@@ -90,7 +90,19 @@ document.getElementById('fightForm').addEventListener('submit', function (e) {
     fetch(`${HOST}/fight`)
         .then(response => response.json())
         .then(data => {
-            document.getElementById('roundResult').innerHTML = data.log.map(line => `<p>${line}</p>`).join("");
+            console.log("Ответ от сервера:", data);
+
+            let messageHtml = data.message
+                .map(line => `<p>${line}</p>`)
+                .join("");
+            document.getElementById('roundResult').innerHTML = messageHtml;
+
+            if (data.isOver) {
+                console.log("Открываем модальное окно...");
+                document.querySelector(".modalBackground").style.display = "flex";
+                openLootBox();
+            }
+
             setTimeout(loadPlayers, 80);
         })
         .catch(err => {
@@ -98,6 +110,7 @@ document.getElementById('fightForm').addEventListener('submit', function (e) {
             document.getElementById('roundResult').textContent = "Ошибка во время боя!";
         });
 });
+
 
 function updateHpBars() {
     if (player1 && player1.maxHitpoint) {
@@ -134,73 +147,147 @@ function updateReloadBars() {
     }
 }
 
-document.getElementById('fightForm').addEventListener('submit', function (e) {
-    e.preventDefault();
+// Функция для открытия модального окна
+const modalTrigger = document.getElementsByClassName("trigger")[0];
 
-    fetch(`${HOST}/fight`)
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('roundResult').textContent = data.message;
+// получаем ширину отображенного содержимого и толщину ползунка прокрутки
+const windowInnerWidth = document.documentElement.clientWidth;
+const scrollbarWidth = parseInt(window.innerWidth) - parseInt(windowInnerWidth);
 
-            if (data.isOver) {
-                showRewardModal(data.winner);
-            }
+// привязываем необходимые элементы
+const bodyElementHTML = document.getElementsByTagName("body")[0];
+const modalBackground = document.getElementsByClassName("modalBackground")[0];
+const modalClose = document.getElementsByClassName("modalClose")[0];
+const modalActive = document.getElementsByClassName("modalActive")[0];
 
-            setTimeout(loadPlayers, 80);
-        })
-        .catch(err => {
-            console.error(err);
-            document.getElementById('roundResult').textContent = "Ошибка во время боя!";
-        });
+// функция для корректировки положения body при появлении ползунка прокрутки
+function bodyMargin() {
+    bodyElementHTML.style.marginRight = "-" + scrollbarWidth + "px";
+}
+
+// при длинной странице - корректируем сразу
+bodyMargin();
+
+// нажатие на крестик закрытия модального окна
+document.querySelector(".modalClose").addEventListener("click", function () {
+    document.querySelector(".modalBackground").style.display = "none";
+    replaceFightButton() // Показываем кнопку Отдохнуть
 });
 
-// Функция отображения модального окна с наградами
-function showRewardModal(winner) {
-    if (winner.name !== player1.name) return; // Если победил не player1, награды не показываем
+// закрытие модального окна на зону вне окна, т.е. на фон
+document.querySelector(".modalBackground").addEventListener("click", function (event) {
+    if (event.target.classList.contains("modalBackground")) {
+        document.querySelector(".modalBackground").style.display = "none";
+    }
+});
 
-    fetch(`http://localhost:4567/get-rewards?winner=${winner.name}`)
+document.addEventListener("DOMContentLoaded", function () {
+    let closeButton = document.querySelector(".modalClose");
+
+    if (closeButton) {
+        let closeImg = document.createElement("img");
+        closeImg.src = `${HOST}/images/x.jpg`;
+        closeImg.alt = "Закрыть";
+        closeButton.appendChild(closeImg);
+    } else {
+        console.error("Ошибка: .modalClose не найден в DOM!");
+    }
+});
+
+function openLootBox() {
+    console.log("Функция openLootBox вызвана!");
+
+    fetch(`${HOST}/lootbox`)
         .then(response => response.json())
-        .then(rewards => {
-            let rewardContainer = document.getElementById("rewardOptions");
-            rewardContainer.innerHTML = ""; // Очищаем старые кнопки
+        .then(data => {
+            console.log("Полученные данные от сервера:", data);
 
-            rewards.forEach(reward => {
-                let button = document.createElement("button");
-                button.classList.add("reward-button");
-                button.textContent = reward.name;
-                button.onclick = () => selectReward(reward);
-                rewardContainer.appendChild(button);
-            });
+            if (!data || !data.lootbox) {
+                console.error("Ошибка: сервер не вернул lootbox!");
+                return;
+            }
 
-            document.getElementById("rewardModal").style.display = "flex"; // Показываем окно
+            displayLootBox(data.lootbox);
         })
-        .catch(err => console.error("Ошибка загрузки наград:", err));
+        .catch(err => console.error("Ошибка загрузки лутбокса:", err));
+}
+
+// Функция отрисовки наград
+function displayLootBox(items) {
+    console.log("Вызвана displayLootBox с предметами:", items);
+
+    if (!items || !Array.isArray(items)) {
+        console.error("Ошибка: items не является массивом!");
+        return;
+    }
+
+    let container = document.getElementById("lootBoxContainer");
+    container.innerHTML = ""; // Очищаем контейнер
+
+    items.forEach(item => {
+        let itemDiv = document.createElement("div");
+        itemDiv.classList.add("loot-item");
+
+        let img = document.createElement("img");
+        img.src = item.picture;
+        img.alt = item.name;
+
+        let name = document.createElement("p");
+        name.textContent = item.name;
+
+        itemDiv.appendChild(img);
+        itemDiv.appendChild(name);
+
+        itemDiv.addEventListener("click", function () {
+            claimLoot(item.id);
+        });
+
+        container.appendChild(itemDiv);
+    });
 }
 
 // Функция отправки выбранной награды на сервер
-function selectReward(reward) {
-    fetch(`http://localhost:4567/claim-reward`, {
+function claimLoot(itemId) {
+    fetch(`${HOST}/claim-reward`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ player: player1.name, reward: reward.name })
+        body: JSON.stringify({ itemId: itemId })
     })
     .then(response => response.json())
     .then(data => {
         console.log("Награда получена:", data);
-        updateInventoryUI(); // Обновляем инвентарь
-        document.getElementById("rewardModal").style.display = "none"; // Закрываем окно
+        document.querySelector(".modalBackground").style.display = "none"; // Закрываем окно после выбора
+        replaceFightButton()
     })
     .catch(err => console.error("Ошибка получения награды:", err));
 }
 
-// Закрытие модалки без выбора награды
-document.getElementById("closeRewardModal").addEventListener("click", function () {
-    document.getElementById("rewardModal").style.display = "none";
+document.getElementById("restButton").addEventListener("click", function () {
+    window.location.href = "inventory.html";
 });
 
-function updateFightLog(logs) {
-    let logContainer = document.getElementById("roundResult");
+// Функция для замены кнопки "Бой!" на "Отдохнуть"
+function replaceFightButton() {
+    let fightButton = document.querySelector(".fight-button");
+    let restButton = document.getElementById("restButton");
 
-    // Объединяем массив строк в единый HTML-блок
-    logContainer.innerHTML = logs.map(line => `<p>${line}</p>`).join("");
+    if (!fightButton || !restButton) {
+        console.error("Ошибка: кнопка 'Бой' или 'Отдохнуть' не найдена!");
+        return;
+    }
+
+    restButton.style.display = "inline-block"; // Показываем кнопку
+    restButton.style.width = fightButton.offsetWidth + "px"; // Наследуем ширину кнопки "Бой!"
+    restButton.style.height = fightButton.offsetHeight + "px"; // Наследуем высоту кнопки "Бой!"
+    restButton.style.backgroundColor = "#28a745"; //Принудительно ставим зелёный цвет
+    restButton.style.color = "white"; //Делаем текст белым
+    restButton.style.fontSize = "22px"; //Делаем шрифт крупнее
+    restButton.style.fontWeight = "bold"; // Делаем шрифт жирным
+
+    fightButton.replaceWith(restButton); // Заменяем кнопку "Бой!"
 }
+
+
+
+
+

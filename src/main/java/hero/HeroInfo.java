@@ -2,7 +2,7 @@ package hero;
 
 import dto.damage.DamageResponseDto;
 import dto.hero.HeroInfoDto;
-import dto.hero.HeroStatisticDto;
+import dto.hero.HeroCharacteristicDto;
 import dto.damage.DamageDto;
 import mechanic.Health;
 import mechanic.Shield;
@@ -28,10 +28,13 @@ public interface HeroInfo {
 
     DamageDto getDamage();
 
+    Statistic getStatistic();
+
     default HeroInfoDto getInfo() {
         return HeroInfoDto
                 .builder()
                 .name(getName())
+                .statistic(getStatistic())
                 .heroClass(getHeroClass().name())
                 .hitpoint(getHealth().getValue())
                 .maxHitpoint(getHealth().getMaxValue())
@@ -41,8 +44,8 @@ public interface HeroInfo {
                 .build();
     }
 
-    default HeroStatisticDto getStatistic() {
-        return HeroStatisticDto
+    default HeroCharacteristicDto getCharacteristic() {
+        return HeroCharacteristicDto
                 .builder()
                 .name(getName())
                 .heroClass(getHeroClass().name())

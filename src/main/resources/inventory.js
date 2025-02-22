@@ -11,7 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     fetch(`${HOST}/getPlayer/statistic/player1`)
         .then(response => response.json())
-        .then(data => updateCharacterStats(data))
+        .then(data => {
+            updateCharacterStats(data);
+        })
         .catch(error => console.error("Ошибка загрузки данных персонажа:", error));
 });
 
@@ -23,7 +25,7 @@ function loadInventory() {
             console.log("📦 Инвентарь и экипировка обновлены:", data);
             renderInventory(data.inventory.cells);
             renderEquipment(data.equipment);
-            updateCharacterStatsFromServer(); // 🔄 Обновляем статистику
+            updateCharacterStatsFromServer(); //Обновляем статистику
         })
         .catch(error => console.error("❌ Ошибка загрузки инвентаря:", error));
 }
@@ -85,26 +87,49 @@ function updateCharacterStatsFromServer() {
     fetch(`${HOST}/getPlayer/statistic/player1`)
         .then(response => response.json())
         .then(data => {
-            console.log("📊 Обновление статистики:", data);
-            updateCharacterStats(data);
+            console.log("Обновление статистики:", data);
+            if (data.characteristic) {
+                updateCharacterStats(data);
+            } else {
+                console.error("Ошибка: Нет данных о характеристиках персонажа!");
+            }
         })
-        .catch(error => console.error("❌ Ошибка обновления статистики персонажа:", error));
+        .catch(error => console.error("Ошибка обновления статистики персонажа:", error));
 }
 
 function updateCharacterStats(data) {
-    document.getElementById("char-name").textContent = data.name;
-    document.getElementById("char-class").textContent = data.heroClass;
-    document.getElementById("char-hp").textContent = Math.floor(data.health);
-    document.getElementById("char-max-hp").textContent = Math.floor(data.maxHealth);
-    document.getElementById("char-mage-shield").textContent = Math.floor(data.shield);
-    document.getElementById("char-max-mage-shield").textContent = Math.floor(data.maxShield);
-    document.getElementById("char-accuracy").textContent = data.accuracy.toFixed(1);
-    document.getElementById("char-agility").textContent = data.agility.toFixed(1);
-    document.getElementById("char-evasion").textContent = data.evasion.toFixed(1);
-    document.getElementById("char-fullDamage").textContent = Math.floor(data.damage.fullDamage);
-    document.getElementById("char-physicalDamage").textContent = Math.floor(data.damage.physicalDamage);
-    document.getElementById("char-fireDamage").textContent = Math.floor(data.damage.fireDamage);
+    console.log("🔍 Вызов updateCharacterStats с данными:", data);
+
+    if (!data) {
+        console.error("❌ данных нет!", data);
+        return;
+    }
+
+    if (!data.characteristic) {
+            console.error("❌ отсутствует поле data.characteristic!", data.characteristic);
+            return;
+        }
+
+    const characteristic = data.characteristic;
+    const statistic = data.statistic;
+
+    document.getElementById("char-name").textContent = characteristic.name;
+    document.getElementById("char-class").textContent = characteristic.heroClass;
+    document.getElementById("char-hp").textContent = Math.floor(characteristic.health);
+    document.getElementById("char-max-hp").textContent = Math.floor(characteristic.maxHealth);
+    document.getElementById("char-mage-shield").textContent = Math.floor(characteristic.shield);
+    document.getElementById("char-max-mage-shield").textContent = Math.floor(characteristic.maxShield);
+
+    document.getElementById("char-accuracy").textContent = characteristic.accuracy.toFixed(1);
+    document.getElementById("char-agility").textContent = characteristic.agility.toFixed(1);
+    document.getElementById("char-evasion").textContent = characteristic.evasion.toFixed(1);
+    document.getElementById("char-fullDamage").textContent = Math.floor(characteristic.damage.fullDamage);
+    document.getElementById("char-physicalDamage").textContent = Math.floor(characteristic.damage.physicalDamage);
+    document.getElementById("char-fireDamage").textContent = Math.floor(characteristic.damage.fireDamage);
+
+    document.getElementById("char-wins").textContent = statistic.wins;
 }
+
 
 // Разрешаем перетаскивание
 function dragOver(event) {
@@ -244,7 +269,104 @@ document.addEventListener("DOMContentLoaded", () => {
     if (startButton) {
         startButton.addEventListener("click", () => {
             console.log("🚀 Переход на экран боя!");
-            window.location.href = "fight.html"; // Укажи путь к файлу боя
+            window.location.href = "fight.html";
         });
     }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadInventory();
+
+    document.querySelectorAll(".inventory-slot, .slot").forEach(slot => {
+        slot.addEventListener("dragover", dragOver);
+        slot.addEventListener("drop", drop);
+    });
+
+    // Загружаем статистику и обновляем кнопки
+    fetch(`${HOST}/getPlayer/statistic/player1`)
+        .then(response => response.json())
+        .then(data => {
+            console.log("📊 Данные о статистике перед обновлением:", data);
+            updateCharacterStats(data);
+            updateStartButton(data);
+        })
+        .catch(error => console.error("Ошибка загрузки данных персонажа:", error));
+});
+
+// Функция для смены кнопок "START" <-> "ПРОДОЛЖИТЬ"
+function updateStartButton(data) {
+    const wins = data.statistic.wins;
+    const startButton = document.getElementById("start-button");
+    const continueButton = document.getElementById("continue-button");
+
+    if (wins > 0) {
+        startButton.style.display = "none";  // Скрываем "START"
+        continueButton.style.display = "block"; // Показываем "ПРОДОЛЖИТЬ"
+    } else {
+        startButton.style.display = "block"; // Показываем "START"
+        continueButton.style.display = "none"; // Скрываем "ПРОДОЛЖИТЬ"
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const startButton = document.getElementById("start-button");
+    const continueButton = document.getElementById("continue-button");
+
+    if (startButton) {
+        startButton.addEventListener("click", () => {
+            console.log("🚀 Начало новой игры...");
+            startNewGame();
+        });
+    }
+
+    if (continueButton) {
+        continueButton.addEventListener("click", () => {
+            console.log("🔄 Продолжение игры...");
+            continueGame();
+        });
+    }
+});
+
+function startNewGame() {
+    fetch(`${HOST}/startNewGame`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            playerId: "player1"
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Ошибка при старте новой игры!");
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Старт новой игры:", data);
+        window.location.href = "fight.html";
+    })
+    .catch(error => console.error("Ошибка при старте игры:", error));
+}
+
+function continueGame() {
+    fetch(`${HOST}/continueGame`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Ошибка при продолжении игры!");
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("✅ Продолжение игры успешно:", data);
+        window.location.href = "fight.html"; // Переход на экран боя
+    })
+    .catch(error => console.error("Ошибка при продолжении игры:", error));
+}
+

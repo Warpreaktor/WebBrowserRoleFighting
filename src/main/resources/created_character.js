@@ -14,7 +14,7 @@ function redirectToFight() {
         return;
     }
 
-    fetch(`${HOST}/start`, {
+    fetch(`${HOST}/startNewGame`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

@@ -1,16 +1,19 @@
 package item.weapon;
 
+import item.Item;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 public class ItemService {
 
     private static ItemService instance;
 
-    private final HashMap<String, Weapon> weaponTable;
+    private final HashMap<String, Item> itemTable;
 
     private ItemService() {
-        weaponTable = new HashMap<>();
+        itemTable = new HashMap<>();
     }
 
     /**
@@ -26,12 +29,17 @@ public class ItemService {
         return instance;
     }
 
-    public Optional<Weapon> get(String weaponId) {
-        return Optional.of(weaponTable.get(weaponId));
+    public Optional<Item> get(String itemId) {
+        return Optional.of(itemTable.get(itemId));
     }
 
     public Weapon generate() {
         return new Knife();
     }
 
+    public void putAll(List<Item> items) {
+        for (var item : items) {
+            itemTable.put(item.getId(), item);
+        }
+    }
 }

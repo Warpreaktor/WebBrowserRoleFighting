@@ -54,18 +54,21 @@
     <!-- Кнопка боя -->
     <form id="fightForm">
         <button type="submit" class="fight-button">Бой!</button>
+        <button id="restButton" class="rest-button" style="display: none;">Отдохнуть</button>
     </form>
     
     <!-- Окно с результатом раунда -->
     <div id="roundResult" class="round-result">Начинается бой</div>
-    
 
-    <!-- Модальное окно выбора награды -->
-    <div id="rewardModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <h2>Выберите награду</h2>
-            <div id="rewardOptions" class="reward-options"></div>
-            <button id="closeRewardModal" class="close-button">Закрыть</button>
+    <!-- модальное окно -->
+    <div class="modalBackground">
+        <div class="modalActive">
+            <div class="modalClose"></div>
+<!--            Содержимое окна-->
+            <div class="modalWindow">
+                <h2>Выберите награду</h2>
+                <div id="lootBoxContainer" class="loot-box-container"></div>
+            </div>
         </div>
     </div>
 

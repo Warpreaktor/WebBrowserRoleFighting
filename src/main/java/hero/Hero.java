@@ -26,11 +26,19 @@ import static equip.EquipSlot.RIGHT_HAND;
 @Setter
 public abstract class Hero implements Heroic {
 
+//==================================================//
+//                  ОБЩЕЕ                           //
+//==================================================//
     /**
      * Имя персонажа. Должно быть у всех, даже у бедных.
      */
     private String name;
 
+    private Statistic statistic;
+
+//==================================================//
+//                  ОДЁЖКА                          //
+//==================================================//
     /**
      * Экипировка. То что надето на персонажа.
      */
@@ -89,6 +97,7 @@ public abstract class Hero implements Heroic {
     private Double agility;
 
     public Hero() {
+        statistic = new Statistic();
         intelligence = new Intelligence(0);
         strength = new Strength(0);
         dexterity = new Dexterity(0);

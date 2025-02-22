@@ -59,11 +59,16 @@ public class FightService {
 //   ▀█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▀   //
 //==================================================//
     public FightResultDto fight() {
-        result.clear();
-        result.addEventAndLog("Раунд - [" + gameMaster.nextRound() + "]");
+        if (result.isOver()) {
+            return result.getResultDto();
+        }
 
         Hero player1 = heroService.get(PLAYER1);
         Hero player2 = heroService.get(PLAYER2);
+
+        result.clear();
+        result.addEventAndLog("Раунд - [" + gameMaster.nextRound() + "]");
+
 
         if (isAnyBodyDeath(player1, player2)) {
             result.addEventAndLog(result.getWinner() + " пинает мёртвое тело");
@@ -110,7 +115,6 @@ public class FightService {
         if (!result.isOver()) {
             combatMoves(defender, attacker);
         }
-        result.addEventAndLog(fightIsOver());
 
         if (!result.isOver()) {
             attacker.focus();
@@ -174,10 +178,12 @@ public class FightService {
 
         if (player1.getHealth().getValue() <= 0) {
             result.setWinner(player2);
+            player2.getStatistic().plusWin();
             return player1.getName() + " падает замертво";
 
         } else if (player2.getHealth().getValue() <= 0) {
             result.setWinner(player1);
+            player1.getStatistic().plusWin();
             return player2.getName() + " падает замертво";
 
         } else {

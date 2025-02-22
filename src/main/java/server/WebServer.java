@@ -4,7 +4,8 @@ import config.ApplicationProperties;
 import controller.HeroController;
 import controller.FightController;
 import controller.InventoryController;
-import controller.MainController;
+import controller.LootBoxController;
+import controller.GameController;
 import controller.ItemController;
 
 import static spark.Spark.*;
@@ -45,9 +46,10 @@ public class WebServer {
         // Регистрируем контроллеры
         new HeroController().registerRoutes();
         new FightController().registerRoutes();
-        new MainController().registerRoutes();
+        new GameController().registerRoutes();
         new ItemController().registerRoutes();
         new InventoryController().registerRoutes();
+        new LootBoxController().registerRoutes();
     }
 }
 

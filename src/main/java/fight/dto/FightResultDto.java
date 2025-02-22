@@ -5,6 +5,7 @@ import lombok.Getter;
 import hero.Hero;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -14,7 +15,7 @@ public class FightResultDto {
 
     private Hero winner;
 
-    private String message;
+    private List<String> message;
 
     private ArrayList<String> log;
 }
