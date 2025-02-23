@@ -2,7 +2,6 @@ package hero;
 
 import equip.EquipSlot;
 import equip.Equipment;
-import equip.EquipmentDto;
 import item.Inventory;
 import item.Item;
 import item.weapon.Knife;
@@ -15,7 +14,6 @@ import mechanic.Intelligence;
 import mechanic.Shield;
 import mechanic.Strength;
 import mechanic.interfaces.Heroic;
-import item.weapon.Weapon;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -58,7 +56,6 @@ public abstract class Hero implements Heroic {
 
     private Intelligence intelligence;
 
-
 //==================================================//
 //                  Характеристики                  //
 //==================================================//
@@ -75,7 +72,7 @@ public abstract class Hero implements Heroic {
 
     /**
      * Меткость, влияет на шанс попадания любой прицельной атакой.
-     * Прицельные атаки это любое оружие, которым тыкают, режут или метают, стреляют
+     * Прицельные атаки это любое оружие, которым тыкают, режут или метают, стреляют,
      * а так же и вся магия, которая бьёт в цель, типа фаерболов, молний и проч.
      */
     private Double accuracy;

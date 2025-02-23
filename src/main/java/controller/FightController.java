@@ -2,7 +2,6 @@ package controller;
 
 import com.google.gson.Gson;
 import fight.FightService;
-import fight.dto.FightResultDto;
 import spark.Route;
 import spark.Spark;
 

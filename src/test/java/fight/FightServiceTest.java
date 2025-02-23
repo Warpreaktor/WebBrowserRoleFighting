@@ -6,6 +6,7 @@ import core.GameMaster;
 import fight.dto.FightResultDto;
 import hero.classes.Archer;
 import hero.classes.Mage;
+import hero.classes.Skeleton;
 import hero.classes.Warrior;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -44,22 +45,22 @@ public class FightServiceTest {
                 Arguments.of(Warrior.class, Warrior.class),
                 Arguments.of(Warrior.class, Mage.class),
                 Arguments.of(Warrior.class, Archer.class),
+                Arguments.of(Warrior.class, Skeleton.class),
 
                 Arguments.of(Archer.class, Archer.class),
                 Arguments.of(Archer.class, Warrior.class),
                 Arguments.of(Archer.class, Mage.class),
+                Arguments.of(Archer.class, Skeleton.class),
 
                 Arguments.of(Mage.class, Mage.class),
                 Arguments.of(Mage.class, Archer.class),
-                Arguments.of(Mage.class, Warrior.class)
-        );
-    }
+                Arguments.of(Mage.class, Warrior.class),
+                Arguments.of(Mage.class, Skeleton.class),
 
-    private static Stream<Arguments> warrior() {
-        return Stream.of(
-                Arguments.of(Warrior.class, Warrior.class),
-                Arguments.of(Warrior.class, Mage.class),
-                Arguments.of(Warrior.class, Archer.class)
+                Arguments.of(Skeleton.class, Mage.class),
+                Arguments.of(Skeleton.class, Archer.class),
+                Arguments.of(Skeleton.class, Warrior.class),
+                Arguments.of(Skeleton.class, Skeleton.class)
         );
     }
 

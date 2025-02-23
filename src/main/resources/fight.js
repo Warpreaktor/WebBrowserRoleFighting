@@ -41,6 +41,12 @@ function loadPlayers() {
             document.getElementById("player1").style.backgroundImage =
                 `url('${HOST}/images/${player1.heroClass}.jpg')`;
 
+            // // Проверка на смерть
+            // if (data.hitpoint <= 0) {
+            //     document.getElementById("fightForm").style.display = "none"; // Скрываем кнопку боя
+            //     document.getElementById("roundResult").innerHTML += `<p>${data.name} погиб!</p>`;
+            // }
+
         })
         .catch(err => console.error("Ошибка загрузки Player1", err));
 
@@ -75,6 +81,12 @@ function loadPlayers() {
             // Установка фонового изображения
             document.getElementById("player2").style.backgroundImage =
                 `url('${HOST}/images/${player2.heroClass}.jpg')`;
+
+            // // Проверка на смерть
+            // if (data.hitpoint <= 0) {
+            //     document.getElementById("fightForm").style.display = "none"; // Скрываем кнопку боя
+            //     document.getElementById("roundResult").innerHTML += `<p>${data.name} погиб!</p>`;
+            // }
         })
         .catch(err => console.error("Ошибка загрузки Player2", err));
 }
