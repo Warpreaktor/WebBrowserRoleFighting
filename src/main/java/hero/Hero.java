@@ -1,13 +1,12 @@
 package hero;
 
+import dto.damage.Damage;
 import equip.EquipSlot;
 import equip.Equipment;
 import item.Inventory;
 import item.Item;
-import item.weapon.Knife;
 import lombok.Getter;
 import lombok.Setter;
-import dto.damage.DamageDto;
 import mechanic.Dexterity;
 import mechanic.Health;
 import mechanic.Intelligence;
@@ -18,6 +17,10 @@ import mechanic.interfaces.Heroic;
 import java.util.Objects;
 import java.util.Optional;
 
+import static constants.GlobalConstants.HEALTH_PER_STRENGTH_MULTIPLIER;
+import static constants.GlobalConstants.HEAL_PER_STRENGTH_MULTIPLIER;
+import static constants.GlobalConstants.SHIELD_GROWER_PER_INTELLIGENCE_MULTIPLIER;
+import static constants.GlobalConstants.SHIELD_PER_INTELLIGENCE_MULTIPLIER;
 import static equip.EquipSlot.RIGHT_HAND;
 
 @Getter
@@ -47,7 +50,7 @@ public abstract class Hero implements Heroic {
      */
     private Inventory inventory;
 
-//==================================================//
+    //==================================================//
 //                  СТАТЫ                           //
 //==================================================//
     private Strength strength;
@@ -93,53 +96,67 @@ public abstract class Hero implements Heroic {
      */
     private Double agility;
 
+    /**
+     * Шанс блокировки удара
+     */
+    private double blockChance;
+
+    /**
+     * Шанс критического удара. Проверка на критический удар проходит во время фазы атаки.
+     */
+    private Double critChance;
+
     public Hero() {
         statistic = new Statistic();
         intelligence = new Intelligence(0);
         strength = new Strength(0);
         dexterity = new Dexterity(0);
+        inventory = new Inventory();
+        equipment = new Equipment();
         shield = new Shield();
         health = new Health();
         accuracy = 0.0;
         agility = 0.0;
         evasion = 0.0;
         reloader = 0.0;
-        equipment = new Equipment();
-        inventory = new Inventory();
-
-        inventory.add(new Knife());
+        blockChance = 0.0;
+        critChance = 0.0;
     }
 
     public void setIntelligence(Integer value) {
         intelligence.setValue(value);
 
         if (value >= intelligence.getValue()) {
-            shield.addMaxValue(value.doubleValue() * 2);
+            shield.addMaxValue(value.doubleValue() * SHIELD_PER_INTELLIGENCE_MULTIPLIER);
         } else {
-            shield.decreaseMaxValue(value.doubleValue() * 2);
+            shield.decreaseMaxValue(value.doubleValue() * SHIELD_PER_INTELLIGENCE_MULTIPLIER);
         }
 
         if (value >= intelligence.getValue()) {
-            shield.addShieldGrower(value * 0.1);
+            shield.addShieldGrower(value * SHIELD_GROWER_PER_INTELLIGENCE_MULTIPLIER);
         } else {
-            shield.decreaseShieldGrower(value * 0.1);
+            shield.decreaseShieldGrower(value * SHIELD_GROWER_PER_INTELLIGENCE_MULTIPLIER);
         }
     }
 
-
+    /**
+     * От установки значения силы зависит то, сколько HP будет у персонажа
+     *
+     * @param value количество силы
+     */
     public void setStrength(Integer value) {
         strength.setValue(value);
 
         if (value >= strength.getValue()) {
-            health.addMaxValue(value.doubleValue() * 5);
+            health.addMaxValue(value.doubleValue() * HEALTH_PER_STRENGTH_MULTIPLIER);
         } else {
-            health.decreaseMaxValue(value.doubleValue() * 5);
+            health.decreaseMaxValue(value.doubleValue() * HEALTH_PER_STRENGTH_MULTIPLIER);
         }
 
         if (value >= strength.getValue()) {
-            health.addHeal(value * 0.1);
+            health.addHeal(value * HEAL_PER_STRENGTH_MULTIPLIER);
         } else {
-            health.decreaseHeal(value * 0.1);
+            health.decreaseHeal(value * HEAL_PER_STRENGTH_MULTIPLIER);
         }
     }
 
@@ -174,6 +191,11 @@ public abstract class Hero implements Heroic {
         accuracy -= value;
     }
 
+    /**
+     * Прибавить значение к текущей скорости атаки
+     *
+     * @param value прибавляемой значение
+     */
     public void addAgility(Double value) {
         agility += value;
     }
@@ -208,7 +230,7 @@ public abstract class Hero implements Heroic {
     private void refresh() {
     }
 
-    public DamageDto getDamage() {
+    public Damage getDamage() {
         return getEquipment().getRightHand().getDamage();
     }
 
@@ -220,7 +242,7 @@ public abstract class Hero implements Heroic {
     public boolean moveItem(String objectId, EquipSlot from, EquipSlot to) {
 
         Item item = getItemByIdAndSlot(objectId, from)
-                .orElseThrow( () -> new RuntimeException("Предмета не существует"));
+                .orElseThrow(() -> new RuntimeException("Предмета не существует"));
 
         if (to.name().startsWith("INVENTORY")) {
             int cell = Integer.parseInt(to.getValue());
@@ -246,8 +268,11 @@ public abstract class Hero implements Heroic {
 
             case RIGHT_HAND -> {
                 if (equipment.equipped(RIGHT_HAND, item)) {
+                    setAgility(getAgility() * getEquipment().getRightHand().getAttackSpeed());
 
                     clearSlotByObjectIdAndSlot(objectId, from);
+                    //Находящийся в руке предмет переместить обратно
+//                    moveItem(item.getId(), to, from);
 
                     return true;
 
@@ -298,7 +323,6 @@ public abstract class Hero implements Heroic {
      * Метод ищет предмет только в инвентаре героя и его слотах экипировки.
      * Если в очищаемой ячейке хранится предмет с идентификатором не соответствующим переданному,
      * то метод не будет производить очистку и выбросит исключение.
-     *
      */
     private void clearSlotByObjectIdAndSlot(String objectId, EquipSlot slot) {
 
@@ -315,9 +339,12 @@ public abstract class Hero implements Heroic {
 
                 case RIGHT_HAND -> {
                     if (Objects.equals(equipment.getRightHand().getId(), objectId)) {
+                        //TODO сделать по нормальному. Думаю нужно отдельное поле множитель.
+                        setAgility(getAgility() / getEquipment().getRightHand().getAttackSpeed());
+
                         equipment.takeWeapon(this.getEquipment().getFist());
                     } else {
-                        throw new RuntimeException("Предмет не найден по идентификатору: [" + objectId + "]" );
+                        throw new RuntimeException("Предмет не найден по идентификатору: [" + objectId + "]");
                     }
                 }
 
@@ -326,5 +353,9 @@ public abstract class Hero implements Heroic {
                 }
             }
         }
+    }
+
+    public void takeWeapon() {
+
     }
 }

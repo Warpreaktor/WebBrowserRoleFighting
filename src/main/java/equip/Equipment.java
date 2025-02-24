@@ -3,7 +3,7 @@ package equip;
 import item.Item;
 import lombok.Getter;
 import item.weapon.Fist;
-import item.weapon.Weapon;
+import item.weapon.abstracts.Weapon;
 
 import java.util.Objects;
 

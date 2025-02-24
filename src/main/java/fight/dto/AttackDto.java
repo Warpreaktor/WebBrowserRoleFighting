@@ -22,13 +22,15 @@ public class AttackDto {
 
     boolean isFail;
 
+    boolean isCritical;
+
     @NonNull
     DamageDto damageDto;
 
     String message;
 
     /**
-     * Свершившаяся атака
+     * Конструктор для успешной атаки
      *
      * @param attacker атакующий
      * @param damageDto итоговый
@@ -50,5 +52,6 @@ public class AttackDto {
         this.isFail = true;
         this.attacker = attacker;
         this.message = message;
+        damageDto = new DamageDto(0.0, 0.0);
     }
 }

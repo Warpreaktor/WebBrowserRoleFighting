@@ -3,13 +3,18 @@ package hero.classes;
 import fight.dto.AttackDto;
 import fight.dto.DefenseDto;
 import hero.Hero;
+import item.weapon.Knife;
 import lombok.Getter;
 import lombok.NonNull;
 import spec.HeroClass;
 
+import static constants.GlobalConstants.HEALTH_PER_STRENGTH_MULTIPLIER;
 import static hero.constants.messages.SkeletonMessages.SKELETON_ATTACK_MESSAGES;
+import static hero.constants.messages.SkeletonMessages.SKELETON_BLOCKED_MESSAGES;
 import static hero.constants.messages.SkeletonMessages.SKELETON_MISSED_MESSAGES;
+import static hero.constants.messages.SkeletonMessages.SKELETON_PAIN_MESSAGES;
 import static hero.constants.messages.SkeletonMessages.SKELETON_RELOAD_MESSAGES;
+import static hero.constants.messages.SkeletonMessages.SKELETON_SHIELD_ABSORB_MESSAGES;
 import static tools.Dice.randomInt;
 
 /**
@@ -31,8 +36,11 @@ public class Skeleton extends Hero {
      * Классовые характеристики
      */
     private static final Integer INTELLIGENCE = 1;
-    private static final Integer STRENGTH = 3;
+    private static final Integer STRENGTH = 2;
     private static final Integer DEXTERITY = 4;
+
+    //Скелет слеповат и глуповат, потому часто бьёт просто наотмаш. Снижен шанс крита.
+    private static final Double CRIT_CHANCE = -0.1;
 
     /**
      * Создаёт нового скелета с заданным именем и базовыми характеристиками.
@@ -49,11 +57,16 @@ public class Skeleton extends Hero {
         setStrength(STRENGTH);
         setDexterity(DEXTERITY);
 
+        setCritChance(CRIT_CHANCE);
+
         // Скелет получает бонус к уклонению
+        //TODO предлагаю в будущем переделать это на бонус к уклонению и уменьшению урона от колющих атак
         addEvasion(0.15);
 
-        // Повышенное здоровье за счет костяной структуры
-        getHealth().addMaxValue(20.0);
+        getHealth().setMaxValue(4.0);
+
+        getInventory().put(new Knife());
+
         getHealth().fillUp();
     }
 
@@ -72,11 +85,26 @@ public class Skeleton extends Hero {
         if (pain > 0) {
             takeDamage(pain);
             return new DefenseDto(pain,
-                    String.format("%s кости трещат, но держатся!", getName()));
+                    getPainMessage());
         }
 
         return new DefenseDto(0.0,
-                String.format("%s холодно сверкнул глазницами - урон поглощен!", getName()));
+                getShieldAbsorbMessage());
+    }
+
+    public String getBlockedMessage() {
+        int index = randomInt(SKELETON_BLOCKED_MESSAGES.size());
+        return String.format(SKELETON_BLOCKED_MESSAGES.get(index), getName());
+    }
+
+    public String getShieldAbsorbMessage() {
+        int index = randomInt(SKELETON_SHIELD_ABSORB_MESSAGES.size());
+        return String.format(SKELETON_SHIELD_ABSORB_MESSAGES.get(index), getName());
+    }
+
+    public String getPainMessage() {
+        int index = randomInt(SKELETON_PAIN_MESSAGES.size());
+        return String.format(SKELETON_PAIN_MESSAGES.get(index), getName());
     }
 
     /**
@@ -85,7 +113,7 @@ public class Skeleton extends Hero {
      * @return Строка с текстом атаки, включающая имя персонажа.
      */
     @Override
-    public String getRandomAttackMessage() {
+    public String getAttackMessage() {
         int index = randomInt(SKELETON_ATTACK_MESSAGES.size());
         return String.format(SKELETON_ATTACK_MESSAGES.get(index), getName());
     }
@@ -96,7 +124,7 @@ public class Skeleton extends Hero {
      * @return Строка с текстом промаха, включающая имя персонажа.
      */
     @Override
-    public String getRandomMissedMessage() {
+    public String getMissedMessage() {
         int index = randomInt(SKELETON_MISSED_MESSAGES.size());
         return String.format(SKELETON_MISSED_MESSAGES.get(index), getName());
     }
@@ -107,7 +135,7 @@ public class Skeleton extends Hero {
      * @return Строка с текстом перезарядки, включающая имя персонажа.
      */
     @Override
-    public String getRandomReloadMessage() {
+    public String getReloadMessage() {
         int index = randomInt(SKELETON_RELOAD_MESSAGES.size());
         return String.format(SKELETON_RELOAD_MESSAGES.get(index), getName());
     }

@@ -26,7 +26,7 @@ public class Health implements Healthy {
     public Health() {
         value = 0.0;
         maxValue = 0.0;
-        heal = 0.1;
+        heal = 0.0;
     }
 
     public void setHeal(Double value) {

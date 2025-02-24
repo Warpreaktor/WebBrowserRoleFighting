@@ -8,7 +8,7 @@ import com.google.gson.JsonObject;
 import spark.Route;
 import spark.Spark;
 import spec.HeroClass;
-import item.weapon.ItemService;
+import item.ItemService;
 
 public class HeroController {
 
@@ -116,7 +116,6 @@ public class HeroController {
                         .toUpperCase());
 
         Hero hero = heroService.get(playerId);
-
 
         if (hero.moveItem(objectId, oldSlot, newSlot)) {
             res.status(200);

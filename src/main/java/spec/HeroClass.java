@@ -5,7 +5,8 @@ public enum HeroClass {
     ARCHER("Лучник"),
     WARRIOR("Воин"),
     MAGE("Маг"),
-    SKELETON("СКЕЛЕТ");
+    SKELETON("СКЕЛЕТ"),
+    HALFLING("Полурослик");
 
     HeroClass(String value) {
     }

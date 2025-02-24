@@ -1,6 +1,6 @@
 package equip;
 
-import item.weapon.Weapon;
+import item.weapon.abstracts.Weapon;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

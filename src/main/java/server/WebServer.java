@@ -19,6 +19,13 @@ public class WebServer {
 
         staticFiles.location("/static");
 
+        // Разрешаем CORS для статических файлов (изображения, стили, скрипты)
+        after((req, res) -> {
+            if (req.pathInfo().startsWith("/images/")) {  // Разрешаем CORS только для картинок
+                res.header("Access-Control-Allow-Origin", "*");
+            }
+        });
+
         // Разрешаем CORS для всех запросов
         options("/*", (req, res) -> {
             String accessControlRequestHeaders = req.headers("Access-Control-Request-Headers");

@@ -30,12 +30,10 @@ h1 {
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(4, auto);
     gap: 10px;
-    width: 100%; /* Делаем ширину 100% для адаптации */
-    max-width: 300px; /* Ограничение по ширине */
-    height: 500px; /* Даем фиксированную высоту */
-    background: url('http://localhost:4568/images/invBackground.jpg') no-repeat center center;
-    background-size: cover; /* Делаем так, чтобы картинка занимала весь контейнер */
-    border: 2px solid white; /* Временно добавим границу, чтобы видеть контейнер */
+    width: 100%;
+    max-width: 300px;
+    height: 500px;
+    border: 2px solid white;
     border-radius: 10px;
     padding: 20px;
     justify-items: center;

@@ -8,45 +8,45 @@ let oldPlayer2Shield = null;
 
 window.onload = loadPlayers;
 
+document.addEventListener("DOMContentLoaded", function () {
+    document.body.style.backgroundImage = `url('${HOST}/images/location/Dead_Forest.png')`;
+});
+
 function loadPlayers() {
     fetch(`${HOST}/getPlayer/player1`)
         .then(response => response.json())
         .then(data => {
+            console.log("загрузка данных персонажа:", data);
+
             let player1Box = document.getElementById("player1");
 
             // Проверка снижения HP (мигаем красным)
             if (oldPlayer1Hp !== null && data.hitpoint < oldPlayer1Hp) {
-                player1Box.classList.add("damageDto");
-                setTimeout(() => player1Box.classList.remove("damageDto"), 2000);
+                let hpBar = document.getElementById("hpBar1");
+                hpBar.classList.add("damage-blink");
+                setTimeout(() => hpBar.classList.remove("damage-blink"), 1000);
             }
             oldPlayer1Hp = data.hitpoint;
 
             // Проверка снижения магического щита (мигаем голубым)
             if (oldPlayer1Shield !== null && data.mageShield < oldPlayer1Shield) {
-                player1Box.classList.add("shield");
-                setTimeout(() => player1Box.classList.remove("shield"), 2000);
+                let shieldBar = document.getElementById("shieldBar1");
+                shieldBar.classList.add("shield-blink");
+                setTimeout(() => shieldBar.classList.remove("shield-blink"), 1000);
             }
             oldPlayer1Shield = data.mageShield;
 
             player1 = data;
-            player1Box.innerHTML = ""; // Очищаем, чтобы не отображались лишние символы
-
-            // Устанавливаем имя персонажа
+            player1Box.innerHTML = "";
+            player1Box.style.backgroundImage = `url('${HOST}/images/hero/${data.heroClass}_PORT.png')`;
             document.getElementById("player1Name").textContent = data.name;
-
             updateHpBars();
             updateReloadBars();
 
-            // Установка фонового изображения
-            document.getElementById("player1").style.backgroundImage =
-                `url('${HOST}/images/${player1.heroClass}.jpg')`;
-
-            // // Проверка на смерть
-            // if (data.hitpoint <= 0) {
-            //     document.getElementById("fightForm").style.display = "none"; // Скрываем кнопку боя
-            //     document.getElementById("roundResult").innerHTML += `<p>${data.name} погиб!</p>`;
-            // }
-
+            let frameOverlay = document.createElement("div");
+            frameOverlay.classList.add("frame-overlay");
+            frameOverlay.style.backgroundImage = `url('${HOST}/images/hero/frame.png')`;
+            player1Box.appendChild(frameOverlay);
         })
         .catch(err => console.error("Ошибка загрузки Player1", err));
 
@@ -57,39 +57,57 @@ function loadPlayers() {
 
             // Проверка снижения HP (мигаем красным)
             if (oldPlayer2Hp !== null && data.hitpoint < oldPlayer2Hp) {
-                player2Box.classList.add("damageDto");
-                setTimeout(() => player2Box.classList.remove("damageDto"), 2000);
+                let hpBar = document.getElementById("hpBar2");
+                hpBar.classList.add("damage-blink");
+                setTimeout(() => hpBar.classList.remove("damage-blink"), 1000);
             }
             oldPlayer2Hp = data.hitpoint;
 
-            // Проверка снижения магического щита (мигаем голубым, только если HP не уменьшилось)
-            if (oldPlayer2Shield !== null && data.mageShield < oldPlayer2Shield && data.hitpoint >= oldPlayer2Hp) {
-                player2Box.classList.add("shield");
-                setTimeout(() => player2Box.classList.remove("shield"), 2000);
+            // Проверка снижения магического щита (мигаем голубым)
+            if (oldPlayer2Shield !== null && data.mageShield < oldPlayer2Shield) {
+                let shieldBar = document.getElementById("shieldBar2");
+                shieldBar.classList.add("shield-blink");
+                setTimeout(() => shieldBar.classList.remove("shield-blink"), 1000);
             }
             oldPlayer2Shield = data.mageShield;
 
             player2 = data;
-            player2Box.innerHTML = ""; // Очищаем, чтобы не отображались лишние символы
-
-            // Устанавливаем имя персонажа
+            player2Box.innerHTML = "";
+            player2Box.style.backgroundImage = `url('${HOST}/images/hero/${data.heroClass}_PORT.png')`;
             document.getElementById("player2Name").textContent = data.name;
-
-            updateReloadBars();
             updateHpBars();
+            updateReloadBars();
 
-            // Установка фонового изображения
-            document.getElementById("player2").style.backgroundImage =
-                `url('${HOST}/images/${player2.heroClass}.jpg')`;
-
-            // // Проверка на смерть
-            // if (data.hitpoint <= 0) {
-            //     document.getElementById("fightForm").style.display = "none"; // Скрываем кнопку боя
-            //     document.getElementById("roundResult").innerHTML += `<p>${data.name} погиб!</p>`;
-            // }
+            let frameOverlay = document.createElement("div");
+            frameOverlay.classList.add("frame-overlay");
+            frameOverlay.style.backgroundImage = `url('${HOST}/images/hero/frame.png')`;
+            player2Box.appendChild(frameOverlay);
         })
         .catch(err => console.error("Ошибка загрузки Player2", err));
 }
+
+//Классы для анимации мигания
+const style = document.createElement('style');
+style.innerHTML = `
+  .damage-blink {
+      animation: damageEffect 1s ease-in-out 2;
+  }
+  .shield-blink {
+      animation: shieldEffect 1s ease-in-out 2;
+  }
+  @keyframes damageEffect {
+      0% { background-color: red; }
+      50% { background-color: white; }
+      100% { background-color: red; }
+  }
+  @keyframes shieldEffect {
+      0% { background-color: blue; }
+      50% { background-color: white; }
+      100% { background-color: blue; }
+  }
+`;
+document.head.appendChild(style);
+
 
 document.getElementById('fightForm').addEventListener('submit', function (e) {
     e.preventDefault();
@@ -125,26 +143,26 @@ document.getElementById('fightForm').addEventListener('submit', function (e) {
 
 
 function updateHpBars() {
-    if (player1 && player1.maxHitpoint) {
-        let hpPercent1 = Math.max((player1.hitpoint / player1.maxHitpoint) * 100, 0);
+    if (player1 && player1.maxHitpoint !== undefined) {
+        let hpPercent1 = Math.floor((player1.hitpoint / player1.maxHitpoint) * 100);
         document.getElementById("hpBar1").style.height = hpPercent1 + "%";
-        document.getElementById("hpValue1").textContent = `${Math.floor(player1.hitpoint)}`;
+        document.getElementById("hpValue1").textContent = Math.floor(player1.hitpoint);
     }
-    if (player2 && player2.maxHitpoint) {
-        let hpPercent2 = Math.max((player2.hitpoint / player2.maxHitpoint) * 100, 0);
+    if (player2 && player2.maxHitpoint !== undefined) {
+        let hpPercent2 = Math.floor((player2.hitpoint / player2.maxHitpoint) * 100);
         document.getElementById("hpBar2").style.height = hpPercent2 + "%";
-        document.getElementById("hpValue2").textContent = `${Math.floor(player2.hitpoint)}`;
+        document.getElementById("hpValue2").textContent = Math.floor(player2.hitpoint);
     }
 
-    if (player1 && player1.maxMageShield) {
-        let shieldPercent1 = Math.max((player1.mageShield / player1.maxMageShield) * 100, 0);
+    if (player1 && player1.maxMageShield !== undefined) {
+        let shieldPercent1 = Math.floor((player1.mageShield / player1.maxMageShield) * 100);
         document.getElementById("shieldBar1").style.height = shieldPercent1 + "%";
-        document.getElementById("shieldValue1").textContent = `${player1.mageShield.toFixed(1)}`;
+        document.getElementById("shieldValue1").textContent = Math.floor(player1.mageShield);
     }
-    if (player2 && player2.maxMageShield) {
-        let shieldPercent2 = Math.max((player2.mageShield / player2.maxMageShield) * 100, 0);
+    if (player2 && player2.maxMageShield !== undefined) {
+        let shieldPercent2 = Math.floor((player2.mageShield / player2.maxMageShield) * 100);
         document.getElementById("shieldBar2").style.height = shieldPercent2 + "%";
-        document.getElementById("shieldValue2").textContent = `${player2.mageShield.toFixed(1)}`;
+        document.getElementById("shieldValue2").textContent = Math.floor(player2.mageShield);
     }
 }
 

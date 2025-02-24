@@ -1,9 +1,9 @@
 package hero;
 
+import dto.damage.Damage;
 import dto.damage.DamageResponseDto;
 import dto.hero.HeroInfoDto;
 import dto.hero.HeroCharacteristicDto;
-import dto.damage.DamageDto;
 import mechanic.Health;
 import mechanic.Shield;
 import spec.HeroClass;
@@ -26,7 +26,7 @@ public interface HeroInfo {
 
     Double getEvasion();
 
-    DamageDto getDamage();
+    Damage getDamage();
 
     Statistic getStatistic();
 
@@ -56,12 +56,9 @@ public interface HeroInfo {
                 .accuracy(getAccuracy())
                 .agility(getAgility())
                 .evasion(getEvasion())
-                .damage(DamageResponseDto
-                        .builder()
-                        .fullDamage(getDamage().getFullDamage())
-                        .physicalDamage(getDamage().getPhysicalDamage())
-                        .fireDamage(getDamage().getFireDamage())
-                        .build())
+                .damage(new DamageResponseDto(
+                        getDamage().getPhysicalDamage().getSumDamage(),
+                        getDamage().getFireDamage()))
                 .build();
     }
 }

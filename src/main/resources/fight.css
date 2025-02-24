@@ -105,6 +105,7 @@ body {
     font-weight: bold;
     text-align: center;
     margin-bottom: 5px;
+    color: white;
 }
 
 /* Кнопка боя */
@@ -183,9 +184,18 @@ body {
 }
 
 #roundResult {
-    white-space: normal; /* Вместо nowrap */
+    white-space: normal;
     word-wrap: break-word;
+    background-color: rgba(0, 0, 0, 0.7); /* Темный полупрозрачный фон */
+    color: white; /* Белый текст */
+    padding: 10px; /* Отступы внутри */
+    border-radius: 8px; /* Скругленные углы */
+    text-align: center; /* Центрируем текст */
+    border: 2px solid red; /* Красная рамка */
+    font-size: 18px; /* Увеличенный размер шрифта */
+    font-weight: bold; /* Жирный текст */
 }
+
 
 
 /* Модальное окно награды начало */
@@ -328,5 +338,36 @@ body {
 /* При наведении цвет становится темнее */
 .rest-button:hover {
     background-color: #218838 !important;
+}
+
+/* Окно персонажа */
+.player-box {
+    width: 350px;
+    height: 350px;
+    border: 2px solid red;
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+    position: relative; /* Включаем относительное позиционирование */
+    background-size: 100% 100%; /* Герой занимает весь блок */
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden; /* Чтобы рамка не выходила за границы */
+}
+
+/* Рамка, накладываемая поверх */
+.frame-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: 100% 100%; /* Рамка покрывает весь player-box */
+    background-position: center;
+    background-repeat: no-repeat;
+    pointer-events: none; /* Чтобы клик проходил сквозь рамку */
 }
 

@@ -41,9 +41,11 @@ public class GameService {
                 .saveCharacter(PLAYER1,
                         heroService.createHero(player.getName(), HeroClass.valueOf(player.getHeroClass())));
 
+        heroService.createLevelingHeroes(10);
+
         heroService
                 .saveCharacter(PLAYER2,
-                        heroService.createHero(null, null));
+                        heroService.getLevelingHero(0));
 
     }
 
@@ -57,9 +59,11 @@ public class GameService {
             return;
         }
 
+        //Сохраняем нового левельного моба в качестве текущего игрока player2
         heroService
                 .saveCharacter(PLAYER2,
-                        heroService.createHero(null, null));
+                        heroService.getLevelingHero(
+                                player.getStatistic().getWins()));
 
         FightService.newInstance();
     }

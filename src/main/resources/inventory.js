@@ -1,8 +1,8 @@
-const HOST = "http://localhost:4568";
 
 document.addEventListener("DOMContentLoaded", () => {
 
     loadInventory();
+
 
     document.querySelectorAll(".inventory-slot, .slot").forEach(slot => {
         slot.addEventListener("dragover", dragOver);
@@ -90,6 +90,7 @@ function updateCharacterStatsFromServer() {
             console.log("Обновление статистики:", data);
             if (data.characteristic) {
                 updateCharacterStats(data);
+                setCharacterPanelBackground(data.characteristic.heroClass);
             } else {
                 console.error("Ошибка: Нет данных о характеристиках персонажа!");
             }
@@ -123,9 +124,9 @@ function updateCharacterStats(data) {
     document.getElementById("char-accuracy").textContent = characteristic.accuracy.toFixed(1);
     document.getElementById("char-agility").textContent = characteristic.agility.toFixed(1);
     document.getElementById("char-evasion").textContent = characteristic.evasion.toFixed(1);
-    document.getElementById("char-fullDamage").textContent = Math.floor(characteristic.damage.fullDamage);
+    document.getElementById("char-sumDamage").textContent = Math.floor(characteristic.damage.sumDamage);
     document.getElementById("char-physicalDamage").textContent = Math.floor(characteristic.damage.physicalDamage);
-    document.getElementById("char-fireDamage").textContent = Math.floor(characteristic.damage.fireDamage);
+    document.getElementById("char-magicDamage").textContent = Math.floor(characteristic.damage.magicDamage);
 
     document.getElementById("char-wins").textContent = statistic.wins;
 }
@@ -369,4 +370,34 @@ function continueGame() {
     })
     .catch(error => console.error("Ошибка при продолжении игры:", error));
 }
+
+function setCharacterPanelBackground(heroClass) {
+    const characterPanel = document.querySelector(".character-panel");
+    if (!characterPanel) return;
+
+    const backgroundUrl = `${HOST}/images/hero/${heroClass}_INV.png`;
+    const fallbackUrl = `${HOST}/images/hero/UNDEFINED_INV.png`;
+
+    // Создаём изображение и проверяем, загружается ли оно
+    const img = new Image();
+    img.src = backgroundUrl;
+
+    img.onload = () => {
+        console.log(`✅ Успешно загружено изображение для ${heroClass}`);
+        characterPanel.style.backgroundImage = `url('${backgroundUrl}')`;
+        characterPanel.style.backgroundSize = "contain";
+        characterPanel.style.backgroundRepeat = "no-repeat";
+        characterPanel.style.backgroundPosition = "center";
+    };
+
+    img.onerror = () => {
+        console.warn(`⚠️ Изображение ${backgroundUrl} не найдено, ставим заглушку.`);
+        characterPanel.style.backgroundImage = `url('${fallbackUrl}')`;
+        characterPanel.style.backgroundSize = "cover";
+        characterPanel.style.backgroundRepeat = "no-repeat";
+        characterPanel.style.backgroundPosition = "center";
+    };
+}
+
+
 

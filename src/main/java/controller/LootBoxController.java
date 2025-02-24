@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import hero.Hero;
 import hero.HeroService;
 import item.lootbox.LootBoxService;
-import item.weapon.ItemService;
+import item.ItemService;
 import spark.Route;
 import spark.Spark;
 

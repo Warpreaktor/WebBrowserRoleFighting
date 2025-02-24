@@ -4,7 +4,7 @@ import hero.HeroService;
 import com.google.gson.Gson;
 import spark.Route;
 import spark.Spark;
-import item.weapon.ItemService;
+import item.ItemService;
 
 public class ItemController {
 

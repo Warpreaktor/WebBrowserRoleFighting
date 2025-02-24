@@ -9,7 +9,7 @@ import hero.classes.Warrior;
 import item.Inventory;
 import item.Item;
 import item.weapon.Knife;
-import item.weapon.Weapon;
+import item.weapon.abstracts.Weapon;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

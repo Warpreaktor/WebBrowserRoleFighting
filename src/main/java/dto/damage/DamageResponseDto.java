@@ -1,19 +1,12 @@
 package dto.damage;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@Builder
 public class DamageResponseDto {
 
-
-    private Double fullDamage;
 
     /**
      * Физический урон
@@ -23,9 +16,18 @@ public class DamageResponseDto {
     /**
      * Огненный урон
      */
-    private Double fireDamage;
+    private Double magicDamage;
 
-    public Double getFullDamage() {
-        return physicalDamage + fireDamage;
+    /**
+     * Сумма всех типов уронов. Служит больше для получения общей информации, но
+     * реально в игре не применяется.
+     */
+    private Double sumDamage;
+
+    public DamageResponseDto(Double physicalDamage, Double magicDamage) {
+        this.physicalDamage = physicalDamage;
+        this.magicDamage = magicDamage;
+        sumDamage = physicalDamage + magicDamage;
     }
+
 }

@@ -1,11 +1,9 @@
-package item.weapon;
+package item.weapon.abstracts;
 
-import dto.damage.DamageDto;
+import dto.damage.Damage;
 import item.Item;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -14,7 +12,7 @@ public abstract class Weapon extends Item {
     /**
      * Информация об уроне оружия.
      */
-    private DamageDto damage;
+    private Damage damage;
 
     /**
      * Двуручное
@@ -26,8 +24,15 @@ public abstract class Weapon extends Item {
      */
     private Boolean throwing;
 
+    /**
+     * Скорость атаки оружия.
+     * Скорость атаки будет помножена на agility героя,
+     * тем самым, либо ускоряя наполнение шкалы автоатаки, либо замедляя её.
+     */
+    private double attackSpeed;
+
     public Weapon(String id, String name, String picturePath) {
         super(id, name, picturePath);
-        damage = new DamageDto();
+        damage = new Damage();
     }
 }

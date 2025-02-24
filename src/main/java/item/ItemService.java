@@ -1,6 +1,7 @@
-package item.weapon;
+package item;
 
-import item.Item;
+import item.weapon.Knife;
+import item.weapon.abstracts.Weapon;
 
 import java.util.HashMap;
 import java.util.List;

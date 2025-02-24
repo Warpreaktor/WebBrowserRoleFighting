@@ -1,7 +1,6 @@
 package item.weapon;
 
-import config.ApplicationProperties;
-import dto.damage.DamageDto;
+import item.weapon.abstracts.Weapon;
 import lombok.Getter;
 
 import java.util.UUID;
@@ -11,14 +10,19 @@ public class Fist extends Weapon {
 
     /**
      * У кулака нет картинки, так как он не для взаимодействия.
-     * Его нельзя снятьи с персонажа и положить в рюкзак.
+     * Его нельзя снять и с персонажа и положить в рюкзак.
      */
     private static final String picturePath = "";
 
     public Fist() {
-        super(UUID.randomUUID().toString(), "кулак", picturePath);
-        getDamage().setPhysicalDamage(4.0);
+        super(UUID.randomUUID().toString(), "Кулак", picturePath);
+
+        getDamage().getPhysicalDamage().setCrushingMax(1.0);
+
+        setAttackSpeed(1.0);
+
         setThrowing(false);
+
         setTwoHand(false);
     }
 

@@ -1,15 +1,14 @@
 package item.lootbox;
 
 import item.Item;
-import item.weapon.ItemService;
+import item.ItemService;
 import item.weapon.Knife;
-import item.weapon.Weapon;
-import item.weapon.WoodenShaft;
+import item.weapon.abstracts.Weapon;
+import item.weapon.MagicWand;
 import lombok.Getter;
 import tools.Dice;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @Getter
@@ -51,7 +50,7 @@ public class LootBoxService {
 
         Weapon[] weapons = {
                 new Knife(),
-                new WoodenShaft()
+                new MagicWand()
         };
 
         return weapons[Dice.randomInt(weapons.length)];

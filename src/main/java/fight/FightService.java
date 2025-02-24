@@ -9,6 +9,7 @@ import fight.dto.DefenseDto;
 import fight.dto.FightResultDto;
 import tools.Dice;
 
+import static constants.GlobalConstants.COST_OF_AUTOATTACK;
 import static hero.constants.HeroConstants.PLAYER1;
 import static hero.constants.HeroConstants.PLAYER2;
 
@@ -108,12 +109,16 @@ public class FightService {
 
     public void combat(Hero attacker, Hero defender) {
 
-        combatMoves(attacker, defender);
+        while ((attacker.getReloader() >= COST_OF_AUTOATTACK || defender.getReloader() >= COST_OF_AUTOATTACK)
+                && !result.isOver()) {
 
-        result.addEventAndLog(fightIsOver());
+            combatMoves(attacker, defender);
 
-        if (!result.isOver()) {
-            combatMoves(defender, attacker);
+            result.addEventAndLog(fightIsOver());
+
+            if (!result.isOver()) {
+                combatMoves(defender, attacker);
+            }
         }
 
         if (!result.isOver()) {
@@ -125,7 +130,18 @@ public class FightService {
     public void combatMoves(Hero attacker, Hero defender) {
 
         AttackDto attackResult = attackPhase(attacker, defender);
-        result.addEventAndLog(attackResult.getMessage());
+
+        if (attackResult.isCritical()) {
+            result.addEventAndLog(String.format(
+                    "%s. !!!КРИТИЧЕСКИ УРОН!!! [%s]",
+                    attackResult.getMessage(),
+                    attackResult.getDamageDto().getFullDamage()));
+        } else {
+            result.addEventAndLog(String.format(
+                    "%s. урон[%s]",
+                    attackResult.getMessage(),
+                    attackResult.getDamageDto().getFullDamage()));
+        }
 
         if (attackResult.isFail()) {
             return;
@@ -138,7 +154,7 @@ public class FightService {
         result.addEventAndLog(defenseResult.getMessage());
     }
 
-//==================================================//
+    //==================================================//
 //   ▄█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▄    //
 //  ▄█                                          █▄  //
 // ███          💢 ФАЗА АТАКИ 💢                ███ //
@@ -154,7 +170,7 @@ public class FightService {
         }
     }
 
-//==================================================//
+    //==================================================//
 //   ▄█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▄    //
 //  ▄█                                          █▄  //
 // ███          ⚔️ ФАЗА ЗАЩИТЫ ⚔️               ███ //

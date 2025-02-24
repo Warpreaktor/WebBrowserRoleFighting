@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import hero.Hero;
 import hero.HeroService;
-import item.weapon.ItemService;
+import item.ItemService;
 import spark.Route;
 import spark.Spark;
 
@@ -57,7 +57,7 @@ public class InventoryController {
         var item = itemService.get(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("Предмета с таким идентификатором не найдено"));
 
-        hero.getInventory().add(item);
+        hero.getInventory().put(item);
 
         res.status(200);
         return gson.toJson(jsonResponse);

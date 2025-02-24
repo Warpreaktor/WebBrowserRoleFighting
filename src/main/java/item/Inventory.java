@@ -14,7 +14,7 @@ public class Inventory {
         cells = new Item[12];
     }
 
-    public boolean add(Item item) {
+    public boolean put(Item item) {
         for (int i = 0; i < cells.length; i++) {
             if (cells[i] == null) {
                 cells[i] = item;
