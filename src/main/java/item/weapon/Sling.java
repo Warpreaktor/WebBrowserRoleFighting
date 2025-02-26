@@ -15,7 +15,7 @@ public class Sling extends Weapon {
     public Sling() {
         super(UUID.randomUUID().toString(), "Праща", picturePath);
 
-        getDamage().getPhysicalDamage().setCrushingMax(2.0);
+        getDamage().setCrushing(1.5, 2d);
 
         setAttackSpeed(0.9);
 

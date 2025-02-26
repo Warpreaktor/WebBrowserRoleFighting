@@ -1,8 +1,8 @@
 package mechanic.interfaces;
 
-import dto.damage.Damage;
+import mechanic.Damage;
 
 public interface Damageable {
 
-    Damage getDamage();
+    Damage getStaticDamage();
 }

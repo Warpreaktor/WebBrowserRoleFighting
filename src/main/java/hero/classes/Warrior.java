@@ -1,19 +1,12 @@
 package hero.classes;
 
 import hero.Hero;
-import fight.dto.AttackDto;
-import fight.dto.DefenseDto;
 import item.weapon.Knife;
 import lombok.Getter;
-import lombok.NonNull;
 import spec.HeroClass;
 
 import java.util.List;
 
-import static hero.constants.messages.WarriorMessages.WARRIOR_ATTACK_MESSAGES;
-import static hero.constants.messages.WarriorMessages.WARRIOR_MISSED_MESSAGES;
-import static hero.constants.messages.WarriorMessages.WARRIOR_RELOAD_MESSAGES;
-import static tools.Dice.getChance;
 import static tools.Dice.randomInt;
 
 /**

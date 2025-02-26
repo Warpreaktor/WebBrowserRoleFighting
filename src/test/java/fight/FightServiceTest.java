@@ -3,7 +3,7 @@ package fight;
 import hero.HeroService;
 import hero.Hero;
 import core.GameMaster;
-import fight.dto.FightResultDto;
+import dto.fightresult.FightResultDto;
 import hero.classes.Archer;
 import hero.classes.Mage;
 import hero.classes.Skeleton;

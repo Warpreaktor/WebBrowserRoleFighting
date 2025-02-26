@@ -6,7 +6,7 @@ import hero.classes.Archer;
 import hero.classes.Mage;
 import hero.classes.Warrior;
 import dto.damage.DamageDto;
-import fight.dto.AttackDto;
+import dto.attack.AttackDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

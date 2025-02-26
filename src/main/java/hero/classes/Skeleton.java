@@ -1,14 +1,13 @@
 package hero.classes;
 
-import fight.dto.AttackDto;
-import fight.dto.DefenseDto;
+import dto.attack.AttackDto;
+import dto.defense.DefenseDto;
 import hero.Hero;
 import item.weapon.Knife;
 import lombok.Getter;
 import lombok.NonNull;
 import spec.HeroClass;
 
-import static constants.GlobalConstants.HEALTH_PER_STRENGTH_MULTIPLIER;
 import static hero.constants.messages.SkeletonMessages.SKELETON_ATTACK_MESSAGES;
 import static hero.constants.messages.SkeletonMessages.SKELETON_BLOCKED_MESSAGES;
 import static hero.constants.messages.SkeletonMessages.SKELETON_MISSED_MESSAGES;
@@ -79,7 +78,7 @@ public class Skeleton extends Hero {
     @Override
     public DefenseDto defense(@NonNull AttackDto attack) {
         // Скелет игнорирует 10% урона благодаря отсутствию плоти
-        double reduceDamage = attack.getDamageDto().getFullDamage() * 0.9;
+        double reduceDamage = attack.getDamageDto().getSumDamage() * 0.9;
         double pain = getShield().takeDamage(reduceDamage);
 
         if (pain > 0) {

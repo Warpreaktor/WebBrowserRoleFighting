@@ -1,4 +1,4 @@
-package fight.dto;
+package dto.defense;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

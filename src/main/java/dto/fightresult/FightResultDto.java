@@ -1,4 +1,4 @@
-package fight.dto;
+package dto.fightresult;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

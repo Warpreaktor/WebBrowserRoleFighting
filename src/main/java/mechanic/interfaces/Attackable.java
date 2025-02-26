@@ -1,12 +1,12 @@
 package mechanic.interfaces;
 
 import dto.damage.DamageDto;
-import fight.dto.AttackDto;
-import fight.dto.DefenseDto;
+import dto.attack.AttackDto;
 
 import static constants.GlobalConstants.COST_OF_AUTOATTACK;
-import static constants.GlobalConstants.CRIT_DAMAGE_MULTIPLIER;
+import static constants.GlobalConstants.GLOBAL_CRIT_DAMAGE_MULTIPLIER;
 import static tools.Dice.getChance;
+import static tools.Dice.randomByMinMax;
 
 /**
  * Всё что может атаковать и может быть атаковано в ответ.
@@ -31,21 +31,39 @@ public interface Attackable extends Reloadable, Accuracy, Damageable {
     }
 
     default AttackDto doAttackEvent() {
-        var physicalDamage = getDamage().getPhysicalDamage().getSumDamage();
-        var magicDamage = getDamage().getFireDamage();
-        boolean isCritical = false;
 
+        var heroDamage = getStaticDamage();
+
+        var piercingDamage = heroDamage.getPiercing();
+        var crushingDamage = heroDamage.getCrushing();
+        var cuttingDamage = heroDamage.getCutting();
+        var fireDamage = heroDamage.getFire();
+
+
+        //MinMax калькуляцая
+        var damageDto = new DamageDto(
+                randomByMinMax(piercingDamage),
+                randomByMinMax(crushingDamage),
+                randomByMinMax(cuttingDamage),
+                randomByMinMax(fireDamage)
+        );
+
+        boolean isCritical = false;
         double tryToCrit = getChance();
 
         if (getCritChance() >= tryToCrit) {
             //Критический удар
-           physicalDamage = physicalDamage * CRIT_DAMAGE_MULTIPLIER;
+            damageDto.setCrushing(damageDto.getCrushing() * GLOBAL_CRIT_DAMAGE_MULTIPLIER);
+            damageDto.setCutting(damageDto.getCutting() * GLOBAL_CRIT_DAMAGE_MULTIPLIER);
+            damageDto.setPiercing(damageDto.getPiercing() * GLOBAL_CRIT_DAMAGE_MULTIPLIER);
+            damageDto.setFire(damageDto.getFire() * GLOBAL_CRIT_DAMAGE_MULTIPLIER);
+
            isCritical = true;
         }
 
         AttackDto attackDto =  new AttackDto(
                 this,
-                new DamageDto(physicalDamage, magicDamage),
+                damageDto,
                 getAttackMessage());
 
         attackDto.setCritical(isCritical);

@@ -1,5 +1,7 @@
 package tools;
 
+import dto.MinMax;
+
 import java.util.Random;
 
 /**
@@ -28,11 +30,20 @@ public class Dice {
     public static int rollHundred() { return randomInt(100) + 1;}
 
     /**
-     * возращает случайно число в от нуля до указанной границы size
-     * @param size
-     * @return
+     * Возращает случайное число от нуля до указанной границы size (исключительно)
+     *
+     * @param size граница в рамках которого будет возвращено число
      */
     public static int randomInt(int size) {
         return random.nextInt(size);
+    }
+
+    /**
+     * Возращает случайное число от минимального до максимального (включительно)
+     *
+     * @param minMax границы в рамках которого будет возвращено число
+     */
+    public static double randomByMinMax(MinMax minMax) {
+        return random.nextDouble(minMax.getMin(), minMax.getMax() + 1);
     }
 }
