@@ -64,11 +64,12 @@ public class FightService {
             return result.getResultDto();
         }
 
+        result.clear();
+
         Hero player1 = heroService.get(PLAYER1);
         Hero player2 = heroService.get(PLAYER2);
 
-        result.clear();
-        result.addEventAndLog("Раунд - [" + gameMaster.nextRound() + "]");
+        result.setRoundCount(gameMaster.nextRound());
 
 
         if (isAnyBodyDeath(player1, player2)) {

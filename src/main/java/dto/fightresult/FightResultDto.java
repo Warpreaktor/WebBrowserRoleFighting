@@ -18,4 +18,6 @@ public class FightResultDto {
     private List<String> message;
 
     private ArrayList<String> log;
+
+    private int roundCount;
 }
