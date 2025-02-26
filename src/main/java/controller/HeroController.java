@@ -54,7 +54,7 @@ public class HeroController {
 
         try {
             HeroClass type = HeroClass.valueOf(heroClass.toUpperCase());
-            Hero hero = heroService.createHero(name, type);
+            Hero hero = heroService.createPlayerHero(name, type);
             return gson.toJson(hero.getInfo());
 
         } catch (IllegalArgumentException e) {
@@ -64,7 +64,7 @@ public class HeroController {
     };
 
     private final Route createRandomCharacter = (req, res) -> {
-        Hero randomHero = heroService.createHero(null, null);
+        Hero randomHero = heroService.createPlayerHero(null, null);
         return new Gson().toJson(randomHero.getInfo());
     };
 

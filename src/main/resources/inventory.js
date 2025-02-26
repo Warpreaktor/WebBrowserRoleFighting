@@ -333,10 +333,7 @@ function startNewGame() {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            playerId: "player1"
-        })
+        }
     })
     .then(response => {
         if (!response.ok) {

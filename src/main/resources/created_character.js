@@ -13,22 +13,7 @@ function redirectToFight() {
         alert("Сначала создайте персонажа!");
         return;
     }
-
-    fetch(`${HOST}/startNewGame`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(createdPlayer)
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("Персонаж отправлен на сервер:", data);
-        window.location.href = "inventory.html";
-    })
-    .catch(err => {
-        console.error("Ошибка при отправке персонажа:", err);
-    });
+    window.location.href = "inventory.html";
 }
 
 document.getElementById("startButton").addEventListener("click", redirectToFight);

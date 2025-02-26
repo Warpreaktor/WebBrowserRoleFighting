@@ -7,6 +7,9 @@ import spec.HeroClass;
 
 import java.util.List;
 
+import static hero.constants.messages.ArcherMessages.ARCHER_BLOCKED_MESSAGES;
+import static hero.constants.messages.ArcherMessages.ARCHER_PAIN_MESSAGES;
+import static hero.constants.messages.ArcherMessages.ARCHER_SHIELD_ABSORB_MESSAGES;
 import static tools.Dice.randomInt;
 
 /**
@@ -55,37 +58,21 @@ public class Archer extends Hero {
         int index = randomInt(ARCHER_PAIN_MESSAGES.size());
         return String.format(ARCHER_PAIN_MESSAGES.get(index), getName());
     }
-    private static final List<String> ARCHER_PAIN_MESSAGES = List.of(
-            "%s зашипел, схватившись за рану, но не отпустил лук!",
-            "%s пошатнулся от удара, но быстро вернулся в строй!",
-            "%s скривился от боли, но его пальцы всё ещё крепко сжимают тетиву!",
-            "%s стиснул зубы, чувствуя жгучую боль в боку!",
-            "%s едва не уронил стрелу, но собрался с силами!"
-    );
 
     public String getShieldAbsorbMessage() {
         int index = randomInt(ARCHER_SHIELD_ABSORB_MESSAGES.size());
         return String.format(ARCHER_SHIELD_ABSORB_MESSAGES.get(index), getName());
     }
-    private static final List<String> ARCHER_SHIELD_ABSORB_MESSAGES = List.of(
-            "%s укрылся за щитом, не получив ни царапины!",
-            "%s выставил щит в последний момент и выдохнул – атака погашена!",
-            "%s спрятался за защитой, не давая врагу ни шанса пробить его!",
-            "%s почувствовал удар, но защита выдержала, оставив его невредимым!",
-            "%s прижал щит к себе, полностью поглощая удар!"
-    );
 
+    /**
+     * Получает случайное сообщение при отражении атаки.
+     *
+     * @return Строка с текстом атаки, включающая имя персонажа.
+     */
     public String getBlockedMessage() {
         int index = randomInt(ARCHER_BLOCKED_MESSAGES.size());
         return String.format(ARCHER_BLOCKED_MESSAGES.get(index), getName());
     }
-    private static final List<String> ARCHER_BLOCKED_MESSAGES = List.of(
-            "%s с лёгким движением отбил удар своим луком!",
-            "%s парировал атаку, отведя оружие противника в сторону!",
-            "%s резко развернулся, выставив щит, и атака ушла в сторону!",
-            "%s вовремя среагировал и заблокировал удар!",
-            "%s легко ушёл в сторону и отразил удар кончиком стрелы!"
-    );
 
     /**
      * Получает случайное сообщение при атаке.

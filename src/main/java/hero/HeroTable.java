@@ -23,7 +23,8 @@ public class HeroTable {
     }
 
     public Hero save(String key, Hero hero) {
-        return table.put(key, hero);
+        table.put(key, hero);
+        return hero;
     }
 
     public Hero get(String key) {
