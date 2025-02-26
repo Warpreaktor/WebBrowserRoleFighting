@@ -2,22 +2,45 @@ package dto.damage;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
+@Setter
 @Getter
 @AllArgsConstructor
 public class DamageDto {
 
     /**
-     * Физический урон
+     * Колющий урон
      */
-    private Double physicalDamage;
+    private Double piercing;
+
+    /**
+     * Режущий урон
+     */
+    private Double cutting;
+
+    /**
+     * Дробящий урон
+     */
+    private Double crushing;
 
     /**
      * Огненный урон
      */
-    private Double magicDamage;
+    private Double fire;
 
-    public double getFullDamage() {
-        return physicalDamage + magicDamage;
+    public double getSumDamage() {
+
+        return piercing
+                + cutting
+                + crushing
+                + fire;
+    }
+
+    public double getAllPhysical() {
+
+        return piercing
+                + cutting
+                + crushing;
     }
 }

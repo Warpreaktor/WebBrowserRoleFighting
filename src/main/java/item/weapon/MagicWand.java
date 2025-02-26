@@ -1,5 +1,6 @@
 package item.weapon;
 
+import dto.MinMax;
 import item.weapon.abstracts.Weapon;
 
 import java.util.UUID;
@@ -17,7 +18,7 @@ public class MagicWand extends Weapon {
     public MagicWand() {
         super(UUID.randomUUID().toString(), "Волшебная палочка", picturePath);
 
-        getDamage().setFireDamage(4.0);
+        getDamage().setFire(2d, 4d);
 
         setAttackSpeed(0.5);
 

@@ -1,6 +1,6 @@
 package item.weapon.abstracts;
 
-import dto.damage.Damage;
+import mechanic.Damage;
 import item.Item;
 import lombok.Getter;
 import lombok.Setter;

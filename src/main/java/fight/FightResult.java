@@ -1,7 +1,7 @@
 package fight;
 
 import hero.Hero;
-import fight.dto.FightResultDto;
+import dto.fightresult.FightResultDto;
 import lombok.Getter;
 
 import java.util.ArrayList;

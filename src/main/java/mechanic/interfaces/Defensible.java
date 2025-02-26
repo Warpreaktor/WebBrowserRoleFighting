@@ -1,7 +1,7 @@
 package mechanic.interfaces;
 
-import fight.dto.AttackDto;
-import fight.dto.DefenseDto;
+import dto.attack.AttackDto;
+import dto.defense.DefenseDto;
 import mechanic.Health;
 import mechanic.Shield;
 
@@ -32,7 +32,7 @@ public interface Defensible extends Evasion {
             return new DefenseDto(0, getBlockedMessage());
         }
 
-        double pain = attack.getDamageDto().getFullDamage();
+        double pain = attack.getDamageDto().getSumDamage();
 
         pain = getShield().takeDamage(pain);
 
@@ -40,7 +40,7 @@ public interface Defensible extends Evasion {
 
             getHealth().takeDamage(pain);
 
-            return new DefenseDto(attack.getDamageDto().getFullDamage(), getPainMessage());
+            return new DefenseDto(attack.getDamageDto().getSumDamage(), getPainMessage());
 
         } else {
             return new DefenseDto(pain, getShieldAbsorbMessage());

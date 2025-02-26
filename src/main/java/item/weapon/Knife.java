@@ -1,6 +1,7 @@
 package item.weapon;
 
 import config.ApplicationProperties;
+import dto.MinMax;
 import item.weapon.abstracts.Weapon;
 import lombok.Getter;
 
@@ -14,7 +15,7 @@ public class Knife extends Weapon {
     public Knife() {
         super(UUID.randomUUID().toString(), "Нож", picturePath);
 
-        getDamage().getPhysicalDamage().setPiercingMax(2.0);
+        getDamage().setPiercing(1.0, 2.0);
 
         setAttackSpeed(1.2);
 

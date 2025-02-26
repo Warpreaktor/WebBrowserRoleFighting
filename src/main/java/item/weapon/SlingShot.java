@@ -15,7 +15,7 @@ public class SlingShot extends Weapon {
     public SlingShot() {
         super(UUID.randomUUID().toString(), "Рогатка", picturePath);
 
-        getDamage().getPhysicalDamage().setCrushingMax(1.0);
+        getDamage().setCrushing(1.0, 1.5);
 
         setAttackSpeed(1.5);
 

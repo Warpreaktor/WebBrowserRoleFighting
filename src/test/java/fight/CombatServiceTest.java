@@ -211,7 +211,7 @@ public class CombatServiceTest {
         //Чтобы точно попал
         player1.setAccuracy(100D);
         player1.setReloader(1D);
-        player1.getDamage().setPhysicalDamage(1D);
+        player1.getStaticDamage().setCrushing(1D, 1D);
 
         player2.getShield().setMaxValue(10D);
         player2.getShield().setValue(10D);
