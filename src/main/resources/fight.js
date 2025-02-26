@@ -45,7 +45,7 @@ function loadPlayers() {
 
             let frameOverlay = document.createElement("div");
             frameOverlay.classList.add("frame-overlay");
-            frameOverlay.style.backgroundImage = `url('${HOST}/images/hero/frame.png')`;
+            frameOverlay.style.backgroundImage = `url('${HOST}/images/hero/frame_02.png')`;
             player1Box.appendChild(frameOverlay);
         })
         .catch(err => console.error("Ошибка загрузки Player1", err));
@@ -80,7 +80,7 @@ function loadPlayers() {
 
             let frameOverlay = document.createElement("div");
             frameOverlay.classList.add("frame-overlay");
-            frameOverlay.style.backgroundImage = `url('${HOST}/images/hero/frame.png')`;
+            frameOverlay.style.backgroundImage = `url('${HOST}/images/hero/frame_02.png')`;
             player2Box.appendChild(frameOverlay);
         })
         .catch(err => console.error("Ошибка загрузки Player2", err));
@@ -125,19 +125,9 @@ document.getElementById('fightForm').addEventListener('submit', function (e) {
     fetch(`${HOST}/fight`)
         .then(response => response.json())
         .then(data => {
-            document.getElementById('roundResult').innerHTML = `${data.message}`;
-            updateRoundNumber(data.countRound); // Устанавливаем номер раунда
-            setTimeout(loadPlayers, 80);
-        })
-        .catch(err => {
-            console.error(err);
-            document.getElementById('roundResult').textContent = "Ошибка во время боя!";
-        });
-
-    fetch(`${HOST}/fight`)
-        .then(response => response.json())
-        .then(data => {
             console.log("Ответ от сервера:", data);
+
+            updateRoundNumber(data.roundCount);
 
             let messageHtml = data.message
                 .map(line => `<p>${line}</p>`)

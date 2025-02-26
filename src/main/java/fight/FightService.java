@@ -132,6 +132,10 @@ public class FightService {
 
         AttackDto attackResult = attackPhase(attacker, defender);
 
+        if (attackResult.isFail()) {
+            return;
+        }
+
         if (attackResult.isCritical()) {
             result.addEventAndLog(String.format(
                     "%s. !!!КРИТИЧЕСКИ УРОН!!! [%s]",
@@ -142,10 +146,6 @@ public class FightService {
                     "%s. урон[%s]",
                     attackResult.getMessage(),
                     attackResult.getDamageDto().getSumDamage()));
-        }
-
-        if (attackResult.isFail()) {
-            return;
         }
 
         DefenseDto defenseResult = defensePhase(attackResult, defender);

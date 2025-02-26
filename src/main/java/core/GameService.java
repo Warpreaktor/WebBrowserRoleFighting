@@ -32,14 +32,9 @@ public class GameService {
     /**
      * Сброс текущей и старт новой игры.
      *
-     * @param player персонаж игрока.
      */
-    public void startNewGame(HeroRequestDto player) {
+    public void startNewGame() {
         FightService.newInstance();
-
-        heroService
-                .saveCharacter(PLAYER1,
-                        heroService.createHero(player.getName(), HeroClass.valueOf(player.getHeroClass())));
 
         heroService.createLevelingHeroes(10);
 

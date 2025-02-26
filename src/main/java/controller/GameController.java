@@ -23,7 +23,7 @@ public class GameController {
         Gson gson = new Gson();
         HeroRequestDto player = gson.fromJson(req.body(), HeroRequestDto.class);
 
-        gameService.startNewGame(player);
+        gameService.startNewGame();
 
         return true;
     };
