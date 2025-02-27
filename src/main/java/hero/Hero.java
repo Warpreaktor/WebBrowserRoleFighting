@@ -14,7 +14,6 @@ import mechanic.Intelligence;
 import mechanic.Shield;
 import mechanic.Strength;
 import mechanic.interfaces.Heroic;
-import tools.Dice;
 
 import java.util.List;
 import java.util.Objects;
@@ -27,9 +26,9 @@ import static constants.GlobalConstants.HEALTH_PER_STRENGTH_MULTIPLIER;
 import static constants.GlobalConstants.HEAL_PER_STRENGTH_MULTIPLIER;
 import static constants.GlobalConstants.SHIELD_GROWER_PER_INTELLIGENCE_MULTIPLIER;
 import static constants.GlobalConstants.SHIELD_PER_INTELLIGENCE_MULTIPLIER;
+import static equip.EquipSlot.LEFT_HAND;
 import static equip.EquipSlot.RIGHT_HAND;
 import static tools.Calculator.average;
-import static tools.Dice.randomByMinMax;
 
 @Getter
 @Setter
@@ -209,7 +208,7 @@ public abstract class Hero implements Heroic {
     }
 
     public void decreaseAgility(Double value) {
-        agility += value;
+        agility -= value;
     }
 
     public void addEvasion(Double value) {
@@ -327,6 +326,18 @@ public abstract class Hero implements Heroic {
                 }
             }
 
+            case LEFT_HAND -> {
+                if (equipment.equipped(LEFT_HAND, item)) {
+                    setAgility(getAgility() * getEquipment().getLeftHand().getAttackSpeed());
+
+                    clearSlotByObjectIdAndSlot(objectId, from);
+
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
             default -> throw new RuntimeException("Слот экипировки [" + to + "] не определён");
         }
     }
@@ -354,6 +365,10 @@ public abstract class Hero implements Heroic {
 
             case RIGHT_HAND -> {
                 return Optional.of(equipment.getRightHand());
+            }
+
+            case LEFT_HAND -> {
+                return Optional.of(equipment.getLeftHand());
             }
 
             default -> {
@@ -389,6 +404,18 @@ public abstract class Hero implements Heroic {
                         setAgility(getAgility() / getEquipment().getRightHand().getAttackSpeed());
 
                         equipment.takeWeapon(this.getEquipment().getFist());
+                    } else {
+                        throw new RuntimeException("Предмет не найден по идентификатору: [" + objectId + "]");
+                    }
+                }
+
+                case LEFT_HAND -> {
+                    if (equipment.getLeftHand() != null && Objects.equals(equipment.getLeftHand().getId(), objectId)) {
+                        // Сохраняем attackSpeed перед снятием
+                        double attackSpeed = equipment.getLeftHand().getAttackSpeed();
+                        // Возвращаем agility обратно
+                        setAgility(getAgility() / attackSpeed);
+                        equipment.unequipLeftHand();
                     } else {
                         throw new RuntimeException("Предмет не найден по идентификатору: [" + objectId + "]");
                     }

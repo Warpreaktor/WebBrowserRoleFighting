@@ -4,6 +4,7 @@ public enum EquipSlot {
 
     RIGHT_HAND("правая рука"),
     LEFT_HAND("LEFT-HAND"),
+    BOTH_HANDS("BOTH-HANDS"),
     HEAD("HEAD"),
     BODY("BODY"),
     BOOTS("BOOTS"),
