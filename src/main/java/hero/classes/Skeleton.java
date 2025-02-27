@@ -3,6 +3,7 @@ package hero.classes;
 import dto.attack.AttackDto;
 import dto.defense.DefenseDto;
 import hero.Hero;
+import item.shield.WoodenShield;
 import item.weapon.Knife;
 import lombok.Getter;
 import lombok.NonNull;
@@ -65,6 +66,7 @@ public class Skeleton extends Hero {
         getHealth().setMaxValue(4.0);
 
         getInventory().put(new Knife());
+        getInventory().put(new WoodenShield());
 
         getHealth().fillUp();
     }

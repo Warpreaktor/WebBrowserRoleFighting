@@ -39,7 +39,6 @@ public class Halfling extends Hero {
         getHealth().setMaxValue(3.0);
         getHealth().fillUp();
 
-        //Полурослик начинает с камнем в руке
         getInventory().put(new SlingShot());
     }
 

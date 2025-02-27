@@ -4,7 +4,7 @@ import hero.classes.Archer;
 import hero.classes.Halfling;
 import hero.classes.Mage;
 import hero.classes.Skeleton;
-import hero.classes.Warrior;
+import hero.classes.Barbarian;
 import spec.HeroClass;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import static spec.HeroClass.ARCHER;
 import static spec.HeroClass.HALFLING;
 import static spec.HeroClass.MAGE;
 import static spec.HeroClass.SKELETON;
-import static spec.HeroClass.WARRIOR;
+import static spec.HeroClass.BARBARIAN;
 import static tools.Dice.randomInt;
 
 /**
@@ -42,7 +42,7 @@ public class HeroService {
     private static final Map<HeroClass, List<String>> CLASS_NAMES = Map.of(
             ARCHER, ARCHER_NAMES,
             MAGE, MAGE_NAMES,
-            WARRIOR, WARRIOR_NAMES,
+            BARBARIAN, WARRIOR_NAMES,
             SKELETON, SKELETON_NAMES,
             HALFLING, HALFLING_NAMES
     );
@@ -51,7 +51,7 @@ public class HeroService {
      * Список доступных классов персонажей
      */
     private static final List<HeroClass> HERO_CLASSES = List.of(
-            ARCHER, MAGE, WARRIOR, SKELETON, HALFLING
+            ARCHER, MAGE, BARBARIAN, SKELETON, HALFLING
     );
 
     private HeroService() {
@@ -135,8 +135,8 @@ public class HeroService {
             case MAGE:
                 return new Mage(name);
 
-            case WARRIOR:
-                return new Warrior(name);
+            case BARBARIAN:
+                return new Barbarian(name);
 
             case SKELETON:
                 return new Skeleton(name);

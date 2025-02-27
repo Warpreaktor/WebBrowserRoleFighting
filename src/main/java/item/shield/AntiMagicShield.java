@@ -22,11 +22,11 @@ import java.util.UUID;
  * @author Группа "Эльфийские алхимики, которые не любят магов"
  * @version 1.0 (первый выпуск после трёх или четырех неудачных попыток)
  */
-public class MagicShield extends Shield {
+public class AntiMagicShield extends Shield {
 
-    private static final String picturePath = ApplicationProperties.getHost() + "/images/shield/magic_shield.png";
+    private static final String picturePath = ApplicationProperties.getHost() + "/images/shield/anti_magic_shield.png";
 
-    public MagicShield() {
+    public AntiMagicShield() {
         super(UUID.randomUUID().toString(), "Магический щит", picturePath);
 
         setPhysicalBlock(0.2);

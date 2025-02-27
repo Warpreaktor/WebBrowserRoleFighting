@@ -1,6 +1,8 @@
 package hero.classes;
 
 import hero.Hero;
+import item.shield.WoodenShield;
+import item.weapon.GrandpasRustySword;
 import item.weapon.Knife;
 import lombok.Getter;
 import spec.HeroClass;
@@ -14,12 +16,12 @@ import static tools.Dice.randomInt;
  * Наследует общие характеристики и поведение от класса {@link Hero}.
  */
 @Getter
-public class Warrior extends Hero {
+public class Barbarian extends Hero {
 
     /**
      * Класс героя — воин.
      */
-    private final HeroClass heroClass = HeroClass.WARRIOR;
+    private final HeroClass heroClass = HeroClass.BARBARIAN;
 
     /**
      * Классовые характеристики
@@ -40,7 +42,7 @@ public class Warrior extends Hero {
      *
      * @param name Имя воина
      */
-    public Warrior(String name) {
+    public Barbarian(String name) {
         super();
 
         setName(name);
@@ -59,7 +61,9 @@ public class Warrior extends Hero {
         //У воина повышенный шанс блокировать удар
         setBlockChance(BLOCK_CHANCE);
 
+        getInventory().put(new GrandpasRustySword());
         getInventory().put(new Knife());
+        getInventory().put(new WoodenShield());
 
         getHealth().fillUp();
     }

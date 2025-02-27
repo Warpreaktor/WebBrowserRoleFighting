@@ -10,6 +10,9 @@ window.onload = loadPlayers;
 
 document.addEventListener("DOMContentLoaded", function () {
     document.body.style.backgroundImage = `url('${HOST}/images/location/Dead_Forest.png')`;
+    document.body.style.backgroundSize = "cover";
+    document.body.style.backgroundPosition = "center";
+    document.body.style.backgroundRepeat = "no-repeat";
 });
 
 function loadPlayers() {

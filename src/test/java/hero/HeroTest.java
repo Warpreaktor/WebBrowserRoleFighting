@@ -5,7 +5,7 @@ import equip.Equipment;
 import hero.classes.Archer;
 import hero.classes.Mage;
 import hero.classes.Skeleton;
-import hero.classes.Warrior;
+import hero.classes.Barbarian;
 import item.Inventory;
 import item.Item;
 import item.weapon.Knife;
@@ -40,7 +40,7 @@ public class HeroTest {
 
     private static Stream<Arguments> allConstructor() {
         return Stream.of(
-                Arguments.of(new Warrior("test")),
+                Arguments.of(new Barbarian("test")),
                 Arguments.of(new Mage("test")),
                 Arguments.of(new Archer("test")),
                 Arguments.of(new Skeleton("test"))

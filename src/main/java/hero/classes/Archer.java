@@ -1,6 +1,7 @@
 package hero.classes;
 
 import hero.Hero;
+import item.shield.AntiMagicShield;
 import item.weapon.ShortBow;
 import lombok.Getter;
 import spec.HeroClass;
@@ -51,6 +52,7 @@ public class Archer extends Hero {
         setCritChance(CRIT_CHANCE);
 
         getInventory().put(new ShortBow());
+        getInventory().put(new AntiMagicShield());
         getHealth().fillUp();
     }
 
