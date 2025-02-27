@@ -72,8 +72,8 @@ h1 {
 .belt-slot { grid-column: 2; grid-row: 3; }
 .left-ring-slot { grid-column: 1; grid-row: 1; }
 .right-ring-slot { grid-column: 3; grid-row: 1; }
-.left-hand { grid-column: 1; grid-row:2; }
-.right-hand { grid-column: 3; grid-row: 2; }
+.left-hand { grid-column: 3; grid-row:2; }
+.right-hand { grid-column: 1; grid-row: 2; }
 
 /* === ИНВЕНТАРЬ === */
 .inventory-grid {
