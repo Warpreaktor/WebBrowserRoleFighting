@@ -2,8 +2,6 @@ package hero.constants.messages;
 
 import java.util.List;
 
-import static tools.Dice.randomInt;
-
 /**
  * Класс, содержащий константные сообщения для скелета.
  * Включает в себя фразы для атак, промахов и перезарядки.
@@ -15,7 +13,7 @@ public final class SkeletonMessages {
     /**
      * Список сообщений для атаки.
      */
-    public static final List<String> SKELETON_ATTACK_MESSAGES = List.of(
+    public static final List<String> ATTACK_MESSAGES = List.of(
             "%s скрипит костями, готовясь сделать твой день хуже!",
             "%s щелкает челюстью так, будто пытается сказать 'бдыщ!'",
             "%s вертит оружие словно фокусник, но шутки тут не к месту!",
@@ -31,7 +29,7 @@ public final class SkeletonMessages {
     /**
      * Список сообщений для промахов.
      */
-    public static final List<String> SKELETON_MISSED_MESSAGES = List.of(
+    public static final List<String> MISSED_MESSAGES = List.of(
             "%s промахивается, ключицы предательски скрипят!",
             "%s заносится для удара, но костлявая рука дрожит!",
             "%s теряет равновесие - позвоночник скрипит в протесте!",
@@ -47,7 +45,7 @@ public final class SkeletonMessages {
     /**
      * Список сообщений для перезарядки.
      */
-    public static final List<String> SKELETON_RELOAD_MESSAGES = List.of(
+    public static final List<String> REST_MESSAGES = List.of(
             "%s скрипит костями, перестраиваясь для новой атаки!",
             "%s проверяет, все ли пальцы на месте, перед новым заходом!",
             "%s встряхивает череп, чтобы мысли снова встали на место!",
@@ -60,7 +58,7 @@ public final class SkeletonMessages {
             "%s чинит свой позвоночник изолентой перед следующей атакой!"
     );
 
-    public static final List<String> SKELETON_PAIN_MESSAGES = List.of(
+    public static final List<String> PAIN_MESSAGES = List.of(
             "%s кости трещат, но держатся!",
             "%s разлетается на части, но быстро собирается обратно!",
             "%s заскрипел костями, но не остановился!",
@@ -73,7 +71,7 @@ public final class SkeletonMessages {
             "%s рассмеялся пустым черепом, будто ничего не произошло!"
     );
 
-    public static final List<String> SKELETON_SHIELD_ABSORB_MESSAGES = List.of(
+    public static final List<String> SHIELD_ABSORB_MESSAGES = List.of(
             "%s хохочет пустым черепом: ‘Твой удар даже не коснулся меня!’",
             "%s наблюдает, как магический щит поглощает всю атаку без следа!",
             "%s покачал головой, когда магия рассеяла удар, словно пыль!",
@@ -86,7 +84,7 @@ public final class SkeletonMessages {
             "%s поиздевался: ‘Ха! Даже моя могила была менее защищённой!’"
     );
 
-    public static final List<String> SKELETON_BLOCKED_MESSAGES = List.of(
+    public static final List<String> BLOCKED_MESSAGES = List.of(
             "%s ловко поднял ржавый щит и отбил удар!",
             "%s скрестил кости перед собой, блокируя атаку!",
             "%s парировал атаку своим ржавым мечом, раздался звон стали!",

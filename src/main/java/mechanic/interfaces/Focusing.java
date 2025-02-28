@@ -1,10 +1,10 @@
 package mechanic.interfaces;
 
-public interface Focusing extends Intelligent, Healthy, Reloadable {
+public interface Focusing extends Intelligent, Healthy, Restable {
 
     default void focus() {
         heal();
         shieldGrow();
-        reload();
+        rest();
     }
 }

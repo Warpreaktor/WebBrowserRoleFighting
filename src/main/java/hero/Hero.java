@@ -60,10 +60,19 @@ public abstract class Hero implements Heroic {
     //==================================================//
 //                  СТАТЫ                           //
 //==================================================//
+    /**
+     * Сила влияет на очки здоровья
+     */
     private Strength strength;
 
+    /**
+     * Ловкость влияет на шанс попадение и шанс уклонения
+     */
     private Dexterity dexterity;
 
+    /**
+     * Интеллект влияет на максимальный размер магического щита и на его скорость восполнения.
+     */
     private Intelligence intelligence;
 
 //==================================================//
@@ -93,13 +102,12 @@ public abstract class Hero implements Heroic {
     private Double evasion;
 
     /**
-     * Прогресс перезарядки оружия. Если >= 1 значит можно бить.
-     * Обычно этот параметр не накапливается и сбрасывается в 0 при атаке.
+     * Очки выносливости персонажа. Каждый раз когда он действует они тратятся.
      */
-    private Double reloader;
+    private Double endurance;
 
     /**
-     * Скорость атаки. Влияет на сколько пунктов за каждый ход поднимается параметр reloader.
+     * Скорость атаки. Влияет на сколько пунктов за каждый ход поднимается параметр endurance.
      */
     private Double agility;
 
@@ -125,7 +133,7 @@ public abstract class Hero implements Heroic {
         accuracy = 0.0;
         agility = 0.0;
         evasion = 0.0;
-        reloader = 0.0;
+        endurance = 0.0;
         blockChance = 0.0;
         critChance = 0.0;
     }
@@ -219,8 +227,8 @@ public abstract class Hero implements Heroic {
         evasion -= value;
     }
 
-    public void reload() {
-        reloader += agility;
+    public void rest() {
+        endurance += agility;
     }
 
     public void shieldGrow() {

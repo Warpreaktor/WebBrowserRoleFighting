@@ -12,9 +12,9 @@ import static tools.Dice.randomByMinMax;
  * Всё что может атаковать и может быть атаковано в ответ.
  * Вызывается в фазу атаки.
  */
-public interface Attackable extends Reloadable, Accuracy, Damageable {
+public interface Attackable extends Restable, Accuracy, Damageable {
 
-    String getReloadMessage();
+    String getRestMessage();
 
     String getAttackMessage();
 
@@ -23,11 +23,11 @@ public interface Attackable extends Reloadable, Accuracy, Damageable {
     Double getCritChance();
 
     /**
-     * Метод перезарядки по умолчанию.
+     * Метод отдыха по умолчанию.
      */
-    default AttackDto doReloadEvent(){
+    default AttackDto doRestEvent(){
         return new AttackDto(this,
-                getReloadMessage());
+                getRestMessage());
     }
 
     default AttackDto doAttackEvent() {
@@ -75,12 +75,12 @@ public interface Attackable extends Reloadable, Accuracy, Damageable {
     }
 
     default AttackDto attack(Defensible defensible) {
-        if (getReloader() >= COST_OF_AUTOATTACK) {
+        if (getEndurance() >= COST_OF_AUTOATTACK) {
 
-            setReloader(getReloader() - COST_OF_AUTOATTACK);
+            setEndurance(getEndurance() - COST_OF_AUTOATTACK);
             return doAttackEvent();
         } else {
-            return doReloadEvent();
+            return doRestEvent();
         }
     }
 

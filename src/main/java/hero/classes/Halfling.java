@@ -14,15 +14,20 @@ public class Halfling extends Hero {
 
     private final HeroClass heroClass = HeroClass.HALFLING;
 
-    private static final int INTELLIGENCE = 2;
+    private static final int INTELLIGENCE = 5;
+    private static final int STRENGTH = 3;
+    private static final int DEXTERITY = 9;
 
-    private static final int STRENGTH = 2;
+    private static final double HEALTH = 45;
+    private static final double SHIELD = 0;
 
-    //Полурослики чрезвычайно ловкие
-    private static final int DEXTERITY = 6;
-
-    //Полурослики народ свирепый и имеют повышенный шанс крита
+    private static final double ACCURACY = 0.6;
+    private static final double EVASION = 0.4;
+    private static final double AGILITY = 0.7;
+    private static final double ENDURANCE = 4.0;
+    private static final double BLOCK_CHANCE = 0.15;
     private static final double CRIT_CHANCE = 0.25;
+
 
     public Halfling(String name) {
         super();
@@ -35,19 +40,28 @@ public class Halfling extends Hero {
 
         setCritChance(CRIT_CHANCE);
 
-        //Полурослик коротыщшка у него пониженное здоровье
-        getHealth().setMaxValue(3.0);
-        getHealth().fillUp();
+        getHealth().addMaxValue(HEALTH);
+        getShield().addMaxValue(SHIELD);
+
+        setAccuracy(ACCURACY);
+        setEvasion(EVASION);
+        setEndurance(ENDURANCE);
+        setAgility(AGILITY);
+
+        setCritChance(CRIT_CHANCE);
+        setBlockChance(BLOCK_CHANCE);
 
         getInventory().put(new SlingShot());
+
+        getHealth().fillUp();
     }
 
     @Override
     public String getBlockedMessage() {
-        int index = randomInt(HALFLING_BLOCKED_MESSAGES.size());
-        return String.format(HALFLING_BLOCKED_MESSAGES.get(index), getName());
+        int index = randomInt(BLOCKED_MESSAGES.size());
+        return String.format(BLOCKED_MESSAGES.get(index), getName());
     }
-    private static final List<String> HALFLING_BLOCKED_MESSAGES = List.of(
+    private static final List<String> BLOCKED_MESSAGES = List.of(
             "%s ловко подставил щит, отразив весь урон!",
             "%s спрятался за щитом, не получив ни царапины!",
             "%s вовремя выставил щит, поглотив удар!",
@@ -57,10 +71,10 @@ public class Halfling extends Hero {
 
     @Override
     public String getPainMessage() {
-        int index = randomInt(HALFLING_PAIN_MESSAGES.size());
-        return String.format(HALFLING_PAIN_MESSAGES.get(index), getName());
+        int index = randomInt(PAIN_MESSAGES.size());
+        return String.format(PAIN_MESSAGES.get(index), getName());
     }
-    private static final List<String> HALFLING_PAIN_MESSAGES = List.of(
+    private static final List<String> PAIN_MESSAGES = List.of(
             "%s вскрикнул, ощущая резкую боль!",
             "%s стиснул зубы, стараясь не показывать слабость!",
             "%s охнул, схватившись за ушибленное место!",
@@ -69,20 +83,20 @@ public class Halfling extends Hero {
     );
 
     public String getShieldAbsorbMessage() {
-        int index = randomInt(HALFLING_SHIELD_ABSORB_MESSAGES.size());
-        return String.format(HALFLING_SHIELD_ABSORB_MESSAGES.get(index), getName());
+        int index = randomInt(SHIELD_ABSORB_MESSAGES.size());
+        return String.format(SHIELD_ABSORB_MESSAGES.get(index), getName());
     }
-    private static final List<String> HALFLING_SHIELD_ABSORB_MESSAGES = List.of(
+    private static final List<String> SHIELD_ABSORB_MESSAGES = List.of(
             "%s лишь ухмыльнулся, когда его щит поглотил всю силу удара!",
             "Удар разбился о магический щит!",
             "%s даже не моргнул, щит всё впитал!"
     );
 
     public String getAttackMessage() {
-        int index = randomInt(HALFLING_ATTACK_MESSAGES.size());
-        return String.format(HALFLING_ATTACK_MESSAGES.get(index), getName());
+        int index = randomInt(ATTACK_MESSAGES.size());
+        return String.format(ATTACK_MESSAGES.get(index), getName());
     }
-    private static final List<String> HALFLING_ATTACK_MESSAGES = List.of(
+    private static final List<String> ATTACK_MESSAGES = List.of(
             "%s быстро скользнул в тень и нанес точный удар!",
             "%s ловко пробрался за спину врага и ударил!",
             "%s с хитрой улыбкой метнул кинжал!",
@@ -92,20 +106,20 @@ public class Halfling extends Hero {
     );
 
     public String getMissedMessage() {
-        int index = randomInt(HALFLING_MISSED_MESSAGES.size());
-        return String.format(HALFLING_MISSED_MESSAGES.get(index), getName());
+        int index = randomInt(MISSED_MESSAGES.size());
+        return String.format(MISSED_MESSAGES.get(index), getName());
     }
-    private static final List<String> HALFLING_MISSED_MESSAGES = List.of(
+    private static final List<String> MISSED_MESSAGES = List.of(
             "%s слишком переоценил свою ловкость и промахнулся!",
             "%s скользнул, но его удар прошел мимо цели!",
             "%s слишком увлекся маневрированием и не попал!"
     );
 
-    public String getReloadMessage() {
-        int index = randomInt(HALFLING_RELOAD_MESSAGES.size());
-        return String.format(HALFLING_RELOAD_MESSAGES.get(index), getName());
+    public String getRestMessage() {
+        int index = randomInt(REST_MESSAGES.size());
+        return String.format(REST_MESSAGES.get(index), getName());
     }
-    private static final List<String> HALFLING_RELOAD_MESSAGES = List.of(
+    private static final List<String> REST_MESSAGES = List.of(
             "%s ловко перекидывает кинжал из руки в руку!",
             "%s прячется в тени, готовясь к новому удару!",
             "%s находит удобный момент для атаки!"

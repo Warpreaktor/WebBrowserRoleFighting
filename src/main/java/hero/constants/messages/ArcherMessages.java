@@ -10,7 +10,7 @@ public final class ArcherMessages {
 
     private ArcherMessages() {}
 
-    public static final List<String> ARCHER_BLOCKED_MESSAGES = List.of(
+    public static final List<String> BLOCKED_MESSAGES = List.of(
             "%s с лёгким движением отбил удар своим луком!",
             "%s парировал атаку, отведя оружие противника в сторону!",
             "%s резко развернулся, выставив щит, и атака ушла в сторону!",
@@ -18,7 +18,7 @@ public final class ArcherMessages {
             "%s легко ушёл в сторону и отразил удар кончиком стрелы!"
     );
 
-    public static final List<String> ARCHER_SHIELD_ABSORB_MESSAGES = List.of(
+    public static final List<String> SHIELD_ABSORB_MESSAGES = List.of(
             "%s укрылся за щитом, не получив ни царапины!",
             "%s выставил щит в последний момент и выдохнул – атака погашена!",
             "%s спрятался за защитой, не давая врагу ни шанса пробить его!",
@@ -26,7 +26,7 @@ public final class ArcherMessages {
             "%s прижал щит к себе, полностью поглощая удар!"
     );
 
-    public static final List<String> ARCHER_PAIN_MESSAGES = List.of(
+    public static final List<String> PAIN_MESSAGES = List.of(
             "%s зашипел, схватившись за рану, но не отпустил лук!",
             "%s пошатнулся от удара, но быстро вернулся в строй!",
             "%s скривился от боли, но его пальцы всё ещё крепко сжимают тетиву!",
@@ -34,10 +34,8 @@ public final class ArcherMessages {
             "%s едва не уронил стрелу, но собрался с силами!"
     );
 
-    /**
-     * Список сообщений для атаки.
-     */
-    public static final List<String> ARCHER_ATTACK_MESSAGES = List.of(
+
+    public static final List<String> ATTACK_MESSAGES = List.of(
             "%s плавно натянул тетиву, словно играя на струнах судьбы, и выпустил стрелу, летящую в самое сердце цели!",
             "%s прищурился, словно оценивая вечерний закат, а затем молниеносно выстрелил — стрела ушла в полёт!",
             "%s улыбнулся краем губ, прицелился и, как истинный мастер, поразил цель без малейшего колебания.",
@@ -70,10 +68,7 @@ public final class ArcherMessages {
             "%s прицелился и сказал: 'Ну что ж, попробуем с закрытыми глазами?' — и, не глядя, попал в точку."
     );
 
-    /**
-     * Список сообщений для промахов.
-     */
-    public static final List<String> ARCHER_MISSED_MESSAGES = List.of(
+    public static final List<String> MISSED_MESSAGES = List.of(
             "%s отпустил тетиву, но стрела решила отправиться в путешествие!",
             "%s хитро прищурился – ветер сегодня явно не на его стороне.",
             "%s кивнул – судьба дала врагу ещё один вздох.",
@@ -96,10 +91,7 @@ public final class ArcherMessages {
             "%s усмехнулся – значит, бой будет дольше, а значит, веселее!"
     );
 
-    /**
-     * Список сообщений для перезарядки.
-     */
-    public static final List<String> ARCHER_RELOAD_MESSAGES = List.of(
+    public static final List<String> REST_MESSAGES = List.of(
             "%s натягивает тетиву, слушая её лёгкий звон.",
             "%s провёл пальцем по оперению стрелы, выбирая идеальную.",
             "%s медленно вдыхает, фокусируя взгляд на будущей цели.",

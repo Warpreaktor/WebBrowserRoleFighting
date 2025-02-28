@@ -9,12 +9,12 @@ import lombok.Getter;
 import lombok.NonNull;
 import spec.HeroClass;
 
-import static hero.constants.messages.SkeletonMessages.SKELETON_ATTACK_MESSAGES;
-import static hero.constants.messages.SkeletonMessages.SKELETON_BLOCKED_MESSAGES;
-import static hero.constants.messages.SkeletonMessages.SKELETON_MISSED_MESSAGES;
-import static hero.constants.messages.SkeletonMessages.SKELETON_PAIN_MESSAGES;
-import static hero.constants.messages.SkeletonMessages.SKELETON_RELOAD_MESSAGES;
-import static hero.constants.messages.SkeletonMessages.SKELETON_SHIELD_ABSORB_MESSAGES;
+import static hero.constants.messages.SkeletonMessages.ATTACK_MESSAGES;
+import static hero.constants.messages.SkeletonMessages.BLOCKED_MESSAGES;
+import static hero.constants.messages.SkeletonMessages.MISSED_MESSAGES;
+import static hero.constants.messages.SkeletonMessages.PAIN_MESSAGES;
+import static hero.constants.messages.SkeletonMessages.REST_MESSAGES;
+import static hero.constants.messages.SkeletonMessages.SHIELD_ABSORB_MESSAGES;
 import static tools.Dice.randomInt;
 
 /**
@@ -32,15 +32,60 @@ public class Skeleton extends Hero {
      */
     private final HeroClass heroClass = HeroClass.SKELETON;
 
-    /**
-     * Классовые характеристики
-     */
-    private static final Integer INTELLIGENCE = 1;
-    private static final Integer STRENGTH = 2;
-    private static final Integer DEXTERITY = 4;
+    //===============================//
+    //    Стартовые характеристики   //
+    //===============================//
+    private static final int INTELLIGENCE = 3;
+    private static final int STRENGTH = 5;
+    private static final int DEXTERITY = 7;
 
-    //Скелет слеповат и глуповат, потому часто бьёт просто наотмаш. Снижен шанс крита.
-    private static final Double CRIT_CHANCE = -0.1;
+    private static final double HEALTH = 40;
+    private static final double SHIELD = 0;
+
+    private static final double ACCURACY = 0.35;
+    private static final double EVASION = 0.25;
+    private static final double AGILITY = 0.6;
+    private static final double ENDURANCE = 3.0;
+    private static final double BLOCK_CHANCE = 0.2;
+    private static final double CRIT_CHANCE = 0.2;
+
+    //============================================//
+    //Коэффициенты прироста параметров за уровень//
+    //==========================================//
+    private static final double INTELLIGENCE_GROWTH = 0.2;
+    private static final double STRENGTH_GROWTH = 0.5;
+    private static final double DEXTERITY_GROWTH = 0.4;
+
+    private static final double HEALTH_GROWTH = 3.0;
+    private static final double ACCURACY_GROWTH = 0.015;
+    private static final double EVASION_GROWTH = 0.01;
+    private static final double AGILITY_GROWTH = 0.03;
+    private static final double ENDURANCE_GROWTH = 0.2;
+    private static final double BLOCK_CHANCE_GROWTH = 0.01;
+    private static final double CRIT_CHANCE_GROWTH = 0.015;
+
+    // Метод повышения уровня
+    public void levelUp() {
+        setLevel(getStatistic().getLevel() + 1);
+    }
+
+    public void setLevel(int newLevel) {
+        if (newLevel < 1) {
+            throw new IllegalArgumentException("Уровень не может быть меньше 1");
+        }
+        getStatistic().setLevel(newLevel);
+
+        getHealth().addMaxValue(HEALTH_GROWTH * (newLevel - 1));
+
+        //TODO нужно будет добавить методы add-еры
+        setAccuracy(ACCURACY + ACCURACY_GROWTH * (newLevel - 1));
+        setEvasion(EVASION + EVASION_GROWTH * (newLevel - 1));
+        setAgility(AGILITY + AGILITY_GROWTH * (newLevel - 1));
+        setEndurance(ENDURANCE + ENDURANCE_GROWTH * (newLevel - 1));
+        setBlockChance(BLOCK_CHANCE + BLOCK_CHANCE_GROWTH * (newLevel - 1));
+        setCritChance(CRIT_CHANCE + CRIT_CHANCE_GROWTH * (newLevel - 1));
+    }
+
 
     /**
      * Создаёт нового скелета с заданным именем и базовыми характеристиками.
@@ -52,23 +97,28 @@ public class Skeleton extends Hero {
 
         setName(name);
 
-        // Установка характеристик
         setIntelligence(INTELLIGENCE);
         setStrength(STRENGTH);
         setDexterity(DEXTERITY);
 
         setCritChance(CRIT_CHANCE);
 
-        // Скелет получает бонус к уклонению
-        //TODO предлагаю в будущем переделать это на бонус к уклонению и уменьшению урона от колющих атак
-        addEvasion(0.15);
+        getHealth().addMaxValue(HEALTH);
+        getShield().addMaxValue(SHIELD);
 
-        getHealth().setMaxValue(4.0);
+        setAccuracy(ACCURACY);
+        setEvasion(EVASION);
+        setEndurance(ENDURANCE);
+        setAgility(AGILITY);
+
+        setCritChance(CRIT_CHANCE);
+        setBlockChance(BLOCK_CHANCE);
 
         getInventory().put(new Knife());
         getInventory().put(new WoodenShield());
 
         getHealth().fillUp();
+        getShield().fillUp();
     }
 
     /**
@@ -94,18 +144,18 @@ public class Skeleton extends Hero {
     }
 
     public String getBlockedMessage() {
-        int index = randomInt(SKELETON_BLOCKED_MESSAGES.size());
-        return String.format(SKELETON_BLOCKED_MESSAGES.get(index), getName());
+        int index = randomInt(BLOCKED_MESSAGES.size());
+        return String.format(BLOCKED_MESSAGES.get(index), getName());
     }
 
     public String getShieldAbsorbMessage() {
-        int index = randomInt(SKELETON_SHIELD_ABSORB_MESSAGES.size());
-        return String.format(SKELETON_SHIELD_ABSORB_MESSAGES.get(index), getName());
+        int index = randomInt(SHIELD_ABSORB_MESSAGES.size());
+        return String.format(SHIELD_ABSORB_MESSAGES.get(index), getName());
     }
 
     public String getPainMessage() {
-        int index = randomInt(SKELETON_PAIN_MESSAGES.size());
-        return String.format(SKELETON_PAIN_MESSAGES.get(index), getName());
+        int index = randomInt(PAIN_MESSAGES.size());
+        return String.format(PAIN_MESSAGES.get(index), getName());
     }
 
     /**
@@ -115,8 +165,8 @@ public class Skeleton extends Hero {
      */
     @Override
     public String getAttackMessage() {
-        int index = randomInt(SKELETON_ATTACK_MESSAGES.size());
-        return String.format(SKELETON_ATTACK_MESSAGES.get(index), getName());
+        int index = randomInt(ATTACK_MESSAGES.size());
+        return String.format(ATTACK_MESSAGES.get(index), getName());
     }
 
     /**
@@ -126,8 +176,8 @@ public class Skeleton extends Hero {
      */
     @Override
     public String getMissedMessage() {
-        int index = randomInt(SKELETON_MISSED_MESSAGES.size());
-        return String.format(SKELETON_MISSED_MESSAGES.get(index), getName());
+        int index = randomInt(MISSED_MESSAGES.size());
+        return String.format(MISSED_MESSAGES.get(index), getName());
     }
 
     /**
@@ -136,8 +186,8 @@ public class Skeleton extends Hero {
      * @return Строка с текстом перезарядки, включающая имя персонажа.
      */
     @Override
-    public String getReloadMessage() {
-        int index = randomInt(SKELETON_RELOAD_MESSAGES.size());
-        return String.format(SKELETON_RELOAD_MESSAGES.get(index), getName());
+    public String getRestMessage() {
+        int index = randomInt(REST_MESSAGES.size());
+        return String.format(REST_MESSAGES.get(index), getName());
     }
 }
