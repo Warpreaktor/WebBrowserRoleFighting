@@ -1,123 +1,16 @@
-package hero.classes;
-
-import hero.Hero;
-import item.weapon.Knife;
-import lombok.Getter;
-import spec.HeroClass;
+package hero.constants.messages;
 
 import java.util.List;
 
-import static tools.Dice.randomInt;
-
 /**
- * Класс, представляющий героя класса "Воин".
- * Наследует общие характеристики и поведение от класса {@link Hero}.
+ * Класс, содержащий константные сообщения для воина.
+ * Включает в себя фразы для атак, промахов и перезарядки.
  */
-@Getter
-public class Warrior extends Hero {
+public final class BarbarianMessages {
 
-    /**
-     * Класс героя — воин.
-     */
-    private final HeroClass heroClass = HeroClass.WARRIOR;
+    private BarbarianMessages() {}
 
-    /**
-     * Классовые характеристики
-     */
-    private static final Integer INTELLIGENCE = 1;
-    private static final Integer STRENGTH = 4;
-    private static final Integer DEXTERITY = 4;
-
-    private static final Double CRIT_CHANCE = 0.1;
-
-    /**
-     * Шанс заблокировать весь урон.
-     */
-    public static final Double BLOCK_CHANCE = 0.4;
-
-    /**
-     * Создаёт нового воина с заданным именем и базовыми характеристиками.
-     *
-     * @param name Имя воина
-     */
-    public Warrior(String name) {
-        super();
-
-        setName(name);
-
-        // Установка характеристик
-        setIntelligence(INTELLIGENCE);
-        setStrength(STRENGTH);
-        setDexterity(DEXTERITY);
-
-
-          //===============================//
-         //      Особенности класса       //
-        //===============================//
-        //Воин уже в начале боя заряжен на удар
-        setReloader(1D);
-        //У воина повышенный шанс блокировать удар
-        setBlockChance(BLOCK_CHANCE);
-
-        getInventory().put(new Knife());
-
-        getHealth().fillUp();
-    }
-
-    @Override
-    public String getShieldAbsorbMessage() {
-        int index = randomInt(WARRIOR_SHIELD_ABSORB_MESSAGES.size());
-        return String.format(WARRIOR_SHIELD_ABSORB_MESSAGES.get(index), getName());
-    }
-    private static final List<String> WARRIOR_SHIELD_ABSORB_MESSAGES = List.of(
-            "%s зарычал от восторга, когда магический щит поглотил весь удар!",
-            "%s ухмыльнулся, видя, как атака рассыпалась о его магический барьер!",
-            "%s расставил руки, чувствуя, как магия впитала весь урон!",
-            "%s глухо рассмеялся: ‘Ха! Тебе придётся постараться сильнее!’",
-            "%s почувствовал, как магический щит поглотил удар, не оставив ни царапины!",
-            "%s сжал кулаки, ощущая силу барьера, не давшего врагу ни шанса!",
-            "%s кивнул, наблюдая, как магический барьер рассеял атаку словно пыль!",
-            "%s бросил врагу вызывающий взгляд: ‘Попробуй ещё раз, если осмелишься!’",
-            "%s не дрогнул, когда щит вспыхнул и растворил атаку в воздухе!",
-            "%s хлопнул себя по груди и рявкнул: ‘Можешь бить сильнее?’"
-    );
-
-    @Override
-    public String getPainMessage() {
-        int index = randomInt(WARRIOR_PAIN_MESSAGES.size());
-        return String.format(WARRIOR_PAIN_MESSAGES.get(index), getName());
-    }
-    private static final List<String> WARRIOR_PAIN_MESSAGES = List.of(
-            "%s стиснул зубы, но не дал боли одолеть себя!",
-            "%s плюнул кровь и зарычал от ярости!",
-            "%s пошатнулся, но тут же вновь встал в стойку!",
-            "%s вытер кровь с губы и злобно улыбнулся!",
-            "%s ощутил боль, но лишь раззадорился ещё сильнее!"
-    );
-
-    @Override
-    public String getBlockedMessage() {
-        int index = randomInt(WARRIOR_BLOCKED_MESSAGES.size());
-        return String.format(WARRIOR_BLOCKED_MESSAGES.get(index), getName());
-    }
-    private static final List<String> WARRIOR_BLOCKED_MESSAGES = List.of(
-            "%s парировал удар, даже не моргнув!",
-            "%s поставил щит и сдержал атаку, как скала!",
-            "%s засмеялся, когда оружие врага бессильно скользнуло по его доспехам!",
-            "%s ударил вражеское лезвие своим, отбивая атаку!",
-            "%s спокойно выдержал удар, словно это было просто дуновение ветра!"
-    );
-
-    /**
-     * Получает случайное сообщение при атаке.
-     *
-     * @return Строка с текстом атаки, включающая имя персонажа.
-     */
-    public String getAttackMessage() {
-        int index = randomInt(WARRIOR_ATTACK_MESSAGES.size());
-        return String.format(WARRIOR_ATTACK_MESSAGES.get(index), getName());
-    }
-    private static final List<String> WARRIOR_ATTACK_MESSAGES = List.of(
+    public static final List<String> ATTACK_MESSAGES = List.of(
             "%s врезал так, что воздух взвыл от боли!",
             "%s нанёс удар такой силы, коим можно было сокрушить горы!",
             "%s взревел как бешеный бык, и жахнул врага!",
@@ -151,17 +44,7 @@ public class Warrior extends Hero {
             "%s не стал любезничать – замахнулся и вдарил, будто он кузнец, а враг – железо на наковальне!"
     );
 
-    /**
-     * Получает случайное сообщение при промахе.
-     *
-     * @return Строка с текстом промаха, включающая имя персонажа.
-     */
-    @Override
-    public String getMissedMessage() {
-        int index = randomInt(WARRIOR_MISSED_MESSAGES.size());
-        return String.format(WARRIOR_MISSED_MESSAGES.get(index), getName());
-    }
-    private static final List<String> WARRIOR_MISSED_MESSAGES = List.of(
+    public static final List<String> MISSED_MESSAGES = List.of(
             "%s поклялся богам, что размажет врага… но пока он смог размазать лишь воздух!",
 
             "%s Проклятые духи леса, да чтоб вас комарье сгрызло!",
@@ -191,16 +74,9 @@ public class Warrior extends Hero {
     );
 
     /**
-     * Получает случайное сообщение при перезарядке.
-     *
-     * @return Строка с текстом перезарядки, включающая имя персонажа.
+     * Список сообщений для отдыха.
      */
-    @Override
-    public String getReloadMessage() {
-        int index = randomInt(WARRIOR_RELOAD_MESSAGES.size());
-        return String.format(WARRIOR_RELOAD_MESSAGES.get(index), getName());
-    }
-    private static final List<String> WARRIOR_RELOAD_MESSAGES = List.of(
+    public static final List<String> REST_MESSAGES = List.of(
             "%s хрустит кулаками",
             "%s готовится к яростному броску!",
             "%s поплевав на ладони перехватывает оружие поудобнее.",
@@ -224,4 +100,32 @@ public class Warrior extends Hero {
             "%s покачал головой – не сейчас, но скоро, очень скоро…"
     );
 
+    public static final List<String> SHIELD_ABSORB_MESSAGES = List.of(
+            "%s зарычал от восторга, когда магический щит поглотил весь удар!",
+            "%s ухмыльнулся, видя, как атака рассыпалась о его магический барьер!",
+            "%s расставил руки, чувствуя, как магия впитала весь урон!",
+            "%s глухо рассмеялся: ‘Ха! Тебе придётся постараться сильнее!’",
+            "%s почувствовал, как магический щит поглотил удар, не оставив ни царапины!",
+            "%s сжал кулаки, ощущая силу барьера, не давшего врагу ни шанса!",
+            "%s кивнул, наблюдая, как магический барьер рассеял атаку словно пыль!",
+            "%s бросил врагу вызывающий взгляд: ‘Попробуй ещё раз, если осмелишься!’",
+            "%s не дрогнул, когда щит вспыхнул и растворил атаку в воздухе!",
+            "%s хлопнул себя по груди и рявкнул: ‘Можешь бить сильнее?’"
+    );
+
+    public static final List<String> PAIN_MESSAGES = List.of(
+            "%s стиснул зубы, но не дал боли одолеть себя!",
+            "%s плюнул кровь и зарычал от ярости!",
+            "%s пошатнулся, но тут же вновь встал в стойку!",
+            "%s вытер кровь с губы и злобно улыбнулся!",
+            "%s ощутил боль, но лишь раззадорился ещё сильнее!"
+    );
+
+    public static final List<String> BLOCKED_MESSAGES = List.of(
+            "%s парировал удар, даже не моргнув!",
+            "%s поставил щит и сдержал атаку, как скала!",
+            "%s засмеялся, когда оружие врага бессильно скользнуло по его доспехам!",
+            "%s ударил вражеское лезвие своим, отбивая атаку!",
+            "%s спокойно выдержал удар, словно это было просто дуновение ветра!"
+    );
 }

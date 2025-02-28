@@ -3,10 +3,11 @@ package spec;
 public enum HeroClass {
 
     ARCHER("Лучник"),
-    WARRIOR("Воин"),
+    BARBARIAN("Воин"),
     MAGE("Маг"),
     SKELETON("СКЕЛЕТ"),
-    HALFLING("Полурослик");
+    HALFLING("Полурослик"),
+    SAMODIVA("Самодива");
 
     HeroClass(String value) {
     }

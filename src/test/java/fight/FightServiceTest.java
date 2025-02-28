@@ -7,7 +7,7 @@ import dto.fightresult.FightResultDto;
 import hero.classes.Archer;
 import hero.classes.Mage;
 import hero.classes.Skeleton;
-import hero.classes.Warrior;
+import hero.classes.Barbarian;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -42,24 +42,24 @@ public class FightServiceTest {
 
     private static Stream<Arguments> all() {
         return Stream.of(
-                Arguments.of(Warrior.class, Warrior.class),
-                Arguments.of(Warrior.class, Mage.class),
-                Arguments.of(Warrior.class, Archer.class),
-                Arguments.of(Warrior.class, Skeleton.class),
+                Arguments.of(Barbarian.class, Barbarian.class),
+                Arguments.of(Barbarian.class, Mage.class),
+                Arguments.of(Barbarian.class, Archer.class),
+                Arguments.of(Barbarian.class, Skeleton.class),
 
                 Arguments.of(Archer.class, Archer.class),
-                Arguments.of(Archer.class, Warrior.class),
+                Arguments.of(Archer.class, Barbarian.class),
                 Arguments.of(Archer.class, Mage.class),
                 Arguments.of(Archer.class, Skeleton.class),
 
                 Arguments.of(Mage.class, Mage.class),
                 Arguments.of(Mage.class, Archer.class),
-                Arguments.of(Mage.class, Warrior.class),
+                Arguments.of(Mage.class, Barbarian.class),
                 Arguments.of(Mage.class, Skeleton.class),
 
                 Arguments.of(Skeleton.class, Mage.class),
                 Arguments.of(Skeleton.class, Archer.class),
-                Arguments.of(Skeleton.class, Warrior.class),
+                Arguments.of(Skeleton.class, Barbarian.class),
                 Arguments.of(Skeleton.class, Skeleton.class)
         );
     }

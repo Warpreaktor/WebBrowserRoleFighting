@@ -1,7 +1,6 @@
 package hero;
 
 import dto.damage.DamageDto;
-import mechanic.Damage;
 import dto.damage.DamageResponseDto;
 import dto.hero.HeroInfoDto;
 import dto.hero.HeroCharacteristicDto;
@@ -17,7 +16,7 @@ public interface HeroInfo {
 
     Health getHealth();
 
-    Double getReloader();
+    Double getEndurance();
 
     Shield getShield();
 
@@ -41,7 +40,7 @@ public interface HeroInfo {
                 .maxHitpoint(getHealth().getMaxValue())
                 .mageShield(getShield().getValue())
                 .maxMageShield(getShield().getMaxValue())
-                .reloader(getReloader())
+                .endurance(getEndurance())
                 .build();
     }
 

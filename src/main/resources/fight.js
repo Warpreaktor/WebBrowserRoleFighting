@@ -10,6 +10,9 @@ window.onload = loadPlayers;
 
 document.addEventListener("DOMContentLoaded", function () {
     document.body.style.backgroundImage = `url('${HOST}/images/location/Dead_Forest.png')`;
+    document.body.style.backgroundSize = "cover";
+    document.body.style.backgroundPosition = "center";
+    document.body.style.backgroundRepeat = "no-repeat";
 });
 
 function loadPlayers() {
@@ -41,7 +44,7 @@ function loadPlayers() {
             player1Box.style.backgroundImage = `url('${HOST}/images/hero/${data.heroClass}_PORT.png')`;
             document.getElementById("player1Name").textContent = data.name;
             updateHpBars();
-            updateReloadBars();
+            updateEnduranceBars();
 
             let frameOverlay = document.createElement("div");
             frameOverlay.classList.add("frame-overlay");
@@ -76,7 +79,7 @@ function loadPlayers() {
             player2Box.style.backgroundImage = `url('${HOST}/images/hero/${data.heroClass}_PORT.png')`;
             document.getElementById("player2Name").textContent = data.name;
             updateHpBars();
-            updateReloadBars();
+            updateEnduranceBars();
 
             let frameOverlay = document.createElement("div");
             frameOverlay.classList.add("frame-overlay");
@@ -172,14 +175,14 @@ function updateHpBars() {
     }
 }
 
-function updateReloadBars() {
+function updateEnduranceBars() {
     if (player1) {
-        let reloadPercent1 = Math.min(player1.reloader * 100, 100);
-        document.getElementById("reloadBar1").style.width = reloadPercent1 + "%";
+        let restPercent1 = Math.min(player1.endurance * 100, 100);
+        document.getElementById("enduranceP1").style.width = restPercent1 + "%";
     }
     if (player2) {
-        let reloadPercent2 = Math.min(player2.reloader * 100, 100);
-        document.getElementById("reloadBar2").style.width = reloadPercent2 + "%";
+        let restPercent2 = Math.min(player2.endurance * 100, 100);
+        document.getElementById("enduranceP2").style.width = restPercent2 + "%";
     }
 }
 

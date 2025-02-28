@@ -1,57 +1,57 @@
 package hero.classes;
 
 import hero.Hero;
-import item.weapon.ShortBow;
 import lombok.Getter;
 import spec.HeroClass;
 
 import java.util.List;
 
-import static hero.constants.messages.ArcherMessages.ATTACK_MESSAGES;
-import static hero.constants.messages.ArcherMessages.BLOCKED_MESSAGES;
-import static hero.constants.messages.ArcherMessages.MISSED_MESSAGES;
-import static hero.constants.messages.ArcherMessages.PAIN_MESSAGES;
-import static hero.constants.messages.ArcherMessages.REST_MESSAGES;
-import static hero.constants.messages.ArcherMessages.SHIELD_ABSORB_MESSAGES;
+import static hero.constants.messages.SamodivaMessages.ATTACK_MESSAGES;
+import static hero.constants.messages.SamodivaMessages.BLOCKED_MESSAGES;
+import static hero.constants.messages.SamodivaMessages.MISSED_MESSAGES;
+import static hero.constants.messages.SamodivaMessages.PAIN_MESSAGES;
+import static hero.constants.messages.SamodivaMessages.REST_MESSAGES;
+import static hero.constants.messages.SamodivaMessages.SHIELD_ABSORB_MESSAGES;
 import static tools.Dice.randomInt;
 
 /**
- * Класс, представляющий героя класса "Лучник".
- * Наследует общие характеристики и поведение от класса {@link Hero}.
+ * Самодивы – прекрасные духи воздуха, ветра и воды, обладающие магической силой.
+ * Они часто изображались как волшебные женщины с крыльями или покрытые сияющей дымкой.
+ * Вилы могли помогать или мстить людям, напоминая капризных западных фей.
  */
 @Getter
-public class Archer extends Hero {
+public class Samodiva extends Hero {
 
     /**
-     * Класс героя — лучник.
+     * Класс героя — Самодива.
      */
-    private final HeroClass heroClass = HeroClass.ARCHER;
+    private final HeroClass heroClass = HeroClass.SAMODIVA;
 
-    private static final int INTELLIGENCE = 4;
-    private static final int STRENGTH = 4;
-    private static final int DEXTERITY = 8;
+    private static final int INTELLIGENCE = 7;
+    private static final int STRENGTH = 1;
+    private static final int DEXTERITY = 5;
 
-    private static final double HEALTH = 50;
-    private static final double SHIELD = 0;
-
-    private static final double ACCURACY = 0.7;
-    private static final double EVASION = 0.3;
-    private static final double AGILITY = 0.65;
-    private static final double ENDURANCE = 3.8;
-    private static final double BLOCK_CHANCE = 0.1;
-    private static final double CRIT_CHANCE = 0.25;
-
+    //Стартовые характеристики
+    private static final double HEALTH = 25d;
+    private static final double SHIELD = 10d;
+    private static final double ACCURACY = 0.4;
+    private static final double EVASION = 0.6;
+    private static final double ENDURANCE = 3d;
+    private static final double AGILITY = 0.5;
+    private static final double BLOCK_CHANCE = 0d;
+    private static final double CRIT_CHANCE = 0.3;
 
     /**
      * Создаёт нового лучника с заданным именем и базовыми характеристиками.
      *
      * @param name Имя лучника
      */
-    public Archer(String name) {
+    public Samodiva(String name) {
         super();
 
         setName(name);
 
+        // Установка характеристик
         setIntelligence(INTELLIGENCE);
         setStrength(STRENGTH);
         setDexterity(DEXTERITY);
@@ -63,16 +63,13 @@ public class Archer extends Hero {
 
         setAccuracy(ACCURACY);
         setEvasion(EVASION);
-        setEndurance(ENDURANCE);
         setAgility(AGILITY);
-
-        setCritChance(CRIT_CHANCE);
+        setEndurance(ENDURANCE);
         setBlockChance(BLOCK_CHANCE);
+        setCritChance(CRIT_CHANCE);
 
-        getInventory().put(new ShortBow());
-
-        getHealth().fillUp();
         getShield().fillUp();
+        getHealth().fillUp();
     }
 
     public String getPainMessage() {
@@ -104,6 +101,7 @@ public class Archer extends Hero {
         int index = randomInt(ATTACK_MESSAGES.size());
         return String.format(ATTACK_MESSAGES.get(index), getName());
     }
+
 
     /**
      * Получает случайное сообщение при промахе.

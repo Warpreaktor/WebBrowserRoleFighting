@@ -4,7 +4,7 @@ import hero.Hero;
 import hero.HeroService;
 import hero.classes.Archer;
 import hero.classes.Mage;
-import hero.classes.Warrior;
+import hero.classes.Barbarian;
 import dto.damage.DamageDto;
 import dto.attack.AttackDto;
 import org.junit.jupiter.api.Assertions;
@@ -62,7 +62,7 @@ public class DefensibleTest {
 
     static Stream<Arguments> defenseAll(){
         return Stream.of(
-                Arguments.of(new Warrior("defensible")),
+                Arguments.of(new Barbarian("defensible")),
                 Arguments.of(new Archer("defensible")),
                 Arguments.of(new Mage("defensible"))
         );

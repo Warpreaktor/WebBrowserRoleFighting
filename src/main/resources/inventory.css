@@ -31,9 +31,9 @@ h1 {
     grid-template-rows: repeat(4, auto);
     gap: 10px;
     width: 100%;
-    max-width: 300px;
+    max-width: 265px;
     height: 500px;
-    border: 2px solid white;
+    border: 8px solid white;
     border-radius: 10px;
     padding: 20px;
     justify-items: center;

@@ -4,13 +4,13 @@ package mechanic.interfaces;
  * Перезаряжается прежде чем ударить.
  * Имеет скорость перезарядки.
  */
-public interface Reloadable {
+public interface Restable {
 
-    Double getReloader();
+    Double getEndurance();
 
-    void setReloader(Double value);
+    void setEndurance(Double value);
 
-    void reload();
+    void rest();
 
     Double getAgility();
 }
