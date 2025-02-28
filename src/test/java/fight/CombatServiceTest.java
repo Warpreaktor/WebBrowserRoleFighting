@@ -210,7 +210,7 @@ public class CombatServiceTest {
 
         //Чтобы точно попал
         player1.setAccuracy(100D);
-        player1.setReloader(1D);
+        player1.setEndurance(1D);
         player1.getStaticDamage().setCrushing(1D, 1D);
 
         player2.getShield().setMaxValue(10D);
@@ -224,7 +224,7 @@ public class CombatServiceTest {
         assertTrue(player2.getShield().getIsBlocked().get(), "Щит должен быть заблокирован на 1 ход");
 
         player1.setAccuracy(0.0);
-        player1.setReloader(0.0);
+        player1.setEndurance(0.0);
 
         var shieldValue = player2.getShield().getValue();
         //Щит должен быть заблокирован
@@ -235,7 +235,7 @@ public class CombatServiceTest {
         assertEquals(shieldValue, player2.getShield().getValue(), "Щит не должен восстанавливаться");
 
         player1.setAccuracy(0.0);
-        player1.setReloader(0.0);
+        player1.setEndurance(0.0);
         //Щит должен разблокироваться и восстановиться в конце раунда
         fightService.fight();
 

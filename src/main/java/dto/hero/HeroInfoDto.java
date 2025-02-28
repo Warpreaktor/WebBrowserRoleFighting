@@ -18,7 +18,7 @@ public class HeroInfoDto {
 
     private double maxMageShield;
 
-    private double reloader;
+    private double endurance;
 
     private double maxHitpoint;
 

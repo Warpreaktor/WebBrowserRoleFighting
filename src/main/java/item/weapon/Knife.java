@@ -7,10 +7,13 @@ import lombok.Getter;
 
 import java.util.UUID;
 
+/**
+ * Чтобы было чем нарезать хлеб в пути.
+ */
 @Getter
 public class Knife extends Weapon {
 
-    private static final String picturePath = ApplicationProperties.getHost() + "/images/weapon/knife.png";
+    private static final String picturePath = ApplicationProperties.getHost() + "/images/weapon/blade/knife.png";
 
     public Knife() {
         super(UUID.randomUUID().toString(), "Нож", picturePath);

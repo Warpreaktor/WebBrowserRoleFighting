@@ -110,7 +110,7 @@ public class FightService {
 
     public void combat(Hero attacker, Hero defender) {
 
-        while ((attacker.getReloader() >= COST_OF_AUTOATTACK || defender.getReloader() >= COST_OF_AUTOATTACK)
+        while ((attacker.getEndurance() >= COST_OF_AUTOATTACK || defender.getEndurance() >= COST_OF_AUTOATTACK)
                 && !result.isOver()) {
 
             combatMoves(attacker, defender);
