@@ -1,6 +1,7 @@
 package hero;
 
-import dto.damage.Damage;
+import dto.damage.DamageDto;
+import mechanic.Damage;
 import equip.EquipSlot;
 import equip.Equipment;
 import item.Inventory;
@@ -14,14 +15,20 @@ import mechanic.Shield;
 import mechanic.Strength;
 import mechanic.interfaces.Heroic;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static constants.GlobalConstants.ACCURACY_PER_DEXTERITY_MULTIPLIER;
+import static constants.GlobalConstants.AGILITY_PER_DEXTERITY_MULTIPLIER;
+import static constants.GlobalConstants.EVASION_PER_DEXTERITY_MULTIPLIER;
 import static constants.GlobalConstants.HEALTH_PER_STRENGTH_MULTIPLIER;
 import static constants.GlobalConstants.HEAL_PER_STRENGTH_MULTIPLIER;
 import static constants.GlobalConstants.SHIELD_GROWER_PER_INTELLIGENCE_MULTIPLIER;
 import static constants.GlobalConstants.SHIELD_PER_INTELLIGENCE_MULTIPLIER;
+import static equip.EquipSlot.LEFT_HAND;
 import static equip.EquipSlot.RIGHT_HAND;
+import static tools.Calculator.average;
 
 @Getter
 @Setter
@@ -165,21 +172,21 @@ public abstract class Hero implements Heroic {
         var dexterityValue = dexterity.getValue();
 
         if (value >= dexterityValue) {
-            addAccuracy(value * 0.1);
+            addAccuracy(value * ACCURACY_PER_DEXTERITY_MULTIPLIER);
         } else {
-            decreaseAccuracy(value * 0.1);
+            decreaseAccuracy(value * ACCURACY_PER_DEXTERITY_MULTIPLIER);
         }
 
         if (value >= dexterityValue) {
-            addAgility(value * 0.1);
+            addAgility(value * AGILITY_PER_DEXTERITY_MULTIPLIER);
         } else {
-            decreaseAgility(value * 0.1);
+            decreaseAgility(value * AGILITY_PER_DEXTERITY_MULTIPLIER);
         }
 
         if (value >= dexterityValue) {
-            addEvasion(value * 0.1);
+            addEvasion(value * EVASION_PER_DEXTERITY_MULTIPLIER);
         } else {
-            decreaseEvasion(value * 0.1);
+            decreaseEvasion(value * EVASION_PER_DEXTERITY_MULTIPLIER);
         }
     }
 
@@ -201,7 +208,7 @@ public abstract class Hero implements Heroic {
     }
 
     public void decreaseAgility(Double value) {
-        agility += value;
+        agility -= value;
     }
 
     public void addEvasion(Double value) {
@@ -230,8 +237,46 @@ public abstract class Hero implements Heroic {
     private void refresh() {
     }
 
-    public Damage getDamage() {
-        return getEquipment().getRightHand().getDamage();
+    /**
+     * Урон героя как есть, включая все модификаторы экипировки.
+     */
+    @Override
+    public Damage getStaticDamage() {
+        //TODO Здесь предполагается код, который будет опрашивать всю экипировку и действующие на героя модификаторы
+        var rightHand = getEquipment().getRightHand().getDamage();
+
+        var piercingDamage = rightHand.getPiercing();
+        var crushingDamage = rightHand.getCrushing();
+        var cuttingDamage = rightHand.getCutting();
+        var fireDamage = rightHand.getFire();
+
+        return new Damage(
+        piercingDamage,
+        crushingDamage,
+        cuttingDamage,
+        fireDamage
+        );
+    }
+
+    /**
+     * Урон героя для отображения в статистике. Берутся средние значения.
+     */
+    @Override
+    public DamageDto getDamageDto() {
+        //TODO Здесь предполагается код, который будет опрашивать всю экипировку и действующие на героя модификаторы
+        var rightHand = getEquipment().getRightHand().getDamage();
+
+        var piercingDamage = rightHand.getPiercing();
+        var crushingDamage = rightHand.getCrushing();
+        var cuttingDamage = rightHand.getCutting();
+        var fireDamage = rightHand.getFire();
+
+        return new DamageDto(
+                average(List.of(piercingDamage.getMin(), piercingDamage.getMax())),
+                average(List.of(crushingDamage.getMin(), crushingDamage.getMax())),
+                average(List.of(cuttingDamage.getMin(), cuttingDamage.getMax())),
+                average(List.of(fireDamage.getMin(), fireDamage.getMax()))
+        );
     }
 
     /**
@@ -281,6 +326,18 @@ public abstract class Hero implements Heroic {
                 }
             }
 
+            case LEFT_HAND -> {
+                if (equipment.equipped(LEFT_HAND, item)) {
+                    setAgility(getAgility() * getEquipment().getLeftHand().getAttackSpeed());
+
+                    clearSlotByObjectIdAndSlot(objectId, from);
+
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
             default -> throw new RuntimeException("Слот экипировки [" + to + "] не определён");
         }
     }
@@ -308,6 +365,10 @@ public abstract class Hero implements Heroic {
 
             case RIGHT_HAND -> {
                 return Optional.of(equipment.getRightHand());
+            }
+
+            case LEFT_HAND -> {
+                return Optional.of(equipment.getLeftHand());
             }
 
             default -> {
@@ -343,6 +404,18 @@ public abstract class Hero implements Heroic {
                         setAgility(getAgility() / getEquipment().getRightHand().getAttackSpeed());
 
                         equipment.takeWeapon(this.getEquipment().getFist());
+                    } else {
+                        throw new RuntimeException("Предмет не найден по идентификатору: [" + objectId + "]");
+                    }
+                }
+
+                case LEFT_HAND -> {
+                    if (equipment.getLeftHand() != null && Objects.equals(equipment.getLeftHand().getId(), objectId)) {
+                        // Сохраняем attackSpeed перед снятием
+                        double attackSpeed = equipment.getLeftHand().getAttackSpeed();
+                        // Возвращаем agility обратно
+                        setAgility(getAgility() / attackSpeed);
+                        equipment.unequipLeftHand();
                     } else {
                         throw new RuntimeException("Предмет не найден по идентификатору: [" + objectId + "]");
                     }

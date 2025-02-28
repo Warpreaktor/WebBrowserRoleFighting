@@ -2,7 +2,6 @@ package hero.classes;
 
 import hero.Hero;
 import item.weapon.SlingShot;
-import item.weapon.Stone;
 import lombok.Getter;
 import spec.HeroClass;
 

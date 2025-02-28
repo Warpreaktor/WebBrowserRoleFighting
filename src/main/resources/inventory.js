@@ -66,6 +66,7 @@ function renderInventory(cells) {
 
 // Отрисовка экипировки
 function renderEquipment(equipment) {
+    // Отрисовка правой руки
     document.querySelector(".right-hand").innerHTML = "";
     if (equipment.rightHand) {
         const weapon = document.createElement("img");
@@ -81,6 +82,25 @@ function renderEquipment(equipment) {
 
         document.querySelector(".right-hand").appendChild(weapon);
     }
+
+    // Отрисовка левой руки (щит или другой предмет)
+    document.querySelector(".left-hand").innerHTML = "";
+    if (equipment.leftHand) {
+        const leftHandItem = document.createElement("img");
+        leftHandItem.src = equipment.leftHand.picture;
+        leftHandItem.alt = equipment.leftHand.name;
+        leftHandItem.classList.add("item");
+        leftHandItem.setAttribute("draggable", "true");
+        leftHandItem.dataset.id = equipment.leftHand.id;
+
+        leftHandItem.addEventListener("dragstart", event => {
+            dragStart(event, equipment.leftHand);
+        });
+
+        document.querySelector(".left-hand").appendChild(leftHandItem);
+    }
+
+    // TODO: добавить отрисовку на двуручку
 }
 
 function updateCharacterStatsFromServer() {
@@ -333,10 +353,7 @@ function startNewGame() {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            playerId: "player1"
-        })
+        }
     })
     .then(response => {
         if (!response.ok) {

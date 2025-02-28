@@ -1,4 +1,4 @@
-package fight.dto;
+package dto.fightresult;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,4 +18,6 @@ public class FightResultDto {
     private List<String> message;
 
     private ArrayList<String> log;
+
+    private int roundCount;
 }

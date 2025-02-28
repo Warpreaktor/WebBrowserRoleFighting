@@ -4,9 +4,9 @@ import hero.Hero;
 import hero.HeroService;
 import commentator.CommentatorService;
 import core.GameMaster;
-import fight.dto.AttackDto;
-import fight.dto.DefenseDto;
-import fight.dto.FightResultDto;
+import dto.attack.AttackDto;
+import dto.defense.DefenseDto;
+import dto.fightresult.FightResultDto;
 import tools.Dice;
 
 import static constants.GlobalConstants.COST_OF_AUTOATTACK;
@@ -64,11 +64,12 @@ public class FightService {
             return result.getResultDto();
         }
 
+        result.clear();
+
         Hero player1 = heroService.get(PLAYER1);
         Hero player2 = heroService.get(PLAYER2);
 
-        result.clear();
-        result.addEventAndLog("Раунд - [" + gameMaster.nextRound() + "]");
+        result.setRoundCount(gameMaster.nextRound());
 
 
         if (isAnyBodyDeath(player1, player2)) {
@@ -131,20 +132,20 @@ public class FightService {
 
         AttackDto attackResult = attackPhase(attacker, defender);
 
+        if (attackResult.isFail()) {
+            return;
+        }
+
         if (attackResult.isCritical()) {
             result.addEventAndLog(String.format(
                     "%s. !!!КРИТИЧЕСКИ УРОН!!! [%s]",
                     attackResult.getMessage(),
-                    attackResult.getDamageDto().getFullDamage()));
+                    attackResult.getDamageDto().getSumDamage()));
         } else {
             result.addEventAndLog(String.format(
                     "%s. урон[%s]",
                     attackResult.getMessage(),
-                    attackResult.getDamageDto().getFullDamage()));
-        }
-
-        if (attackResult.isFail()) {
-            return;
+                    attackResult.getDamageDto().getSumDamage()));
         }
 
         DefenseDto defenseResult = defensePhase(attackResult, defender);

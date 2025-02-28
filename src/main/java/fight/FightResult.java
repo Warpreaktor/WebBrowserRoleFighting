@@ -1,22 +1,28 @@
 package fight;
 
 import hero.Hero;
-import fight.dto.FightResultDto;
+import dto.fightresult.FightResultDto;
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
 public class FightResult {
 
+    @Getter
     private boolean isOver;
 
+    @Getter
     private Hero winner;
 
+    @Getter
     private final ArrayList<String> message;
 
+    @Getter
     private final ArrayList<String> log;
+
+    @Getter
+    private int roundCount;
 
     public void setWinner(Hero winner) {
         isOver = true;
@@ -47,11 +53,21 @@ public class FightResult {
                 isOver,
                 winner,
                 getMessage(),
-                getLog()
+                getLog(),
+                roundCount
         );
     }
 
+    /**
+     * Логгировать сообщение.
+     *
+     * @param log сообщение для лога
+     */
     public void log(String log) {
         this.log.add(log);
+    }
+
+    public void setRoundCount(int value) {
+        this.roundCount = value;
     }
 }

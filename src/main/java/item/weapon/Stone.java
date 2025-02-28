@@ -15,7 +15,7 @@ public class Stone extends Weapon {
     public Stone() {
         super(UUID.randomUUID().toString(), "Камень", picturePath);
 
-        getDamage().getPhysicalDamage().setCrushingMax(1.2);
+        getDamage().setCrushing(1.2, 1.4);
 
         setAttackSpeed(1.3);
 

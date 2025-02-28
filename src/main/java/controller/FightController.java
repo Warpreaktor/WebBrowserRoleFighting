@@ -7,10 +7,7 @@ import spark.Spark;
 
 public class FightController {
 
-    private FightService fightService;
-
     public FightController() {
-        fightService = FightService.getInstance();
     }
 
     public void registerRoutes() {
@@ -20,6 +17,6 @@ public class FightController {
     public final Route fight = (req, res) -> {
         res.type("application/json");
 
-        return new Gson().toJson(fightService.fight());
+        return new Gson().toJson(FightService.getInstance().fight());
     };
 }

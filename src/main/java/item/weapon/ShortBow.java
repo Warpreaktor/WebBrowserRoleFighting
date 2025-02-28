@@ -16,7 +16,7 @@ public class ShortBow extends Weapon {
     public ShortBow() {
         super(UUID.randomUUID().toString(), "Короткий лук", picturePath);
 
-        getDamage().getPhysicalDamage().setPiercingMax(3.0);
+        getDamage().setPiercing(2.0, 3.0);
 
         setAttackSpeed(0.75);
 

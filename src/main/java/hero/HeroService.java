@@ -73,6 +73,18 @@ public class HeroService {
     }
 
     /**
+     * Создаёт персонажа для игрока с указанным именем и классом.
+     * Если имя или класс не указаны, создаёт случайного персонажа.
+     *
+     * @param name      Имя персонажа.
+     * @param heroClass Класс персонажа.
+     * @return Созданный персонаж.
+     */
+    public Hero createPlayerHero(String name, HeroClass heroClass) {
+        return saveCharacter("player1", createHero(name, heroClass));
+    }
+
+    /**
      * Создаёт персонажа с указанным именем и классом.
      * Если имя или класс не указаны, создаёт случайного персонажа.
      *
@@ -133,7 +145,7 @@ public class HeroService {
                 return new Halfling(name);
 
             default:
-                return createRandomCharacter();
+                throw new RuntimeException("Класс героя не определён");
         }
     }
 

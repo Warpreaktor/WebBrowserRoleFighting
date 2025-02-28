@@ -1,4 +1,4 @@
-package fight.dto;
+package dto.attack;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -52,6 +52,6 @@ public class AttackDto {
         this.isFail = true;
         this.attacker = attacker;
         this.message = message;
-        damageDto = new DamageDto(0.0, 0.0);
+        damageDto = new DamageDto(0d, 0d, 0d, 0d);
     }
 }

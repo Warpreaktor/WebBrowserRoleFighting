@@ -45,7 +45,7 @@ function loadPlayers() {
 
             let frameOverlay = document.createElement("div");
             frameOverlay.classList.add("frame-overlay");
-            frameOverlay.style.backgroundImage = `url('${HOST}/images/hero/frame.png')`;
+            frameOverlay.style.backgroundImage = `url('${HOST}/images/hero/frame_02.png')`;
             player1Box.appendChild(frameOverlay);
         })
         .catch(err => console.error("Ошибка загрузки Player1", err));
@@ -80,7 +80,7 @@ function loadPlayers() {
 
             let frameOverlay = document.createElement("div");
             frameOverlay.classList.add("frame-overlay");
-            frameOverlay.style.backgroundImage = `url('${HOST}/images/hero/frame.png')`;
+            frameOverlay.style.backgroundImage = `url('${HOST}/images/hero/frame_02.png')`;
             player2Box.appendChild(frameOverlay);
         })
         .catch(err => console.error("Ошибка загрузки Player2", err));
@@ -90,10 +90,10 @@ function loadPlayers() {
 const style = document.createElement('style');
 style.innerHTML = `
   .damage-blink {
-      animation: damageEffect 1s ease-in-out 2;
+      animation: damageEffect 1s ease-in-out 3;
   }
   .shield-blink {
-      animation: shieldEffect 1s ease-in-out 2;
+      animation: shieldEffect 1s ease-in-out 3;
   }
   @keyframes damageEffect {
       0% { background-color: red; }
@@ -108,7 +108,12 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
+//Счетчик раундов
+function updateRoundNumber(round) {
+    document.getElementById("roundNumber").textContent = `Раунд ${round}`;
+}
 
+//Бой
 document.getElementById('fightForm').addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -121,6 +126,8 @@ document.getElementById('fightForm').addEventListener('submit', function (e) {
         .then(response => response.json())
         .then(data => {
             console.log("Ответ от сервера:", data);
+
+            updateRoundNumber(data.roundCount);
 
             let messageHtml = data.message
                 .map(line => `<p>${line}</p>`)
@@ -140,7 +147,6 @@ document.getElementById('fightForm').addEventListener('submit', function (e) {
             document.getElementById('roundResult').textContent = "Ошибка во время боя!";
         });
 });
-
 
 function updateHpBars() {
     if (player1 && player1.maxHitpoint !== undefined) {
