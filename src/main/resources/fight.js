@@ -6,7 +6,16 @@ let oldPlayer2Hp = null;
 let oldPlayer1Shield = null;
 let oldPlayer2Shield = null;
 
-window.onload = loadPlayers;
+//Применение способностей
+let selectedAbility = null; // Хранит выбранную способность, если требуется цель
+let originalCursor = document.body.style.cursor; // Сохраняем оригинальный курсор
+
+
+// Загрузка данных при открытии экрана
+window.onload = function() {
+    loadPlayers();
+    loadPlayerAbilities();
+};
 
 document.addEventListener("DOMContentLoaded", function () {
     document.body.style.backgroundImage = `url('${HOST}/images/location/Dead_Forest.png')`;
@@ -326,7 +335,78 @@ function replaceFightButton() {
     fightButton.replaceWith(restButton); // Заменяем кнопку "Бой!"
 }
 
+function loadPlayerAbilities() {
+    fetch(`${HOST}/getPlayer/abilities/player1`)
+        .then(response => response.json())
+        .then(data => {
+            console.log("Загружены способности:", data);
 
+            data.forEach((ability, index) => {
+                let abilitySlot = document.getElementById(`ability${index + 1}`);
+                if (abilitySlot) {
+                    abilitySlot.style.backgroundImage = `url('${ability.picturePath}')`;
+                    abilitySlot.setAttribute("data-tooltip", `${ability.name}: ${ability.description}`);
 
+                    abilitySlot.onclick = () => {
+                                            if (ability.type === "ENEMY_TARGET") {
+                                                startTargetingMode(ability);
+                                            } else {
+                                                useAbility(ability, null); // Если не нужна цель, сразу используем
+                                            }
+                                        };
+                }
+            });
+        })
+        .catch(err => console.error("Ошибка загрузки способностей", err));
+}
 
+function startTargetingMode(ability) {
+    console.log(`Выбрана способность ${ability.name} - Ожидание цели`);
+    selectedAbility = ability;
 
+    // Проверяем, доступен ли указатель
+    let targetCursor = `${HOST}/images/target.png`;
+
+    let img = new Image();
+    img.src = targetCursor;
+    img.onload = () => {
+        document.body.style.cursor = `url('${targetCursor}') 16 16, pointer`; // Указываем размер
+    };
+
+    // Добавляем слушатель клика для выбора цели
+    document.getElementById("player2").addEventListener("click", onEnemyTargetClick);
+}
+
+function onEnemyTargetClick() {
+    if (selectedAbility) {
+        console.log(`Применение способности ${selectedAbility.name} на врага`);
+        useAbility(selectedAbility, "player2");
+
+        // Сбрасываем выбор способности и восстанавливаем курсор
+        selectedAbility = null;
+        setTimeout(() => {
+            document.body.style.cursor = "auto";
+        }, 100);
+
+        // Убираем слушатель клика, чтобы не мешал другим кликам
+        document.getElementById("player2").removeEventListener("click", onEnemyTargetClick);
+    }
+}
+
+function useAbility(ability, target) {
+    let requestBody = { ability: ability.name };
+    if (target) {
+        requestBody.target = target;
+    }
+
+    fetch(`${HOST}/useAbility`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestBody)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(`Способность ${ability.name} активирована:`, data.message);
+    })
+    .catch(err => console.error("Ошибка при использовании способности", err));
+}

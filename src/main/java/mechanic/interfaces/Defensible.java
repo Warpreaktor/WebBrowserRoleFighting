@@ -2,6 +2,7 @@ package mechanic.interfaces;
 
 import dto.attack.AttackDto;
 import dto.defense.DefenseDto;
+import hero.State;
 import mechanic.Health;
 import mechanic.Shield;
 
@@ -11,6 +12,8 @@ import static tools.Dice.getChance;
  * Всё что может защищаться от атак.
  */
 public interface Defensible extends Evasion {
+
+    State getState();
 
     double getBlockChance();
 

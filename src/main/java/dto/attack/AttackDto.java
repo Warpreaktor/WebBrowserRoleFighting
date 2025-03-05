@@ -52,6 +52,6 @@ public class AttackDto {
         this.isFail = true;
         this.attacker = attacker;
         this.message = message;
-        damageDto = new DamageDto(0d, 0d, 0d, 0d);
+        damageDto = new DamageDto();
     }
 }

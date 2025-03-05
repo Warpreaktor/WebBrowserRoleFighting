@@ -4,6 +4,8 @@ import dto.MinMax;
 
 import java.util.Random;
 
+import static constants.GlobalConstants.GLOBAL_CRIT_DAMAGE_MULTIPLIER;
+
 /**
  * 🎲
  */
@@ -13,6 +15,20 @@ public class Dice {
 
     public static double getChance() {
         return random.nextDouble();
+    }
+
+    /**
+     * Метод совершает проверку на что-нибудь... на всё что угодно, у чего имеется некоторый шанс.
+     * Критический удар, блок, уклонение, наложить шок или яд.
+     *
+     * @param chance шанс героя совершить действие, которое будет подвергнуто проверке.
+     *
+     * @return true если попытка была успешной.
+     */
+    public static boolean tryTo(double chance) {
+        double dice = getChance();
+
+        return chance >= dice;
     }
 
     public static int rollSix() {

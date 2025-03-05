@@ -3,7 +3,7 @@ package hero;
 import hero.classes.Archer;
 import hero.classes.Halfling;
 import hero.classes.Mage;
-import hero.classes.Samodiva;
+import hero.classes.samodiva.Samodiva;
 import hero.classes.Skeleton;
 import hero.classes.Barbarian;
 import spec.HeroClass;

@@ -1,10 +1,8 @@
-package hero.classes;
+package hero.classes.samodiva;
 
 import hero.Hero;
 import lombok.Getter;
 import spec.HeroClass;
-
-import java.util.List;
 
 import static hero.constants.messages.SamodivaMessages.ATTACK_MESSAGES;
 import static hero.constants.messages.SamodivaMessages.BLOCKED_MESSAGES;
@@ -67,6 +65,8 @@ public class Samodiva extends Hero {
         setEndurance(ENDURANCE);
         setBlockChance(BLOCK_CHANCE);
         setCritChance(CRIT_CHANCE);
+
+        addAbility(new LightningStrike());
 
         getShield().fillUp();
         getHealth().fillUp();

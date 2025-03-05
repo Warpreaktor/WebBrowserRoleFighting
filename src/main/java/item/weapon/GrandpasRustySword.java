@@ -2,6 +2,7 @@ package item.weapon;
 
 import config.ApplicationProperties;
 import item.weapon.abstracts.Weapon;
+import lombok.Getter;
 
 import java.util.UUID;
 
@@ -21,6 +22,7 @@ import java.util.UUID;
  */
 public class GrandpasRustySword extends Weapon {
 
+    @Getter
     private static final String picturePath = ApplicationProperties.getHost() + "/images/weapon/blade/grandpas_rusty_sword.png";
 
     public GrandpasRustySword() {

@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 
 public class CombatServiceTest {
 
-    private FightService fightService;
+    private FightServiceV2 fightServiceV2;
 
     public HeroService heroService;
 
@@ -39,7 +39,7 @@ public class CombatServiceTest {
     public void fight1() {
         heroService = mock(HeroService.class);
 
-        fightService = spy(new FightService(heroService, new FightResult(), new GameMaster()));
+        fightServiceV2 = spy(new FightServiceV2(heroService, new FightResult(), new GameMaster()));
 
         Hero player1 = new Archer(PLAYER1);
         Hero player2 = new Mage(PLAYER2);
@@ -50,11 +50,11 @@ public class CombatServiceTest {
                 .thenReturn(player2);
 
         for (int i = 0; i < 100; i++) {
-            fightService.fight();
+            fightServiceV2.fight();
         }
 
         // Подсчитываем, сколько раз реально вызвался `combat`
-        List<Invocation> details = Mockito.mockingDetails(fightService).getInvocations().stream()
+        List<Invocation> details = Mockito.mockingDetails(fightServiceV2).getInvocations().stream()
                 .filter(invocation -> invocation.getMethod().getName().equals("combat"))
                 .collect(Collectors.toList());
 
@@ -80,7 +80,7 @@ public class CombatServiceTest {
     @Test
     void checkWinner() {
         heroService = mock(HeroService.class);
-        fightService = new FightService(heroService,
+        fightServiceV2 = new FightServiceV2(heroService,
                 new FightResult(),
                 new GameMaster());
 
@@ -92,7 +92,7 @@ public class CombatServiceTest {
 
         player1.getHealth().setValue(0D);
         player2.getHealth().setValue(10D);
-        String result1 = fightService.fightIsOver();
+        String result1 = fightServiceV2.fightIsOver();
         Assertions.assertEquals(PLAYER1 + " падает замертво", result1);
     }
 
@@ -102,7 +102,7 @@ public class CombatServiceTest {
     @Test
     void checkWinner2() {
         heroService = mock(HeroService.class);
-        fightService = new FightService(heroService,
+        fightServiceV2 = new FightServiceV2(heroService,
                 new FightResult(),
                 new GameMaster());
 
@@ -114,7 +114,7 @@ public class CombatServiceTest {
 
         player1.getHealth().setValue(10D);
         player2.getHealth().setValue(0D);
-        String result2 = fightService.fightIsOver();
+        String result2 = fightServiceV2.fightIsOver();
         Assertions.assertEquals(PLAYER2 + " падает замертво", result2);
     }
 
@@ -124,7 +124,7 @@ public class CombatServiceTest {
     @Test
     void checkWinner3() {
         heroService = mock(HeroService.class);
-        fightService = new FightService(heroService, new FightResult(), new GameMaster());
+        fightServiceV2 = new FightServiceV2(heroService, new FightResult(), new GameMaster());
 
         Hero player1 = new Archer(PLAYER1);
         Hero player2 = new Mage(PLAYER2);
@@ -134,7 +134,7 @@ public class CombatServiceTest {
 
         player1.getHealth().setValue(10D);
         player2.getHealth().setValue(10D);
-        String result3 = fightService.fightIsOver();
+        String result3 = fightServiceV2.fightIsOver();
         Assertions.assertEquals("", result3);
     }
 
@@ -146,7 +146,7 @@ public class CombatServiceTest {
     void checkWinner4() {
         heroService = mock(HeroService.class);
         FightResult mockResult = mock(FightResult.class);
-        fightService = new FightService(heroService,
+        fightServiceV2 = new FightServiceV2(heroService,
                 mockResult,
                 new GameMaster());
 
@@ -159,7 +159,7 @@ public class CombatServiceTest {
         //Player1 проиграл, Player2 должен быть победителем
         player1.getHealth().setValue(0D);
         player2.getHealth().setValue(10D);
-        fightService.fightIsOver();
+        fightServiceV2.fightIsOver();
 
         verify(mockResult, times(1)).setWinner(player2);
     }
@@ -172,7 +172,7 @@ public class CombatServiceTest {
     void checkWinner5() {
         heroService = mock(HeroService.class);
         FightResult mockResult = mock(FightResult.class);
-        fightService = new FightService(heroService,
+        fightServiceV2 = new FightServiceV2(heroService,
                 mockResult,
                 new GameMaster());
 
@@ -184,7 +184,7 @@ public class CombatServiceTest {
 
         player1.getHealth().setValue(10D);
         player2.getHealth().setValue(0D);
-        fightService.fightIsOver();
+        fightServiceV2.fightIsOver();
 
         verify(mockResult, times(1)).setWinner(player1);
     }
@@ -206,7 +206,7 @@ public class CombatServiceTest {
         FightResult mockResult = mock(FightResult.class);
         GameMaster gameMaster = new GameMaster();
 
-        fightService = new FightService(heroService, mockResult, gameMaster);
+        fightServiceV2 = new FightServiceV2(heroService, mockResult, gameMaster);
 
         //Чтобы точно попал
         player1.setAccuracy(100D);
@@ -218,7 +218,7 @@ public class CombatServiceTest {
 
         // Маг атакует, у противника падает маг. щит и блокируется его восстановление
         while (player2.getShield().getValue() >= 10){
-            fightService.fight();
+            fightServiceV2.fight();
         }
 
         assertTrue(player2.getShield().getIsBlocked().get(), "Щит должен быть заблокирован на 1 ход");
@@ -228,7 +228,7 @@ public class CombatServiceTest {
 
         var shieldValue = player2.getShield().getValue();
         //Щит должен быть заблокирован
-        fightService.fight();
+        fightServiceV2.fight();
 
         // Щит всё ещё заблокирован, т.к. был только 1 ход после атаки
         assertTrue(player2.getShield().getIsBlocked().get(), "Щит должен быть всё еще заблокирован");
@@ -237,7 +237,7 @@ public class CombatServiceTest {
         player1.setAccuracy(0.0);
         player1.setEndurance(0.0);
         //Щит должен разблокироваться и восстановиться в конце раунда
-        fightService.fight();
+        fightServiceV2.fight();
 
         assertFalse(player2.getShield().getIsBlocked().get(), "Щит должен разблокироваться");
         assertTrue(shieldValue < player2.getShield().getValue(), "Щит должен немного восстановиться после удара");
