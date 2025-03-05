@@ -29,12 +29,26 @@ public class DamageDto {
      */
     private Double fire;
 
+    /**
+     * "Электрический урон
+     */
+    private Double electric;
+
+    public DamageDto() {
+        this.piercing = 0.0;
+        this.cutting = 0.0;
+        this.crushing = 0.0;
+        this.fire = 0.0;
+        this.electric = 0.0;
+    }
+
     public double getSumDamage() {
 
         return piercing
                 + cutting
                 + crushing
-                + fire;
+                + fire
+                + electric;
     }
 
     public double getAllPhysical() {
@@ -42,5 +56,11 @@ public class DamageDto {
         return piercing
                 + cutting
                 + crushing;
+    }
+
+    public double getAllMagic() {
+
+        return fire
+                + electric;
     }
 }

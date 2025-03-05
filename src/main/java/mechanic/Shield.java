@@ -1,12 +1,10 @@
 package mechanic;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.util.concurrent.atomic.AtomicBoolean;
+import mechanic.interfaces.Switchable;
 
 @Getter
-public class Shield {
+public class Shield implements Switchable {
 
     private Double value = 0D;
 
@@ -21,14 +19,19 @@ public class Shield {
      */
     private Double maxValue = 0D;
 
-    private AtomicBoolean isBlocked = new AtomicBoolean(false);
+    private boolean isActive = false;
+
+    @Override
+    public boolean isActive() {
+        return isActive;
+    }
 
     public void setValue(Double value) {
         this.value = value;
     }
 
     public void setIsBlocked(boolean blocked) {
-        isBlocked.set(blocked);
+        isActive = blocked;
     }
 
     public void setMaxValue(Double maxValue) {
@@ -65,7 +68,7 @@ public class Shield {
      * Значение щита не может превышать максимальное.
      */
     public void shieldGrow() {
-        if (isBlocked.get()) {
+        if (isActive) {
             return;
         }
 
@@ -97,5 +100,15 @@ public class Shield {
         double remainingDamage = damage - value;
         value = 0.0;
         return remainingDamage;
+    }
+
+    @Override
+    public void switchOn() {
+        this.isActive = true;
+    }
+
+    @Override
+    public void switchOff() {
+
     }
 }

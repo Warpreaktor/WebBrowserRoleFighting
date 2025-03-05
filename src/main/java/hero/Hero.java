@@ -1,6 +1,7 @@
 package hero;
 
 import dto.damage.DamageDto;
+import mechanic.Ability;
 import mechanic.Damage;
 import equip.EquipSlot;
 import equip.Equipment;
@@ -15,6 +16,7 @@ import mechanic.Shield;
 import mechanic.Strength;
 import mechanic.interfaces.Heroic;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,7 +33,6 @@ import static equip.EquipSlot.RIGHT_HAND;
 import static tools.Calculator.average;
 
 @Getter
-@Setter
 public abstract class Hero implements Heroic {
 
 //==================================================//
@@ -40,9 +41,12 @@ public abstract class Hero implements Heroic {
     /**
      * Имя персонажа. Должно быть у всех, даже у бедных.
      */
+    @Setter
     private String name;
 
     private Statistic statistic;
+
+    private State state;
 
 //==================================================//
 //                  ОДЁЖКА                          //
@@ -94,35 +98,44 @@ public abstract class Hero implements Heroic {
      * Прицельные атаки это любое оружие, которым тыкают, режут или метают, стреляют,
      * а так же и вся магия, которая бьёт в цель, типа фаерболов, молний и проч.
      */
+    @Setter
     private Double accuracy;
 
     /**
      * Уклонение увеличивает шанс уклониться от удара, по сути, снижает вражескую меткость
      */
+    @Setter
     private Double evasion;
 
     /**
      * Очки выносливости персонажа. Каждый раз когда он действует они тратятся.
      */
+    @Setter
     private Double endurance;
 
     /**
      * Скорость атаки. Влияет на сколько пунктов за каждый ход поднимается параметр endurance.
      */
+    @Setter
     private Double agility;
 
     /**
      * Шанс блокировки удара
      */
+    @Setter
     private double blockChance;
 
     /**
      * Шанс критического удара. Проверка на критический удар проходит во время фазы атаки.
      */
+    @Setter
     private Double critChance;
+
+    private List<Ability> abilities;
 
     public Hero() {
         statistic = new Statistic();
+        state = new State();
         intelligence = new Intelligence(0);
         strength = new Strength(0);
         dexterity = new Dexterity(0);
@@ -136,6 +149,7 @@ public abstract class Hero implements Heroic {
         endurance = 0.0;
         blockChance = 0.0;
         critChance = 0.0;
+        abilities = new ArrayList<>(4);
     }
 
     public void setIntelligence(Integer value) {
@@ -257,12 +271,14 @@ public abstract class Hero implements Heroic {
         var crushingDamage = rightHand.getCrushing();
         var cuttingDamage = rightHand.getCutting();
         var fireDamage = rightHand.getFire();
+        var electricDamage = rightHand.getElectric();
 
         return new Damage(
         piercingDamage,
         crushingDamage,
         cuttingDamage,
-        fireDamage
+        fireDamage,
+                electricDamage
         );
     }
 
@@ -278,12 +294,14 @@ public abstract class Hero implements Heroic {
         var crushingDamage = rightHand.getCrushing();
         var cuttingDamage = rightHand.getCutting();
         var fireDamage = rightHand.getFire();
+        var electricDamage = rightHand.getElectric();
 
         return new DamageDto(
                 average(List.of(piercingDamage.getMin(), piercingDamage.getMax())),
                 average(List.of(crushingDamage.getMin(), crushingDamage.getMax())),
                 average(List.of(cuttingDamage.getMin(), cuttingDamage.getMax())),
-                average(List.of(fireDamage.getMin(), fireDamage.getMax()))
+                average(List.of(fireDamage.getMin(), fireDamage.getMax())),
+                average(List.of(electricDamage.getMin(), electricDamage.getMax()))
         );
     }
 
@@ -436,7 +454,11 @@ public abstract class Hero implements Heroic {
         }
     }
 
-    public void takeWeapon() {
-
+    /**
+     * Добавляет новую способность героя
+     */
+    public void addAbility(Ability ability) {
+        this.abilities.add(ability);
     }
+
 }

@@ -1,10 +1,8 @@
 package core;
 
-import dto.hero.HeroRequestDto;
-import fight.FightService;
+import fight.FightServiceV2;
 import hero.Hero;
 import hero.HeroService;
-import spec.HeroClass;
 
 import static hero.constants.HeroConstants.PLAYER1;
 import static hero.constants.HeroConstants.PLAYER2;
@@ -34,7 +32,7 @@ public class GameService {
      *
      */
     public void startNewGame() {
-        FightService.newInstance();
+        FightServiceV2.newInstance();
 
         heroService.createLevelingHeroes(10);
 
@@ -60,11 +58,11 @@ public class GameService {
                         heroService.getLevelingHero(
                                 player.getStatistic().getWins()));
 
-        FightService.newInstance();
+        FightServiceV2.newInstance();
     }
 
     public void startTestGame() {
-        FightService.newInstance();
+        FightServiceV2.newInstance();
 
         Hero player = heroService
                 .saveCharacter(PLAYER1,

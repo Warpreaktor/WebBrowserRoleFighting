@@ -5,6 +5,7 @@ import hero.Hero;
 import hero.HeroService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import mechanic.Ability;
 import spark.Route;
 import spark.Spark;
 import spec.HeroClass;
@@ -27,6 +28,7 @@ public class HeroController {
 
         Spark.get("/getPlayer/:id", getPlayer);
         Spark.get("/getPlayer/statistic/:id", getPlayerStatistic);
+        Spark.get("/getPlayer/abilities/:id", getPlayerAbilities);
 
         Spark.post("/hero/dropItem/", dropItem);
 
@@ -124,5 +126,19 @@ public class HeroController {
             res.status(400);
             return gson.toJson("Предмет не перемещён");
         }
+    };
+
+    /**
+     * Возвращает способности героя
+     */
+    private final Route getPlayerAbilities = (req, res) -> {
+        String id = req.params("id");
+
+        var player = heroService.get(id);
+
+        return new Gson().toJson(player.getAbilities()
+                .stream()
+                .map(Ability::toDto)
+                .toList());
     };
 }
