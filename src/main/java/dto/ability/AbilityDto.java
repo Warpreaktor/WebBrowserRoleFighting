@@ -20,4 +20,10 @@ public class AbilityDto {
 
     @Getter
     private String description;
+
+    @Getter
+    private int cost;
+
+    @Getter
+    private String isActive;
 }

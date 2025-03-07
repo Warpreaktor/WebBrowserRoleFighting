@@ -12,7 +12,6 @@ public class FightController {
 
     public void registerRoutes() {
         Spark.get("/fight", fight);
-        Spark.get("/fight/attack", attack);
     }
 
     public final Route fight = (req, res) -> {
@@ -21,9 +20,4 @@ public class FightController {
         return new Gson().toJson(FightServiceV2.getInstance().fight());
     };
 
-    public final Route attack = (req, res) -> {
-        res.type("application/json");
-
-        return new Gson().toJson(FightServiceV2.getInstance().combatMoves());
-    };
 }

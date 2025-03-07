@@ -2,14 +2,13 @@ package fight;
 
 import hero.Hero;
 import hero.HeroService;
-import commentator.CommentatorService;
 import core.GameMaster;
 import dto.attack.AttackDto;
 import dto.defense.DefenseDto;
 import dto.fightresult.FightResultDto;
-import tools.Dice;
 
-import static constants.GlobalConstants.COST_OF_AUTOATTACK;
+import java.util.Objects;
+
 import static hero.constants.HeroConstants.PLAYER1;
 import static hero.constants.HeroConstants.PLAYER2;
 
@@ -75,14 +74,21 @@ public class FightServiceV2 {
 
         result.setRoundCount(gameMaster.nextRound());
 
-        return result.getResultDto();
+        return combatMoves();
     }
 
     public FightResultDto combatMoves() {
-        Hero attacker = heroService.get(PLAYER1);
-        Hero defender = heroService.get(PLAYER2);
+        Hero player1 = heroService.get(PLAYER1);
+        Hero player2 = heroService.get(PLAYER2);
 
-        AttackDto attackResult = attackPhase(attacker, defender);
+        var playebleHero = gameMaster.nextTurn();
+
+        //TODO продумать как именно будет проходить фаза атаки человеческого игрока.
+        if (Objects.equals(playebleHero, player1)) {
+            return result.getResultDto();
+        }
+
+        AttackDto attackResult = attackCpu(player2, player1);
 
         if (attackResult.isFail()) {
             return result.getResultDto();
@@ -100,9 +106,9 @@ public class FightServiceV2 {
                     attackResult.getDamageDto().getSumDamage()));
         }
 
-        DefenseDto defenseResult = defensePhase(attackResult, defender);
+        DefenseDto defenseResult = defensePhase(attackResult, player1);
 
-        gameMaster.block(defender.getShield(), 1);
+        gameMaster.switchOn(player1.getShield(), 1);
 
         result.addEventAndLog(defenseResult.getMessage());
 
@@ -116,7 +122,8 @@ public class FightServiceV2 {
 //  ▀█                                          █▀  //
 //   ▀█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▀    //
 //==================================================//
-    public AttackDto attackPhase(Hero attacker, Hero defender) {
+    // TODO Продумать алгоритм того, как будет проходить фаза атаки у компьютерного игрока
+    public AttackDto attackCpu(Hero attacker, Hero defender) {
 
         if (gameMaster.isHit(attacker, defender)) {
             return attacker.attack(defender);

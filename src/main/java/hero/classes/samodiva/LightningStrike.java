@@ -3,6 +3,7 @@ package hero.classes.samodiva;
 import config.ApplicationProperties;
 import dto.MinMax;
 import dto.ability.AbilityDto;
+import dto.attack.AttackDto;
 import dto.damage.DamageDto;
 import enums.AbilityType;
 import lombok.Getter;
@@ -20,20 +21,25 @@ import static tools.Dice.tryTo;
 public class LightningStrike extends Ability {
 
     @Getter
-//    private static final String picturePath = ApplicationProperties.getHost() + "/images/ability/hero/samodiva/lightning_strike.png";
-    private static final String picturePath = ApplicationProperties.getHost() + "/images/ability/hero/samodiva/lightning_strike.png";
+    private static final String PICTURE_PATH = ApplicationProperties.getHost() + "/images/ability/hero/samodiva/lightning_strike.png";
 
-    private static final String name = "Удар молнией";
+    private static final String NAME = "Удар молнией";
 
-    private static final AbilityType type = ENEMY_TARGET;
+    private static final AbilityType TYPE = ENEMY_TARGET;
 
-    private static final String description = "Удар молнией";
+    private static final String DESCRIPTION = "Самодива призывает к стихиям грома и бьёт врага электрическим разрядом. "
+            + "С некоторой вероятностью, может ввести врага в состояние шока.";
+
+    private static final int COST = 1;
+
+    private static final int COOL_DOWN = 0;
 
     /**
      * Информация об уроне.
      */
     @Getter
     private Damage damage;
+
 
     /**
      * Шанс наложить шок
@@ -43,10 +49,15 @@ public class LightningStrike extends Ability {
     /**
      * Длительность шока
      */
-    private int shockTemp = 1;
+    private int shockLength = 1;
+
+    /**
+     * Активна ли способность. Если способность не активно, то использовать её нельзя.
+     */
+    private boolean isActive = true;
 
     public LightningStrike() {
-        super(picturePath, name, type, description);
+        super(PICTURE_PATH, NAME, TYPE, DESCRIPTION, COST, COOL_DOWN);
 
         this.damage = Damage
                 .builder()
@@ -61,13 +72,17 @@ public class LightningStrike extends Ability {
     @Override
     public DamageDto apply(Defensible target) {
 
-        if (tryTo(chanceToShock)){
+        if (tryTo(chanceToShock)) {
             var shock = target.getState().getShock();
-            target.getState().switchOn(shock, shockTemp);
+            target.getState().switchOn(shock, shockLength);
         }
 
         var damageDto = new DamageDto();
         damageDto.setElectric(randomByMinMax(damage.getElectric()));
+        var attack = new AttackDto(damageDto, "ЖАХХ! Ударило молнией!");
+
+        target.defense(attack);
+
         return damageDto;
     }
 
@@ -75,11 +90,34 @@ public class LightningStrike extends Ability {
     public AbilityDto toDto() {
         return AbilityDto
                 .builder()
-                .picturePath(picturePath)
-                .name(name)
-                .type(type)
-                .description(description)
+                .picturePath(PICTURE_PATH)
+                .name(NAME)
+                .type(TYPE)
+                .description(DESCRIPTION)
                 .build();
     }
 
+    /**
+     * Возвращает текущее состояние способности. Активна ли она.
+     */
+    @Override
+    public boolean isActive() {
+        return isActive;
+    }
+
+    /**
+     * Включает способность
+     */
+    @Override
+    public void switchOn() {
+        isActive = true;
+    }
+
+    /**
+     * Выключает способность
+     */
+    @Override
+    public void switchOff() {
+        isActive = false;
+    }
 }

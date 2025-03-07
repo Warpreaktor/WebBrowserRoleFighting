@@ -7,6 +7,7 @@ public interface Heroic extends
         Defensible,
         HeroInfo,
         Focusing,
-        Accuracy
+        Accuracy,
+        UseAbility
 {
 }

@@ -40,9 +40,9 @@ public class Samodiva extends Hero {
     private static final double CRIT_CHANCE = 0.3;
 
     /**
-     * Создаёт нового лучника с заданным именем и базовыми характеристиками.
+     * Создаёт нового героя с заданным именем и базовыми характеристиками.
      *
-     * @param name Имя лучника
+     * @param name Имя героя
      */
     public Samodiva(String name) {
         super();

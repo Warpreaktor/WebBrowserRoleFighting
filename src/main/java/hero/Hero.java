@@ -241,8 +241,21 @@ public abstract class Hero implements Heroic {
         evasion -= value;
     }
 
+    /**
+     * Отдых. Метод восстанавливающий очки выносливости.
+     */
     public void rest() {
         endurance += agility;
+    }
+
+    /**
+     * Измождение. Метод отнимающий очки выносливости.
+     *
+     * @param cost количество вычитаемых очков
+     */
+    @Override
+    public void exhaustion(double cost) {
+        endurance -= cost;
     }
 
     public void shieldGrow() {
