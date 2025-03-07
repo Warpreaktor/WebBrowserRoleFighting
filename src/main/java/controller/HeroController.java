@@ -11,6 +11,8 @@ import spark.Spark;
 import spec.HeroClass;
 import item.ItemService;
 
+import static hero.constants.HeroConstants.PLAYER1;
+
 public class HeroController {
 
     HeroService heroService;
@@ -30,7 +32,9 @@ public class HeroController {
         Spark.get("/getPlayer/statistic/:id", getPlayerStatistic);
         Spark.get("/getPlayer/abilities/:id", getPlayerAbilities);
 
-        Spark.post("/hero/dropItem/", dropItem);
+        Spark.post("/hero/dropItem", dropItem);
+
+        Spark.post("/hero/useAbility", useAbility);
 
     }
 
@@ -140,5 +144,29 @@ public class HeroController {
                 .stream()
                 .map(Ability::toDto)
                 .toList());
+    };
+
+    public final Route useAbility = (req, res) -> {
+        Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson(req.body(), JsonObject.class);
+
+        if (jsonObject == null
+                || !jsonObject.has("ability")
+                || !jsonObject.has("target")
+        ) {
+
+            res.status(400);
+            return gson.toJson("Ошибка: отсутствуют обязательные поля!");
+        }
+
+        String ability = jsonObject.get("ability").getAsString();
+        String target = jsonObject.get("target").getAsString();
+
+        var defensible = heroService.get(target);
+
+        heroService.get(PLAYER1).useAbility(ability, defensible);
+
+        res.status(200);
+        return gson.toJson("Способность [" + ability + "] применена");
     };
 }

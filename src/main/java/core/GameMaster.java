@@ -81,19 +81,36 @@ public class GameMaster {
         while (iterator.hasNext()) {
             var event = iterator.next();
             if (event.timeIsEnd()) {
-                event.switchOff();
+                event.switcher();
                 iterator.remove();
             }
         }
     }
 
-    public void block(Switchable switchObject, int roundCount) {
+    /**
+     * Активирует способность/эффект на некоторое количество раундов
+     * Если нужно активировать способность или эффект только
+     * на остаток текущего раунда в параметр roundCount нужно передать 0
+     *
+     * @param switchObject объект который нужно активировать
+     * @param roundCount количество раундов на которое активируется объект
+     */
+    public void switchOn(Switchable switchObject, int roundCount) {
         switchObject.switchOn();
         eventTimers.add(new EventTimer(switchObject, roundCount));
     }
 
-    public void unBlock(Switchable switchObject) {
+    /**
+     * Деактивирует способность/эффект на некоторое количество раундов.
+     * Если нужно заморозить способность или деактивировать эффект только
+     * на остаток текущего раунда в параметр roundCount нужно передать 0
+     *
+     * @param switchObject объект который нужно активировать
+     * @param roundCount количество раундов на которое активируется объект
+     */
+    public void switchOff(Switchable switchObject, int roundCount) {
         switchObject.switchOff();
+        eventTimers.add(new EventTimer(switchObject, roundCount));
     }
 
     /**
@@ -124,8 +141,18 @@ public class GameMaster {
             return roundCount < 0;
         }
 
-        public void switchOff() {
-            this.switchObject.switchOff();
+        /**
+         * Переключает активность эффекта/способности в противоположное состояние.
+         */
+        public void switcher() {
+            var switchable = this.switchObject;
+
+            if (switchable.isActive()) {
+
+                switchable.switchOff();
+            } else {
+                switchable.switchOn();
+            }
         }
     }
 }

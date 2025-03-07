@@ -150,7 +150,7 @@ public class FightServiceV1 {
 
         DefenseDto defenseResult = defensePhase(attackResult, defender);
 
-        gameMaster.block(defender.getShield(), 1);
+        gameMaster.switchOn(defender.getShield(), 1);
 
         result.addEventAndLog(defenseResult.getMessage());
     }

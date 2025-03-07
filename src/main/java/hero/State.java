@@ -20,11 +20,11 @@ public class State {
     }
 
     @Getter
-    private Shock shock;
+    private Shock shock = new Shock();
 
     public void switchOn(Switchable switchable, int roundCount) {
         switchable.switchOn();
-        gameMaster.block(switchable, roundCount);
+        gameMaster.switchOn(switchable, roundCount);
     }
 
     public void switchOff(Switchable switchable, int numRound) {

@@ -188,6 +188,7 @@ function updateEnduranceBars() {
     if (player1) {
         let restPercent1 = Math.min(player1.endurance * 100, 100);
         document.getElementById("enduranceP1").style.width = restPercent1 + "%";
+
     }
     if (player2) {
         let restPercent2 = Math.min(player2.endurance * 100, 100);
@@ -399,14 +400,17 @@ function useAbility(ability, target) {
         requestBody.target = target;
     }
 
-    fetch(`${HOST}/useAbility`, {
+    fetch(`${HOST}/hero/useAbility`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestBody)
     })
     .then(response => response.json())
     .then(data => {
+
         console.log(`Способность ${ability.name} активирована:`, data.message);
+
+        loadPlayers();
     })
     .catch(err => console.error("Ошибка при использовании способности", err));
 }
