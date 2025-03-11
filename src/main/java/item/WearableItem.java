@@ -3,6 +3,9 @@ package item;
 import equip.EquipSlot;
 import lombok.Getter;
 import lombok.Setter;
+import mechanic.Ability;
+
+import java.util.List;
 
 /**
  * Это класс для всех предметов, которые можно экипировать.

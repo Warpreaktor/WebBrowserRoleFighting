@@ -25,5 +25,5 @@ public class AbilityDto {
     private int cost;
 
     @Getter
-    private String isActive;
+    private Boolean isActive;
 }

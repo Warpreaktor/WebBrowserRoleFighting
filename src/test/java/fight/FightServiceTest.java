@@ -22,7 +22,7 @@ import static hero.constants.HeroConstants.PLAYER2;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class FightServiceV2Test {
+public class FightServiceTest {
 
     private static final int TEST_FIGHT_COUNT = 10;
 
@@ -30,7 +30,7 @@ public class FightServiceV2Test {
 
     private static final double AVERAGE_ROUND_COUNT = 30;
 
-    private FightServiceV2 fightServiceV2;
+    private FightService fightService;
 
     public HeroService heroService;
 
@@ -77,7 +77,7 @@ public class FightServiceV2Test {
         LinkedList<Integer> average = new LinkedList<>();
 
         for (int i = 0; i < TEST_FIGHT_COUNT; i++) {
-            fightServiceV2 = new FightServiceV2(
+            fightService = new FightService(
                     heroService,
                     new FightResult(),
                     new GameMaster());
@@ -95,7 +95,7 @@ public class FightServiceV2Test {
 
             int roundCount = 0;
             do {
-                result = fightServiceV2.fight();
+                result = fightService.fight();
                 roundCount++;
             } while (!result.isOver());
 

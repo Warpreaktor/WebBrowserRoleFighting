@@ -10,9 +10,10 @@ import item.Item;
 import lombok.Getter;
 import lombok.Setter;
 import mechanic.Dexterity;
+import mechanic.Endurance;
 import mechanic.Health;
 import mechanic.Intelligence;
-import mechanic.Shield;
+import mechanic.MagicScreen;
 import mechanic.Strength;
 import mechanic.interfaces.Heroic;
 
@@ -22,17 +23,14 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static constants.GlobalConstants.ACCURACY_PER_DEXTERITY_MULTIPLIER;
-import static constants.GlobalConstants.AGILITY_PER_DEXTERITY_MULTIPLIER;
+import static constants.GlobalConstants.ENDURANCE_GROWER_PER_DEXTERITY_MULTIPLIER;
 import static constants.GlobalConstants.EVASION_PER_DEXTERITY_MULTIPLIER;
 import static constants.GlobalConstants.HEALTH_PER_STRENGTH_MULTIPLIER;
 import static constants.GlobalConstants.HEAL_PER_STRENGTH_MULTIPLIER;
-import static constants.GlobalConstants.SHIELD_GROWER_PER_INTELLIGENCE_MULTIPLIER;
-import static constants.GlobalConstants.SHIELD_PER_INTELLIGENCE_MULTIPLIER;
-import static equip.EquipSlot.LEFT_HAND;
-import static equip.EquipSlot.RIGHT_HAND;
+import static constants.GlobalConstants.MAGIC_SCREEN_GROWER_PER_INTELLIGENCE_MULTIPLIER;
+import static constants.GlobalConstants.MAGIC_SCREEN_PER_INTELLIGENCE_MULTIPLIER;
 import static tools.Calculator.average;
 
-@Getter
 public abstract class Hero implements Heroic {
 
 //==================================================//
@@ -41,29 +39,34 @@ public abstract class Hero implements Heroic {
     /**
      * Имя персонажа. Должно быть у всех, даже у бедных.
      */
+    @Getter
     @Setter
     private String name;
 
+    @Getter
     private Statistic statistic;
 
+    @Getter
     private State state;
 
-//==================================================//
-//                  ОДЁЖКА                          //
-//==================================================//
+    //==================================================//
+    //                  ОДЁЖКА                          //
+    //==================================================//
     /**
      * Экипировка. То что надето на персонажа.
      */
+    @Getter
     private Equipment equipment;
 
     /**
      * Инвентарь персонажа. То что он носит в мешке за спиной.
      */
+    @Getter
     private Inventory inventory;
 
     //==================================================//
-//                  СТАТЫ                           //
-//==================================================//
+    //                  СТАТЫ                           //
+    //==================================================//
     /**
      * Сила влияет на очки здоровья
      */
@@ -86,51 +89,52 @@ public abstract class Hero implements Heroic {
     /**
      * Магический щит. Постепенно увеличивается и уменьшает весь входящий урон.
      */
-    private Shield shield;
+    @Getter
+    private MagicScreen magicScreen;
 
     /**
      * Здоровье персонажа. Если здоровье упадёт до 0, вы умрёте.
      */
+    @Getter
     private Health health;
+
+    /**
+     * Выносливость персонажа.
+     */
+    @Getter
+    private Endurance endurance;
 
     /**
      * Меткость, влияет на шанс попадания любой прицельной атакой.
      * Прицельные атаки это любое оружие, которым тыкают, режут или метают, стреляют,
      * а так же и вся магия, которая бьёт в цель, типа фаерболов, молний и проч.
      */
+    @Getter
     @Setter
     private Double accuracy;
 
     /**
      * Уклонение увеличивает шанс уклониться от удара, по сути, снижает вражескую меткость
      */
+    @Getter
     @Setter
     private Double evasion;
 
     /**
-     * Очки выносливости персонажа. Каждый раз когда он действует они тратятся.
-     */
-    @Setter
-    private Double endurance;
-
-    /**
-     * Скорость атаки. Влияет на сколько пунктов за каждый ход поднимается параметр endurance.
-     */
-    @Setter
-    private Double agility;
-
-    /**
      * Шанс блокировки удара
      */
+    @Getter
     @Setter
     private double blockChance;
 
     /**
      * Шанс критического удара. Проверка на критический удар проходит во время фазы атаки.
      */
+    @Getter
     @Setter
     private Double critChance;
 
+    @Getter
     private List<Ability> abilities;
 
     public Hero() {
@@ -140,31 +144,30 @@ public abstract class Hero implements Heroic {
         strength = new Strength(0);
         dexterity = new Dexterity(0);
         inventory = new Inventory();
-        equipment = new Equipment();
-        shield = new Shield();
+        magicScreen = new MagicScreen();
         health = new Health();
         accuracy = 0.0;
-        agility = 0.0;
         evasion = 0.0;
-        endurance = 0.0;
+        endurance = new Endurance();
         blockChance = 0.0;
         critChance = 0.0;
         abilities = new ArrayList<>(4);
+        equipment = new Equipment(this);
     }
 
     public void setIntelligence(Integer value) {
         intelligence.setValue(value);
 
         if (value >= intelligence.getValue()) {
-            shield.addMaxValue(value.doubleValue() * SHIELD_PER_INTELLIGENCE_MULTIPLIER);
+            magicScreen.addMaxValue(value.doubleValue() * MAGIC_SCREEN_PER_INTELLIGENCE_MULTIPLIER);
         } else {
-            shield.decreaseMaxValue(value.doubleValue() * SHIELD_PER_INTELLIGENCE_MULTIPLIER);
+            magicScreen.decreaseMaxValue(value.doubleValue() * MAGIC_SCREEN_PER_INTELLIGENCE_MULTIPLIER);
         }
 
         if (value >= intelligence.getValue()) {
-            shield.addShieldGrower(value * SHIELD_GROWER_PER_INTELLIGENCE_MULTIPLIER);
+            magicScreen.addMagicScreenGrower(value * MAGIC_SCREEN_GROWER_PER_INTELLIGENCE_MULTIPLIER);
         } else {
-            shield.decreaseShieldGrower(value * SHIELD_GROWER_PER_INTELLIGENCE_MULTIPLIER);
+            magicScreen.decreaseMagicScreenGrower(value * MAGIC_SCREEN_GROWER_PER_INTELLIGENCE_MULTIPLIER);
         }
     }
 
@@ -183,9 +186,9 @@ public abstract class Hero implements Heroic {
         }
 
         if (value >= strength.getValue()) {
-            health.addHeal(value * HEAL_PER_STRENGTH_MULTIPLIER);
+            health.addGrower(value * HEAL_PER_STRENGTH_MULTIPLIER);
         } else {
-            health.decreaseHeal(value * HEAL_PER_STRENGTH_MULTIPLIER);
+            health.decreaseGrower(value * HEAL_PER_STRENGTH_MULTIPLIER);
         }
     }
 
@@ -200,9 +203,9 @@ public abstract class Hero implements Heroic {
         }
 
         if (value >= dexterityValue) {
-            addAgility(value * AGILITY_PER_DEXTERITY_MULTIPLIER);
+            addEnduranceGrower(value * ENDURANCE_GROWER_PER_DEXTERITY_MULTIPLIER);
         } else {
-            decreaseAgility(value * AGILITY_PER_DEXTERITY_MULTIPLIER);
+            decreaseEnduranceGrower(value * ENDURANCE_GROWER_PER_DEXTERITY_MULTIPLIER);
         }
 
         if (value >= dexterityValue) {
@@ -225,12 +228,12 @@ public abstract class Hero implements Heroic {
      *
      * @param value прибавляемой значение
      */
-    public void addAgility(Double value) {
-        agility += value;
+    public void addEnduranceGrower(Double value) {
+        endurance.addGrower(value);
     }
 
-    public void decreaseAgility(Double value) {
-        agility -= value;
+    public void decreaseEnduranceGrower(Double value) {
+        endurance.decreaseGrower(value);
     }
 
     public void addEvasion(Double value) {
@@ -244,8 +247,8 @@ public abstract class Hero implements Heroic {
     /**
      * Отдых. Метод восстанавливающий очки выносливости.
      */
-    public void rest() {
-        endurance += agility;
+    public void endurancePointGrow() {
+        endurance.grow();
     }
 
     /**
@@ -255,11 +258,11 @@ public abstract class Hero implements Heroic {
      */
     @Override
     public void exhaustion(double cost) {
-        endurance -= cost;
+        endurance.decreaseValue(cost);
     }
 
-    public void shieldGrow() {
-        shield.shieldGrow();
+    public void magicScreenGrow() {
+        magicScreen.grow();
     }
 
     /**
@@ -348,36 +351,15 @@ public abstract class Hero implements Heroic {
             }
         }
 
-        switch (to) {
+        if (equipment.equipped(to, item)) {
 
-            case RIGHT_HAND -> {
-                if (equipment.equipped(RIGHT_HAND, item)) {
-                    setAgility(getAgility() * getEquipment().getRightHand().getAttackSpeed());
+            clearSlotByObjectIdAndSlot(objectId, from);
 
-                    clearSlotByObjectIdAndSlot(objectId, from);
-                    //Находящийся в руке предмет переместить обратно
-//                    moveItem(item.getId(), to, from);
+            return true;
 
-                    return true;
+        } else {
 
-                } else {
-                    return false;
-                }
-            }
-
-            case LEFT_HAND -> {
-                if (equipment.equipped(LEFT_HAND, item)) {
-                    setAgility(getAgility() * getEquipment().getLeftHand().getAttackSpeed());
-
-                    clearSlotByObjectIdAndSlot(objectId, from);
-
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-
-            default -> throw new RuntimeException("Слот экипировки [" + to + "] не определён");
+            return false;
         }
     }
 
@@ -438,11 +420,10 @@ public abstract class Hero implements Heroic {
             switch (slot) {
 
                 case RIGHT_HAND -> {
+                    //Проверяем что удаляемый предмет правда экипирован
                     if (Objects.equals(equipment.getRightHand().getId(), objectId)) {
-                        //TODO сделать по нормальному. Думаю нужно отдельное поле множитель.
-                        setAgility(getAgility() / getEquipment().getRightHand().getAttackSpeed());
 
-                        equipment.takeWeapon(this.getEquipment().getFist());
+                        equipment.unequipRightHand();
                     } else {
                         throw new RuntimeException("Предмет не найден по идентификатору: [" + objectId + "]");
                     }
@@ -453,7 +434,7 @@ public abstract class Hero implements Heroic {
                         // Сохраняем attackSpeed перед снятием
                         double attackSpeed = equipment.getLeftHand().getAttackSpeed();
                         // Возвращаем agility обратно
-                        setAgility(getAgility() / attackSpeed);
+                        endurance.setGrower(endurance.getGrower() / attackSpeed);
                         equipment.unequipLeftHand();
                     } else {
                         throw new RuntimeException("Предмет не найден по идентификатору: [" + objectId + "]");
@@ -470,8 +451,8 @@ public abstract class Hero implements Heroic {
     /**
      * Добавляет новую способность героя
      */
-    public void addAbility(Ability ability) {
-        this.abilities.add(ability);
+    public void addAbilities(List<Ability> ability) {
+        this.abilities.addAll(ability);
     }
 
 }

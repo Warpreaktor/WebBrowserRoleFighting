@@ -5,17 +5,17 @@ import item.weapon.abstracts.Weapon;
 
 import java.util.UUID;
 
+import static constants.GlobalDamage.JUST_A_STONE;
+
 /**
- * Камень. Довольно бесполезный, но всё же лучше чем кулаками.
+ * Просто камень. Довольно бесполезный, но всё же лучше, чем кулаками.
  */
-public class Stone extends Weapon {
+public class JustAStone extends Weapon {
 
     private static final String picturePath = ApplicationProperties.getHost() + "/images/weapon/stone.png";
 
-    public Stone() {
-        super(UUID.randomUUID().toString(), "Камень", picturePath);
-
-        getDamage().setCrushing(1.2, 1.4);
+    public JustAStone() {
+        super(UUID.randomUUID().toString(), "Камень", picturePath, JUST_A_STONE);
 
         setAttackSpeed(1.3);
 

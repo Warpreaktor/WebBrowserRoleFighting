@@ -6,6 +6,7 @@ import hero.classes.Mage;
 import hero.classes.samodiva.Samodiva;
 import hero.classes.Skeleton;
 import hero.classes.Barbarian;
+import item.weapon.Knife;
 import spec.HeroClass;
 
 import java.util.ArrayList;
@@ -194,7 +195,8 @@ public class HeroService {
 
         for (int level = 0; level < maxLevel; level++) {
             Skeleton skeleton = new Skeleton("Скелет Ур. " + (level + 1));
-            skeleton.setLevel(level + 1);
+            skeleton.setAutoLevel(level + 1);
+//            skeleton.getEquipment().takeInRightHand(new Knife());
             levelingCreatures.add(skeleton);
         }
 

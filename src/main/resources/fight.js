@@ -3,22 +3,27 @@ let player2 = null;
 
 let oldPlayer1Hp = null;
 let oldPlayer2Hp = null;
-let oldPlayer1Shield = null;
-let oldPlayer2Shield = null;
+let oldPlayer1MagicScreen = null;
+let oldPlayer2MagicScreen = null;
 
 //Применение способностей
 let selectedAbility = null; // Хранит выбранную способность, если требуется цель
 let originalCursor = document.body.style.cursor; // Сохраняем оригинальный курсор
 
-
 // Загрузка данных при открытии экрана
 window.onload = function() {
+    refreshAll();
+};
+
+function refreshAll() {
     loadPlayers();
     loadPlayerAbilities();
-};
+}
+
 
 document.addEventListener("DOMContentLoaded", function () {
     document.body.style.backgroundImage = `url('${HOST}/images/location/Dead_Forest.png')`;
+    document.body.style.backgroundSize = "cover";
     document.body.style.backgroundSize = "cover";
     document.body.style.backgroundPosition = "center";
     document.body.style.backgroundRepeat = "no-repeat";
@@ -33,27 +38,27 @@ function loadPlayers() {
             let player1Box = document.getElementById("player1");
 
             // Проверка снижения HP (мигаем красным)
-            if (oldPlayer1Hp !== null && data.hitpoint < oldPlayer1Hp) {
+            if (oldPlayer1Hp !== null && data.healthValue < oldPlayer1Hp) {
                 let hpBar = document.getElementById("hpBar1");
                 hpBar.classList.add("damage-blink");
                 setTimeout(() => hpBar.classList.remove("damage-blink"), 1000);
             }
-            oldPlayer1Hp = data.hitpoint;
+            oldPlayer1Hp = data.healthValue;
 
             // Проверка снижения магического щита (мигаем голубым)
-            if (oldPlayer1Shield !== null && data.mageShield < oldPlayer1Shield) {
-                let shieldBar = document.getElementById("shieldBar1");
-                shieldBar.classList.add("shield-blink");
-                setTimeout(() => shieldBar.classList.remove("shield-blink"), 1000);
+            if (oldPlayer1MagicScreen !== null && data.magicScreenValue < oldPlayer1MagicScreen) {
+                let magicScreenBar = document.getElementById("magicScreenBar1");
+                magicScreenBar.classList.add("shield-blink");
+                setTimeout(() => magicScreenBar.classList.remove("shield-blink"), 1000);
             }
-            oldPlayer1Shield = data.mageShield;
+            oldPlayer1MagicScreen = data.magicScreenValue;
 
             player1 = data;
             player1Box.innerHTML = "";
             player1Box.style.backgroundImage = `url('${HOST}/images/hero/${data.heroClass}_PORT.png')`;
             document.getElementById("player1Name").textContent = data.name;
             updateHpBars();
-            updateEnduranceBars();
+            updateEndurance(data, "enduranceP1"); // Обновляем выносливость
 
             let frameOverlay = document.createElement("div");
             frameOverlay.classList.add("frame-overlay");
@@ -68,27 +73,27 @@ function loadPlayers() {
             let player2Box = document.getElementById("player2");
 
             // Проверка снижения HP (мигаем красным)
-            if (oldPlayer2Hp !== null && data.hitpoint < oldPlayer2Hp) {
+            if (oldPlayer2Hp !== null && data.healthValue < oldPlayer2Hp) {
                 let hpBar = document.getElementById("hpBar2");
                 hpBar.classList.add("damage-blink");
                 setTimeout(() => hpBar.classList.remove("damage-blink"), 1000);
             }
-            oldPlayer2Hp = data.hitpoint;
+            oldPlayer2Hp = data.healthValue;
 
             // Проверка снижения магического щита (мигаем голубым)
-            if (oldPlayer2Shield !== null && data.mageShield < oldPlayer2Shield) {
-                let shieldBar = document.getElementById("shieldBar2");
-                shieldBar.classList.add("shield-blink");
-                setTimeout(() => shieldBar.classList.remove("shield-blink"), 1000);
+            if (oldPlayer2MagicScreen !== null && data.magicScreenValue < oldPlayer2MagicScreen) {
+                let magicScreenBar = document.getElementById("magicScreenBar2");
+                magicScreenBar2.classList.add("shield-blink");
+                setTimeout(() => magicScreenBar2.classList.remove("shield-blink"), 1000);
             }
-            oldPlayer2Shield = data.mageShield;
+            oldPlayer2MagicScreen = data.magicScreenValue;
 
             player2 = data;
             player2Box.innerHTML = "";
             player2Box.style.backgroundImage = `url('${HOST}/images/hero/${data.heroClass}_PORT.png')`;
             document.getElementById("player2Name").textContent = data.name;
             updateHpBars();
-            updateEnduranceBars();
+            updateEndurance(data, "enduranceP2"); // Обновляем выносливость
 
             let frameOverlay = document.createElement("div");
             frameOverlay.classList.add("frame-overlay");
@@ -152,7 +157,7 @@ document.getElementById('fightForm').addEventListener('submit', function (e) {
                 openLootBox();
             }
 
-            setTimeout(loadPlayers, 80);
+            setTimeout(refreshAll, 80);
         })
         .catch(err => {
             console.error(err);
@@ -161,38 +166,47 @@ document.getElementById('fightForm').addEventListener('submit', function (e) {
 });
 
 function updateHpBars() {
-    if (player1 && player1.maxHitpoint !== undefined) {
-        let hpPercent1 = Math.floor((player1.hitpoint / player1.maxHitpoint) * 100);
+    if (player1 && player1.healthMaxValue !== undefined) {
+        let hpPercent1 = Math.floor((player1.healthValue / player1.healthMaxValue) * 100);
         document.getElementById("hpBar1").style.height = hpPercent1 + "%";
-        document.getElementById("hpValue1").textContent = Math.floor(player1.hitpoint);
+        document.getElementById("hpValue1").textContent = `${Math.floor(player1.healthValue)}/${Math.floor(player1.healthMaxValue)}`;
     }
-    if (player2 && player2.maxHitpoint !== undefined) {
-        let hpPercent2 = Math.floor((player2.hitpoint / player2.maxHitpoint) * 100);
+    if (player2 && player2.healthMaxValue !== undefined) {
+        let hpPercent2 = Math.floor((player2.healthValue / player2.healthMaxValue) * 100);
         document.getElementById("hpBar2").style.height = hpPercent2 + "%";
-        document.getElementById("hpValue2").textContent = Math.floor(player2.hitpoint);
+        document.getElementById("hpValue2").textContent = `${Math.floor(player2.healthValue)}/${Math.floor(player2.healthMaxValue)}`;
     }
 
-    if (player1 && player1.maxMageShield !== undefined) {
-        let shieldPercent1 = Math.floor((player1.mageShield / player1.maxMageShield) * 100);
-        document.getElementById("shieldBar1").style.height = shieldPercent1 + "%";
-        document.getElementById("shieldValue1").textContent = Math.floor(player1.mageShield);
+    if (player1 && player1.magicScreenMaxValue !== undefined) {
+        let shieldPercent1 = Math.floor((player1.magicScreenValue / player1.magicScreenMaxValue) * 100);
+        document.getElementById("magicScreenBar1").style.height = shieldPercent1 + "%";
+        document.getElementById("magicScreenValue1").textContent = Math.floor(player1.magicScreenValue);
     }
-    if (player2 && player2.maxMageShield !== undefined) {
-        let shieldPercent2 = Math.floor((player2.mageShield / player2.maxMageShield) * 100);
-        document.getElementById("shieldBar2").style.height = shieldPercent2 + "%";
-        document.getElementById("shieldValue2").textContent = Math.floor(player2.mageShield);
+    if (player2 && player2.magicScreenMaxValue !== undefined) {
+        let shieldPercent2 = Math.floor((player2.magicScreenValue / player2.magicScreenMaxValue) * 100);
+        document.getElementById("magicScreenBar2").style.height = shieldPercent2 + "%";
+        document.getElementById("magicScreenValue2").textContent = Math.floor(player2.magicScreenValue);
     }
 }
 
-function updateEnduranceBars() {
-    if (player1) {
-        let restPercent1 = Math.min(player1.endurance * 100, 100);
-        document.getElementById("enduranceP1").style.width = restPercent1 + "%";
+function updateEndurance(player, containerId) {
+    let container = document.getElementById(containerId);
+    if (!container) return; // Если контейнера нет, ничего не делаем
 
-    }
-    if (player2) {
-        let restPercent2 = Math.min(player2.endurance * 100, 100);
-        document.getElementById("enduranceP2").style.width = restPercent2 + "%";
+    container.innerHTML = ""; // Очищаем контейнер перед обновлением
+
+    let enduranceCount = Math.floor(player.enduranceMaxValue || 0); // Количество кружков
+    let filledCount = Math.floor(player.enduranceValue || 0); // Сколько кружков синие
+
+    for (let i = 0; i < enduranceCount; i++) {
+        let dot = document.createElement("div");
+        dot.classList.add("endurance-dot");
+
+        if (i < filledCount) {
+            dot.classList.add("filled"); // Заполненный кружочек
+        }
+
+        container.appendChild(dot);
     }
 }
 
@@ -337,28 +351,85 @@ function replaceFightButton() {
 }
 
 function loadPlayerAbilities() {
+    // Загрузка способностей игрока 1
     fetch(`${HOST}/getPlayer/abilities/player1`)
         .then(response => response.json())
-        .then(data => {
-            console.log("Загружены способности:", data);
+        .then(abilities => {
+            console.log("Способности игрока 1:", abilities);
 
-            data.forEach((ability, index) => {
-                let abilitySlot = document.getElementById(`ability${index + 1}`);
+            // Используем уже загруженные данные о player1
+            const heroEndurance = player1.enduranceValue; // Смотрим, сколько у героя выносливости
+
+            abilities.forEach((ability, index) => {
+                let slotId = `ability${index + 1}`;
+                let abilitySlot = document.getElementById(slotId);
+
+                ability.slotId = slotId;
+
+                if (abilitySlot) {
+                    // Устанавливаем иконку и описание
+                    abilitySlot.style.backgroundImage = `url('${ability.picturePath}')`;
+                    abilitySlot.setAttribute("data-tooltip", `${ability.name}: ${ability.description}`);
+
+                    // Логика блокировки
+                    if (!ability.isActive || ability.cost > heroEndurance) {
+                        // Блокируем
+                        abilitySlot.classList.add("disabled");
+                        abilitySlot.onclick = null;
+                        console.log(`Блокируем ${ability.name} (cost:${ability.cost} / heroEndurance:${heroEndurance})`);
+                    } else {
+                        // Разблокируем
+                        abilitySlot.classList.remove("disabled");
+                        abilitySlot.onclick = () => {
+                            if (ability.type === "ENEMY_TARGET") {
+                                startTargetingMode(ability);
+                            } else {
+                                // ...
+                            }
+                        };
+                    }
+                }
+            });
+        })
+        .catch(err => console.error("Ошибка загрузки способностей игрока1", err));
+
+    // Аналогично для игрока 2
+    fetch(`${HOST}/getPlayer/abilities/player2`)
+        .then(response => response.json())
+        .then(abilities => {
+            console.log("Способности игрока 2:", abilities);
+
+            // Используем уже загруженные данные о player2
+            const heroEndurance = player2.enduranceValue;
+
+            abilities.forEach((ability, index) => {
+                let slotId = `ability${index + 1 + 4}`;
+                let abilitySlot = document.getElementById(slotId);
+
+                ability.slotId = slotId;
+
                 if (abilitySlot) {
                     abilitySlot.style.backgroundImage = `url('${ability.picturePath}')`;
                     abilitySlot.setAttribute("data-tooltip", `${ability.name}: ${ability.description}`);
 
-                    abilitySlot.onclick = () => {
-                                            if (ability.type === "ENEMY_TARGET") {
-                                                startTargetingMode(ability);
-                                            } else {
-                                                useAbility(ability, null); // Если не нужна цель, сразу используем
-                                            }
-                                        };
+                    if (!ability.isActive || ability.cost > heroEndurance) {
+                        abilitySlot.classList.add("disabled");
+                        abilitySlot.onclick = null;
+                        console.log(`Блокируем ${ability.name} (cost:${ability.cost} / heroEndurance:${heroEndurance})`);
+                    } else {
+                        abilitySlot.classList.remove("disabled");
+                        abilitySlot.onclick = () => {
+                            if (ability.type === "ENEMY_TARGET") {
+                                startTargetingMode(ability);
+                            } else {
+                                // ...
+                            }
+                        };
+                    }
                 }
             });
         })
-        .catch(err => console.error("Ошибка загрузки способностей", err));
+        .catch(err => console.error("Ошибка загрузки способностей игрока2", err));
 }
 
 function startTargetingMode(ability) {
@@ -381,15 +452,40 @@ function startTargetingMode(ability) {
 function onEnemyTargetClick() {
     if (selectedAbility) {
         console.log(`Применение способности ${selectedAbility.name} на врага`);
-        useAbility(selectedAbility, "player2");
 
-        // Сбрасываем выбор способности и восстанавливаем курсор
+        // Сохраняем ID слота ДО обнуления selectedAbility
+        let abilitySlotId = selectedAbility.slotId;
+
+        useAbility(selectedAbility, "player2")
+            .then((data) => {
+                if (!abilitySlotId) {
+                    console.error("Ошибка: abilitySlotId равен null");
+                    return;
+                }
+
+                // Находим слот
+                let abilitySlot = document.getElementById(abilitySlotId);
+
+                // Если способность деактивировалась
+                if (!data.isActive) {
+                    if (abilitySlot) {
+                        abilitySlot.classList.add("disabled");
+                        abilitySlot.onclick = null;
+                        console.log(`Выключение способности в слоте ${abilitySlotId}`);
+                    } else {
+                        console.error(`Ошибка: не найден слот ${abilitySlotId}`);
+                    }
+                }
+            })
+            .catch(err => console.error("Ошибка при использовании способности", err));
+
+        // Сбрасываем выбор и восстанавливаем курсор
         selectedAbility = null;
         setTimeout(() => {
             document.body.style.cursor = "auto";
         }, 100);
 
-        // Убираем слушатель клика, чтобы не мешал другим кликам
+        // Удаляем слушатель
         document.getElementById("player2").removeEventListener("click", onEnemyTargetClick);
     }
 }
@@ -400,17 +496,26 @@ function useAbility(ability, target) {
         requestBody.target = target;
     }
 
-    fetch(`${HOST}/hero/useAbility`, {
+    console.log(`Отправка запроса на сервер для способности: ${ability.name}`);
+
+    return fetch(`${HOST}/hero/useAbility`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestBody)
     })
-    .then(response => response.json())
-    .then(data => {
-
-        console.log(`Способность ${ability.name} активирована:`, data.message);
-
-        loadPlayers();
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Ошибка сервера: ${response.status}`);
+        }
+        return response.json();
     })
-    .catch(err => console.error("Ошибка при использовании способности", err));
+    .then(data => {
+        console.log("Ответ сервера на способность:", data);
+        refreshAll();
+        return data;
+    })
+    .catch(err => {
+        console.error("Ошибка при использовании способности:", err);
+        throw err;
+    });
 }

@@ -38,7 +38,7 @@ document.getElementById('createForm').addEventListener('submit', function(e) {
     .then(response => response.json())
     .then(data => {
         console.log("Ответ сервера:", data);
-        document.getElementById('creationResult').textContent = `✅ Создан герой: ${data.name} (${data.heroClass}) HP: ${data.hitpoint}`;
+        document.getElementById('creationResult').textContent = `✅ Создан герой: ${data.name} (${data.heroClass}) HP: ${data.healthValue}`;
         createdPlayer = data;
         enableStartButton();
     })

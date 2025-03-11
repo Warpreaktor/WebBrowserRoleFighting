@@ -12,15 +12,17 @@ public class HeroInfoDto {
 
     private String heroClass;
 
-    private double hitpoint;
+    private double healthMaxValue;
 
-    private double mageShield;
+    private double healthValue;
 
-    private double maxMageShield;
+    private double magicScreenMaxValue;
 
-    private double endurance;
+    private double magicScreenValue;
 
-    private double maxHitpoint;
+    private double enduranceValue;
+
+    private double enduranceMaxValue;
 
     private Statistic statistic;
 }

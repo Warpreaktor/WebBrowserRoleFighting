@@ -6,6 +6,8 @@ import lombok.Getter;
 
 import java.util.UUID;
 
+import static constants.GlobalDamage.GRANDPAS_RUSTY_SWORD;
+
 /**
  * Grandpa’s Rusty Sword - Дедов ржавый меч
  *
@@ -26,7 +28,7 @@ public class GrandpasRustySword extends Weapon {
     private static final String picturePath = ApplicationProperties.getHost() + "/images/weapon/blade/grandpas_rusty_sword.png";
 
     public GrandpasRustySword() {
-        super(UUID.randomUUID().toString(), "Короткий меч", picturePath);
+        super(UUID.randomUUID().toString(), "Короткий меч", picturePath, GRANDPAS_RUSTY_SWORD);
 
         getDamage().setPiercing(0.9, 1.5);
         getDamage().setCrushing(1.0, 1.0);

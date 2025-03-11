@@ -23,9 +23,9 @@ public abstract class Weapon extends WearableItem {
     @Setter
     private Boolean throwing;
 
-    public Weapon(String id, String name, String picturePath) {
+    public Weapon(String id, String name, String picturePath, Damage damage) {
         super(id, name, picturePath);
-        damage = new Damage();
+        this.damage = damage;
 
         // По умолчанию оружие можно держать в правой руке
         setRightHand(true);

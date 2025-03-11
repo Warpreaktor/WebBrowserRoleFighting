@@ -7,6 +7,8 @@ import lombok.Getter;
 
 import java.util.UUID;
 
+import static constants.GlobalDamage.KNIFE_STRIKE;
+
 /**
  * Чтобы было чем нарезать хлеб в пути.
  */
@@ -15,10 +17,9 @@ public class Knife extends Weapon {
 
     private static final String picturePath = ApplicationProperties.getHost() + "/images/weapon/blade/knife.png";
 
-    public Knife() {
-        super(UUID.randomUUID().toString(), "Нож", picturePath);
 
-        getDamage().setPiercing(1.0, 2.0);
+    public Knife() {
+        super(UUID.randomUUID().toString(), "Нож", picturePath, KNIFE_STRIKE);
 
         setAttackSpeed(1.2);
 

@@ -7,8 +7,6 @@ import item.weapon.Knife;
 import lombok.Getter;
 import spec.HeroClass;
 
-import java.util.List;
-
 import static hero.constants.messages.BarbarianMessages.ATTACK_MESSAGES;
 import static hero.constants.messages.BarbarianMessages.BLOCKED_MESSAGES;
 import static hero.constants.messages.BarbarianMessages.MISSED_MESSAGES;
@@ -37,12 +35,12 @@ public class Barbarian extends Hero {
     private static final int DEXTERITY = 5;
 
     private static final double HEALTH = 70;
-    private static final double SHIELD = 0;
+    private static final double MAGIC_SCREEN = 0;
     
     private static final double ACCURACY = 0.65;
     private static final double EVASION = 0.1;
-    private static final double AGILITY = 0.4;
     private static final double ENDURANCE = 3.5;
+    private static final double ENDURANCE_GROWER = 0.4;
     private static final double BLOCK_CHANCE = 0.5;
     private static final double CRIT_CHANCE = 0.15;
 
@@ -61,12 +59,13 @@ public class Barbarian extends Hero {
         setDexterity(DEXTERITY);
 
         getHealth().addMaxValue(HEALTH);
-        getShield().addMaxValue(SHIELD);
+        getMagicScreen().addMaxValue(MAGIC_SCREEN);
 
         setAccuracy(ACCURACY);
         setEvasion(EVASION);
-        setEndurance(ENDURANCE);
-        setAgility(AGILITY);
+
+        getEndurance().setMaxValue(ENDURANCE);
+        getEndurance().setGrower(ENDURANCE_GROWER);
 
         setCritChance(CRIT_CHANCE);
         setBlockChance(BLOCK_CHANCE);
@@ -76,11 +75,12 @@ public class Barbarian extends Hero {
         getInventory().put(new WoodenShield());
 
         getHealth().fillUp();
-        getShield().fillUp();
+        getMagicScreen().fillUp();
+        getEndurance().fillUp();
     }
 
     @Override
-    public String getShieldAbsorbMessage() {
+    public String getMagicScreenAbsorbMessage() {
         int index = randomInt(SHIELD_ABSORB_MESSAGES.size());
         return String.format(SHIELD_ABSORB_MESSAGES.get(index), getName());
     }

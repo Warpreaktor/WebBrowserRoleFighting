@@ -1,10 +1,11 @@
 package mechanic;
 
+import core.GameMaster;
 import lombok.Getter;
 import mechanic.interfaces.Switchable;
 
 @Getter
-public class Shield implements Switchable {
+public class MagicScreen implements Switchable {
 
     private Double value = 0D;
 
@@ -51,11 +52,11 @@ public class Shield implements Switchable {
         this.value -= value;
     }
 
-    public void addShieldGrower(Double value) {
+    public void addMagicScreenGrower(Double value) {
         shieldGrower += value;
     }
 
-    public void decreaseShieldGrower(Double value) {
+    public void decreaseMagicScreenGrower(Double value) {
         shieldGrower -= value;
     }
 
@@ -67,7 +68,7 @@ public class Shield implements Switchable {
      * Щит приращивается на фазе фокусировки.
      * Значение щита не может превышать максимальное.
      */
-    public void shieldGrow() {
+    public void grow() {
         if (isActive) {
             return;
         }
@@ -99,6 +100,9 @@ public class Shield implements Switchable {
         // Вычисляем остаток урона
         double remainingDamage = damage - value;
         value = 0.0;
+
+        GameMaster.getInstance().switchOn(this, 1);
+        
         return remainingDamage;
     }
 

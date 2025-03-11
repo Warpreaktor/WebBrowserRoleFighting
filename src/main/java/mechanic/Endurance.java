@@ -3,35 +3,35 @@ package mechanic;
 import lombok.Getter;
 import lombok.Setter;
 
-public class Health {
+import static constants.GlobalConstants.ENDURANCE_GROWER_PER_DEXTERITY_MULTIPLIER;
+import static constants.GlobalConstants.ENDURANCE_VALUE_PER_DEXTERITY_MULTIPLIER;
+
+public class Endurance {
 
     /**
-     * Максимальное количество жизней у персонажа.
+     * Значение выносливости. Выносливость влияет на очки выносливости.
      */
     @Getter
     private double maxValue;
 
     /**
-     * Значение здоровье.
+     * Очки выносливости персонажа. Каждый раз когда он действует они тратятся.
      */
     @Setter
     @Getter
     private double value;
 
     /**
-     * Лечение. Количество пунктов на которые персонаж может вылечиться за фокусировку.
+     * Скорость восстановления. Влияет на сколько очков за раунд поднимается endurancePoint.
      */
     @Setter
     @Getter
-    private double grower;
+    private Double grower;
 
-    @Getter
-    private Boolean isDead = false;
-
-    public Health() {
+    public Endurance() {
+        maxValue = 0.0 * ENDURANCE_VALUE_PER_DEXTERITY_MULTIPLIER;
         value = 0.0;
-        maxValue = 0.0;
-        grower = 0.0;
+        grower = 0.0 * ENDURANCE_GROWER_PER_DEXTERITY_MULTIPLIER;
     }
 
     public void addGrower(Double value) {
@@ -57,13 +57,13 @@ public class Health {
     public void setMaxValue(Double maxValue) {
         this.maxValue = maxValue;
 
-        if (this.maxValue < value) {
-            value = this.maxValue;
+        if (this.maxValue < this.value) {
+            this.value = this.maxValue;
         }
     }
 
     /**
-     * Полностью поправляет здоровье
+     * Полностью восстанавливает выносливость
      */
     public void fillUp() {
         value = maxValue;
@@ -75,18 +75,14 @@ public class Health {
 
     public void decreaseMaxValue(Double value) {
         maxValue -= value;
-        this.value -= value;
+        this.maxValue -= value;
     }
 
     /**
-     * Потратить здоровье.
+     * Потратить выносливость.
      */
     public void decreaseValue(double value) {
         this.value -= value;
     }
 
-    public void die() {
-        value = 0.0;
-        isDead = true;
-    }
 }

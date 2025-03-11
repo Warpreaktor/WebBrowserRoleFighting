@@ -1,6 +1,6 @@
 package core;
 
-import fight.FightServiceV2;
+import fight.FightService;
 import hero.Hero;
 import hero.HeroService;
 
@@ -32,7 +32,7 @@ public class GameService {
      *
      */
     public void startNewGame() {
-        FightServiceV2.newInstance();
+        FightService.newInstance();
 
         heroService.createLevelingHeroes(10);
 
@@ -58,11 +58,11 @@ public class GameService {
                         heroService.getLevelingHero(
                                 player.getStatistic().getWins()));
 
-        FightServiceV2.newInstance();
+        FightService.newInstance();
     }
 
     public void startTestGame() {
-        FightServiceV2.newInstance();
+        FightService.newInstance();
 
         Hero player = heroService
                 .saveCharacter(PLAYER1,

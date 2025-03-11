@@ -4,8 +4,9 @@ import dto.damage.DamageDto;
 import dto.damage.DamageResponseDto;
 import dto.hero.HeroInfoDto;
 import dto.hero.HeroCharacteristicDto;
+import mechanic.Endurance;
 import mechanic.Health;
-import mechanic.Shield;
+import mechanic.MagicScreen;
 import spec.HeroClass;
 
 public interface HeroInfo {
@@ -16,13 +17,11 @@ public interface HeroInfo {
 
     Health getHealth();
 
-    Double getEndurance();
+    Endurance getEndurance();
 
-    Shield getShield();
+    MagicScreen getMagicScreen();
 
     Double getAccuracy();
-
-    Double getAgility();
 
     Double getEvasion();
 
@@ -36,11 +35,12 @@ public interface HeroInfo {
                 .name(getName())
                 .statistic(getStatistic())
                 .heroClass(getHeroClass().name())
-                .hitpoint(getHealth().getValue())
-                .maxHitpoint(getHealth().getMaxValue())
-                .mageShield(getShield().getValue())
-                .maxMageShield(getShield().getMaxValue())
-                .endurance(getEndurance())
+                .healthValue(getHealth().getValue())
+                .healthMaxValue(getHealth().getMaxValue())
+                .magicScreenValue(getMagicScreen().getValue())
+                .magicScreenMaxValue(getMagicScreen().getMaxValue())
+                .enduranceMaxValue(getEndurance().getMaxValue())
+                .enduranceValue(getEndurance().getValue())
                 .build();
     }
 
@@ -49,12 +49,13 @@ public interface HeroInfo {
                 .builder()
                 .name(getName())
                 .heroClass(getHeroClass().name())
-                .health(getHealth().getValue())
-                .maxHealth(getHealth().getMaxValue())
-                .shield(getShield().getValue())
-                .maxShield(getShield().getMaxValue())
+                .healthValue(getHealth().getValue())
+                .healthMaxValue(getHealth().getMaxValue())
+                .magicScreenValue(getMagicScreen().getValue())
+                .magicScreenMaxValue(getMagicScreen().getMaxValue())
+                .enduranceMaxValue(getEndurance().getMaxValue())
+                .enduranceValue(getEndurance().getValue())
                 .accuracy(getAccuracy())
-                .agility(getAgility())
                 .evasion(getEvasion())
                 .damage(new DamageResponseDto(
                         getDamageDto().getAllPhysical(),

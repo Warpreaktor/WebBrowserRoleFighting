@@ -1,10 +1,10 @@
 package tools;
 
 import dto.MinMax;
+import dto.damage.DamageDto;
+import mechanic.Damage;
 
 import java.util.Random;
-
-import static constants.GlobalConstants.GLOBAL_CRIT_DAMAGE_MULTIPLIER;
 
 /**
  * 🎲
@@ -59,7 +59,24 @@ public class Dice {
      *
      * @param minMax границы в рамках которого будет возвращено число
      */
-    public static double randomByMinMax(MinMax minMax) {
+    public static double byMinMaxChance(MinMax minMax) {
+
+        if (minMax.getMax() <= 0d) {
+            return 0d;
+        }
+
         return random.nextDouble(minMax.getMin(), minMax.getMax() + 1);
+    }
+
+    public static DamageDto byMinMaxChance(Damage damage) {
+
+        return DamageDto
+                .builder()
+                .piercing(byMinMaxChance(damage.getPiercing()))
+                .cutting(byMinMaxChance(damage.getCutting()))
+                .crushing(byMinMaxChance(damage.getCrushing()))
+                .fire(byMinMaxChance(damage.getFire()))
+                .electric(byMinMaxChance(damage.getElectric()))
+                .build();
     }
 }

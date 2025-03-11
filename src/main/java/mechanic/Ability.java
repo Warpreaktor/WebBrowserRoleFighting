@@ -12,6 +12,7 @@ public abstract class Ability implements Switchable {
     /**
      * Путь к иконке способности
      */
+    @Getter
     private final String picturePath;
 
     /**
@@ -23,11 +24,13 @@ public abstract class Ability implements Switchable {
     /**
      * Тип применения способности.
      */
+    @Getter
     private final AbilityType type;
 
     /**
      * Описание способности
      */
+    @Getter
     private final String description;
 
     /**
@@ -42,6 +45,11 @@ public abstract class Ability implements Switchable {
     @Getter
     private int coolDown;
 
+    /**
+     * Активна ли способность. Если способность не активно, то использовать её нельзя.
+     */
+    private boolean isActive = true;
+
     protected Ability(String picturePath,
                       String name,
                       AbilityType type,
@@ -55,10 +63,48 @@ public abstract class Ability implements Switchable {
         this.type = type;
         this.description = description;
         this.cost = cost;
+        this.coolDown = coolDown;
     }
 
-    public abstract DamageDto apply(Defensible target);
+    /**
+     * Применить способность
+     */
+    public abstract void apply(Defensible target);
 
-    public abstract AbilityDto toDto();
+    /**
+     * Возвращает текущее состояние способности. Активна ли она.
+     */
+    @Override
+    public boolean isActive() {
+        return isActive;
+    }
+
+    /**
+     * Включает способность
+     */
+    @Override
+    public void switchOn() {
+        isActive = true;
+    }
+
+    /**
+     * Выключает способность
+     */
+    @Override
+    public void switchOff() {
+        isActive = false;
+    }
+
+    public AbilityDto toDto() {
+        return AbilityDto
+                .builder()
+                .picturePath(picturePath)
+                .name(name)
+                .type(type)
+                .description(description)
+                .cost(cost)
+                .isActive(isActive)
+                .build();
+    }
 
 }

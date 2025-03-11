@@ -94,9 +94,6 @@ public class HeroTest {
         Inventory inventoryMock = mock(Inventory.class);
         Equipment equipmentMock = mock(Equipment.class);
 
-        hero.setInventory(inventoryMock);
-        hero.setEquipment(equipmentMock);
-
         Item knife1 = new Knife();
         Item[] cells = new Item[12];
         cells[0] = knife1;
@@ -121,9 +118,6 @@ public class HeroTest {
         Hero hero = heroService.createHero(null, null);
         Inventory inventoryMock = mock(Inventory.class);
         Equipment equipmentMock = mock(Equipment.class);
-
-        hero.setInventory(inventoryMock);
-        hero.setEquipment(equipmentMock);
 
         // Мокаем, что ячейка уже занята другим предметом
         Item knife1 = new Knife();
@@ -154,9 +148,6 @@ public class HeroTest {
     void dropItem4() {
         Hero hero = heroService.createHero(null, null);
 
-        hero.setInventory(new Inventory());
-        hero.setEquipment(new Equipment());
-
         Item knife1 = new Knife();
 
         hero.getInventory().getCells()[0] = knife1;
@@ -177,8 +168,6 @@ public class HeroTest {
     @Test
     void dropItem5() {
         Hero hero = heroService.createHero(null, null);
-        hero.setInventory(new Inventory());
-        hero.setEquipment(new Equipment());
 
         Item knife1 = new Knife();
 
@@ -204,9 +193,6 @@ public class HeroTest {
         Inventory inventoryMock = mock(Inventory.class);
         Equipment equipmentMock = mock(Equipment.class);
         Item testItem = mock(Item.class);
-
-        hero.setInventory(inventoryMock);
-        hero.setEquipment(equipmentMock);
 
         Item knife1 = new Knife();
 
@@ -238,9 +224,6 @@ public class HeroTest {
         Inventory inventoryMock = mock(Inventory.class);
         Equipment equipmentMock = mock(Equipment.class);
 
-        hero.setInventory(inventoryMock);
-        hero.setEquipment(equipmentMock);
-
         Item knife1 = new Knife();
 
         Item[] cells = new Item[12];
@@ -267,9 +250,6 @@ public class HeroTest {
         Hero hero = heroService.createHero(null, null);
         Inventory inventoryMock = mock(Inventory.class);
         Equipment equipmentMock = mock(Equipment.class);
-
-        hero.setInventory(inventoryMock);
-        hero.setEquipment(equipmentMock);
 
         Item knife1 = new Knife();
 
@@ -298,7 +278,7 @@ public class HeroTest {
         Hero hero = heroService.createHero(null, null);
 
         Weapon knife1 = new Knife();
-        hero.getEquipment().takeWeapon(knife1);
+        hero.getEquipment().takeInRightHand(knife1);
 
 
         Assertions.assertThrows(RuntimeException.class,
@@ -319,7 +299,6 @@ public class HeroTest {
     @Test
     void dropItem10() {
         Hero hero = heroService.createHero(null, null);
-        hero.setInventory(new Inventory());
 
         Weapon knife1 = new Knife();
         hero.getInventory().getCells()[4] = knife1;

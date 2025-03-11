@@ -17,15 +17,17 @@ public class GlobalConstants {
 
     public static final Double HEAL_PER_STRENGTH_MULTIPLIER = 0.0;
 
-    public static final Double SHIELD_PER_INTELLIGENCE_MULTIPLIER = 0.0;
+    public static final Double MAGIC_SCREEN_PER_INTELLIGENCE_MULTIPLIER = 0.0;
 
     public static final Double ACCURACY_PER_DEXTERITY_MULTIPLIER = 0.1;
 
     public static final Double EVASION_PER_DEXTERITY_MULTIPLIER = 0.1;
 
-    public static final Double AGILITY_PER_DEXTERITY_MULTIPLIER = 0.1;
+    public static final Double ENDURANCE_GROWER_PER_DEXTERITY_MULTIPLIER = 0.1;
 
-    public static final Double SHIELD_GROWER_PER_INTELLIGENCE_MULTIPLIER = 0.0;
+    public static final Double ENDURANCE_VALUE_PER_DEXTERITY_MULTIPLIER = 0.0;
+
+    public static final Double MAGIC_SCREEN_GROWER_PER_INTELLIGENCE_MULTIPLIER = 0.0;
 
     public static final Double COST_OF_AUTOATTACK = 1.0;
 

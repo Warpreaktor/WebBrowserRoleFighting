@@ -1,23 +1,30 @@
 package item.weapon;
 
+import ability.item.FistStrike;
 import item.weapon.abstracts.Weapon;
 import lombok.Getter;
+import mechanic.Ability;
 
+import java.util.List;
 import java.util.UUID;
+
+import static constants.GlobalDamage.FIST_STRIKE;
 
 @Getter
 public class Fist extends Weapon {
 
     /**
      * У кулака нет картинки, так как он не для взаимодействия.
-     * Его нельзя снять и с персонажа и положить в рюкзак.
+     * Его нельзя снять с персонажа и положить в рюкзак.
      */
-    private static final String picturePath = "";
+    private static final String PICTURE_PATH = "";
+
+    private static final String NAME = "Кулак";
 
     public Fist() {
-        super(UUID.randomUUID().toString(), "Кулак", picturePath);
+        super(UUID.randomUUID().toString(), NAME, PICTURE_PATH, FIST_STRIKE);
 
-        getDamage().setCrushing(1.0, 1.0);
+        getAbilities().add(new FistStrike(this));
 
         setAttackSpeed(1.0);
 

@@ -1,39 +1,45 @@
 package mechanic;
 
 import dto.MinMax;
+import dto.damage.DamageDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 import static constants.GlobalConstants.GLOBAL_DAMAGE_MULTIPLIER;
 
-@Builder
 @AllArgsConstructor
+@Builder
 public class Damage {
 
     /**
      * Колющий урон
      */
-    private MinMax piercing;
+    @Builder.Default
+    private MinMax piercing = new MinMax(0d);
 
     /**
      * Режущий урон
      */
-    private MinMax cutting;
+    @Builder.Default
+    private MinMax cutting = new MinMax(0d);
 
     /**
      * Дробящий урон
      */
-    private MinMax crushing;
+    @Builder.Default
+    private MinMax crushing = new MinMax(0d);
 
     /**
      * Огненный урон
      */
-    private MinMax fire;
+    @Builder.Default
+    private MinMax fire = new MinMax(0d);
 
     /**
      * Электрический урон
      */
-    private MinMax electric;
+    @Builder.Default
+    private MinMax electric = new MinMax(0d);
 
     public Damage() {
         piercing = new MinMax(0d);
@@ -272,4 +278,5 @@ public class Damage {
     public MinMax getElectric() {
         return new MinMax(electric);
     }
+
 }
