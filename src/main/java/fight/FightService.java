@@ -2,17 +2,23 @@ package fight;
 
 import hero.Hero;
 import hero.HeroService;
-import commentator.CommentatorService;
 import core.GameMaster;
 import dto.attack.AttackDto;
 import dto.defense.DefenseDto;
 import dto.fightresult.FightResultDto;
-import tools.Dice;
 
-import static constants.GlobalConstants.COST_OF_AUTOATTACK;
+import java.util.Objects;
+
 import static hero.constants.HeroConstants.PLAYER1;
 import static hero.constants.HeroConstants.PLAYER2;
 
+/**
+ * Вторая имплементация поединка.
+ * В нём не будет просто цикла как раньше. Теперь противники сражаются тактически.
+ * У каждого есть очки действий и способности, которые они будут применять.
+ * Обмены ударами происходят вне этого сервиса.
+ * Этот сервис лишь следит за фазами боя и содержит вызовы для компьютерного игрока.
+ */
 public class FightService {
 
     private static FightService instance;
@@ -38,7 +44,7 @@ public class FightService {
             instance = new FightService(
                     HeroService.getInstance(),
                     new FightResult(),
-                    new GameMaster()
+                    GameMaster.newInstance()
 
             );
             return instance;
@@ -66,74 +72,27 @@ public class FightService {
 
         result.clear();
 
+        result.setRoundCount(gameMaster.nextRound());
+
+        return combatMoves();
+    }
+
+    public FightResultDto combatMoves() {
         Hero player1 = heroService.get(PLAYER1);
         Hero player2 = heroService.get(PLAYER2);
 
-        result.setRoundCount(gameMaster.nextRound());
+        var playebleHero = gameMaster.nextTurn();
 
-
-        if (isAnyBodyDeath(player1, player2)) {
-            result.addEventAndLog(result.getWinner() + " пинает мёртвое тело");
-        }
-
-        //TODO Написать функцию определяющую того кто первый ходит.
-        // Она может основываться на какой-то из характеристик персонажа
-        // Если эти характеристики равны, то старый добрый рандом
-        // Они определяются раз и на весь матч.
-        int player1Dice = Dice.rollSix();
-        int player2Dice = Dice.rollSix();
-        Hero attacker;
-        Hero defender;
-
-        if (player1Dice == player2Dice) {
-            result.addEventAndLog(CommentatorService
-                    .getRandomBattleMessage(
-                            player1.getName(), player2.getName()));
-
+        //TODO продумать как именно будет проходить фаза атаки человеческого игрока.
+        if (Objects.equals(playebleHero, player1)) {
             player1.focus();
-            player2.focus();
             return result.getResultDto();
         }
 
-        if (player1Dice > player2Dice) {
-            attacker = player1;
-            defender = player2;
-        } else {
-            attacker = player2;
-            defender = player1;
-        }
-
-        combat(attacker, defender);
-
-        return result.getResultDto();
-    }
-
-    public void combat(Hero attacker, Hero defender) {
-
-        while ((attacker.getEndurance() >= COST_OF_AUTOATTACK || defender.getEndurance() >= COST_OF_AUTOATTACK)
-                && !result.isOver()) {
-
-            combatMoves(attacker, defender);
-
-            result.addEventAndLog(fightIsOver());
-
-            if (!result.isOver()) {
-                combatMoves(defender, attacker);
-            }
-        }
-
-        if (!result.isOver()) {
-            attacker.focus();
-            defender.focus();
-        }
-    }
-
-    public void combatMoves(Hero attacker, Hero defender) {
-
-        AttackDto attackResult = attackPhase(attacker, defender);
+        AttackDto attackResult = computerAttack(player2, player1);
 
         if (attackResult.isFail()) {
-            return;
+            return result.getResultDto();
         }
 
         if (attackResult.isCritical()) {
@@ -148,21 +107,17 @@ public class FightService {
                     attackResult.getDamageDto().getSumDamage()));
         }
 
-        DefenseDto defenseResult = defensePhase(attackResult, defender);
+        DefenseDto defenseResult = defensePhase(attackResult, player1);
 
-        gameMaster.block(defender.getShield().getIsBlocked(), 1);
+        player2.focus();
 
         result.addEventAndLog(defenseResult.getMessage());
+
+        return result.getResultDto();
     }
 
-    //==================================================//
-//   ▄█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▄    //
-//  ▄█                                          █▄  //
-// ███          💢 ФАЗА АТАКИ 💢                ███ //
-//  ▀█                                          █▀  //
-//   ▀█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▀    //
-//==================================================//
-    private AttackDto attackPhase(Hero attacker, Hero defender) {
+    // TODO Продумать алгоритм того, как будет проходить фаза атаки у компьютерного игрока
+    public AttackDto computerAttack(Hero attacker, Hero defender) {
 
         if (gameMaster.isHit(attacker, defender)) {
             return attacker.attack(defender);
@@ -171,13 +126,6 @@ public class FightService {
         }
     }
 
-    //==================================================//
-//   ▄█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▄    //
-//  ▄█                                          █▄  //
-// ███          ⚔️ ФАЗА ЗАЩИТЫ ⚔️               ███ //
-//  ▀█                                          █▀  //
-//   ▀█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▀    //
-//==================================================//
     private DefenseDto defensePhase(AttackDto attack, Hero defender) {
         return defender.defense(attack);
     }
@@ -212,4 +160,6 @@ public class FightService {
         return player1.getHealth().getIsDead()
                 || player2.getHealth().getIsDead();
     }
+
+
 }

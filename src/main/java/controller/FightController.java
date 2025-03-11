@@ -19,4 +19,5 @@ public class FightController {
 
         return new Gson().toJson(FightService.getInstance().fight());
     };
+
 }

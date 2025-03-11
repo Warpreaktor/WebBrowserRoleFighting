@@ -8,28 +8,30 @@ import lombok.Setter;
 /**
  * Класс оружия
  */
-@Getter
-@Setter
 public abstract class Weapon extends WearableItem {
 
     /**
-     * Информация об уроне оружия.
+     * Информация об уроне.
      */
+    @Getter
     private Damage damage;
 
     /**
      * Метательное
      */
+    @Getter
+    @Setter
     private Boolean throwing;
 
-    public Weapon(String id, String name, String picturePath) {
+    public Weapon(String id, String name, String picturePath, Damage damage) {
         super(id, name, picturePath);
-        damage = new Damage();
+        this.damage = damage;
 
         // По умолчанию оружие можно держать в правой руке
         setRightHand(true);
         setLeftHand(false); // Большинство оружия нельзя держать в левой руке
         setTwoHand(false);  // По умолчанию не двуручное
+        setThrowing(false);  // По умолчанию не метательное
     }
 
     /**

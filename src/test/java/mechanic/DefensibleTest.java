@@ -29,7 +29,7 @@ public class DefensibleTest {
                 heroService.createHero(null, null));
         attack.setDamageDto(new DamageDto());
 
-        var shield = new Shield();
+        var shield = new MagicScreen();
         shield.setValue(10.0);
         shield.setMaxValue(10.0);
 
@@ -49,8 +49,8 @@ public class DefensibleTest {
                 heroService.createHero(null, null));
         attack.setDamageDto(new DamageDto());
 
-        defensible.getShield().setValue(5.0);
-        defensible.getShield().setMaxValue(5.0);
+        defensible.getMagicScreen().setValue(5.0);
+        defensible.getMagicScreen().setMaxValue(5.0);
 
         defensible.getHealth().setValue(10.0);
         defensible.getHealth().setMaxValue(10.0);

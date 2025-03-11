@@ -21,7 +21,7 @@ body {
 }
 /* Контейнеры HP и магического щита */
 .hp-bar-container, 
-.shield-bar-container {
+.magic-screen-bar-container {
     width: 50px;
     height: 150px;
     border: 2px solid black;
@@ -42,29 +42,32 @@ body {
     transition: height 0.5s ease-in-out;
 }
 
-.shield-bar {
+.magic-screen-bar {
     width: 100%;
     background-color: green;
     transition: height 0.5s ease-in-out;
 }
 
-/* Полоса перезарядки */
-.endurance-bar-container {
-    width: 300px;
-    height: 10px;
-    background-color: #ddd;
-    border: 1px solid black;
+/* Контейнер выносливости */
+.endurance-container {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
     margin-top: 5px;
-    position: relative;
-    overflow: hidden;
 }
 
-/* Заполняемая часть перезарядки */
-.endurance-bar {
-    width: 0%;
-    height: 100%;
-    background-color: rgb(74, 198, 243);
-    transition: width 0.3s ease-in-out;
+/* Кружочки выносливости */
+.endurance-dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: white;
+    border: 2px solid #007BFF; /* Синяя рамка */
+}
+
+/* Заполненные кружочки */
+.endurance-dot.filled {
+    background-color: #007BFF; /* Заполняем синим */
 }
 
 /* Картинка персонажа */
@@ -393,4 +396,51 @@ body {
 
     /* Применяем анимацию */
     animation: zoomIn 1.5s ease-in-out; /* Длительность анимации: 1.5 секунды */
+}
+
+/* Контейнер способностей */
+.abilities-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Ячейки способностей */
+.ability-slot {
+    width: 50px;
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 2px solid white;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    position: relative;
+}
+
+/* Отключённая способность */
+.ability-slot.disabled {
+    opacity: 0.5; /* Затемняем */
+    pointer-events: none; /* Запрещаем клик */
+}
+
+/* Всплывающая подсказка */
+.ability-slot::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 5px;
+    white-space: nowrap;
+    display: none;
+}
+
+/* Показываем подсказку при наведении */
+.ability-slot:hover::after {
+    display: block;
 }

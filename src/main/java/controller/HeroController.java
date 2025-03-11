@@ -5,10 +5,13 @@ import hero.Hero;
 import hero.HeroService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import mechanic.Ability;
 import spark.Route;
 import spark.Spark;
 import spec.HeroClass;
 import item.ItemService;
+
+import static hero.constants.HeroConstants.PLAYER1;
 
 public class HeroController {
 
@@ -27,8 +30,11 @@ public class HeroController {
 
         Spark.get("/getPlayer/:id", getPlayer);
         Spark.get("/getPlayer/statistic/:id", getPlayerStatistic);
+        Spark.get("/getPlayer/abilities/:id", getPlayerAbilities);
 
-        Spark.post("/hero/dropItem/", dropItem);
+        Spark.post("/hero/moveItem", moveItem);
+
+        Spark.post("/hero/useAbility", useAbility);
 
     }
 
@@ -89,7 +95,8 @@ public class HeroController {
         return gson.toJson(jsonResponse);
     };
 
-    private final Route dropItem = (req, res) -> {
+    private final Route moveItem = (req, res) -> {
+
         Gson gson = new Gson();
         JsonObject jsonObject = gson.fromJson(req.body(), JsonObject.class);
 
@@ -117,12 +124,48 @@ public class HeroController {
 
         Hero hero = heroService.get(playerId);
 
-        if (hero.moveItem(objectId, oldSlot, newSlot)) {
-            res.status(200);
-            return gson.toJson("Предмет перемещен в ячейку инвентаря [" + newSlot + "]");
-        } else {
+        hero.moveItem(objectId, oldSlot, newSlot);
+
+        res.status(200);
+        return gson.toJson("Предмет перемещен в ячейку инвентаря [" + newSlot + "]");
+
+    };
+
+    /**
+     * Возвращает способности героя
+     */
+    private final Route getPlayerAbilities = (req, res) -> {
+        String id = req.params("id");
+
+        var player = heroService.get(id);
+
+        return new Gson().toJson(player.getAbilities()
+                .stream()
+                .map(Ability::toDto)
+                .toList());
+    };
+
+    public final Route useAbility = (req, res) -> {
+        Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson(req.body(), JsonObject.class);
+
+        if (jsonObject == null
+                || !jsonObject.has("ability")
+                || !jsonObject.has("target")
+        ) {
+
             res.status(400);
-            return gson.toJson("Предмет не перемещён");
+            return gson.toJson("Ошибка: отсутствуют обязательные поля!");
         }
+
+        String ability = jsonObject.get("ability").getAsString();
+        String target = jsonObject.get("target").getAsString();
+
+        var defensible = heroService.get(target);
+
+        var abilityDto = heroService.get(PLAYER1).useAbility(ability, defensible);
+
+        res.status(200);
+        return gson.toJson(abilityDto);
     };
 }

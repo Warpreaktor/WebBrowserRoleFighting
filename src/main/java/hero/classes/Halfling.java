@@ -1,7 +1,7 @@
 package hero.classes;
 
 import hero.Hero;
-import item.weapon.SlingShot;
+import item.weapon.SlingshotFromBranch;
 import lombok.Getter;
 import spec.HeroClass;
 
@@ -19,12 +19,12 @@ public class Halfling extends Hero {
     private static final int DEXTERITY = 9;
 
     private static final double HEALTH = 45;
-    private static final double SHIELD = 0;
+    private static final double MAGIC_SCREEN = 0;
 
     private static final double ACCURACY = 0.6;
     private static final double EVASION = 0.4;
-    private static final double AGILITY = 0.7;
     private static final double ENDURANCE = 4.0;
+    private static final double ENDURANCE_GROWER = 0.7;
     private static final double BLOCK_CHANCE = 0.15;
     private static final double CRIT_CHANCE = 0.25;
 
@@ -41,19 +41,22 @@ public class Halfling extends Hero {
         setCritChance(CRIT_CHANCE);
 
         getHealth().addMaxValue(HEALTH);
-        getShield().addMaxValue(SHIELD);
+        getMagicScreen().addMaxValue(MAGIC_SCREEN);
 
         setAccuracy(ACCURACY);
         setEvasion(EVASION);
-        setEndurance(ENDURANCE);
-        setAgility(AGILITY);
+
+        getEndurance().setMaxValue(ENDURANCE);
+        getEndurance().setGrower(ENDURANCE_GROWER);
 
         setCritChance(CRIT_CHANCE);
         setBlockChance(BLOCK_CHANCE);
 
-        getInventory().put(new SlingShot());
+        getInventory().put(new SlingshotFromBranch());
 
         getHealth().fillUp();
+        getMagicScreen().fillUp();
+        getEndurance().fillUp();
     }
 
     @Override
@@ -82,7 +85,7 @@ public class Halfling extends Hero {
             "%s зашипел сквозь зубы, ощущая неприятное жжение в теле!"
     );
 
-    public String getShieldAbsorbMessage() {
+    public String getMagicScreenAbsorbMessage() {
         int index = randomInt(SHIELD_ABSORB_MESSAGES.size());
         return String.format(SHIELD_ABSORB_MESSAGES.get(index), getName());
     }

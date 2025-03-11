@@ -1,60 +1,57 @@
 package mechanic;
 
 import lombok.Getter;
-import mechanic.interfaces.Healthy;
+import lombok.Setter;
 
-@Getter
-public class Health implements Healthy {
-
-    /**
-     * Значение здоровье.
-     */
-    private Double value;
-
-    /**
-     * Лечение. Количество пунктов на которые персонаж может вылечиться за фокусировку.
-     */
-    private Double heal;
+public class Health {
 
     /**
      * Максимальное количество жизней у персонажа.
      */
-    private Double maxValue;
+    @Getter
+    private double maxValue;
 
+    /**
+     * Значение здоровье.
+     */
+    @Setter
+    @Getter
+    private double value;
+
+    /**
+     * Лечение. Количество пунктов на которые персонаж может вылечиться за фокусировку.
+     */
+    @Setter
+    @Getter
+    private double grower;
+
+    @Getter
     private Boolean isDead = false;
 
     public Health() {
         value = 0.0;
         maxValue = 0.0;
-        heal = 0.0;
+        grower = 0.0;
     }
 
-    public void setHeal(Double value) {
-        heal = value;
+    public void addGrower(Double value) {
+        grower += value;
     }
 
-    public void addHeal(Double value) {
-        heal += value;
-    }
-
-    public void decreaseHeal(Double value) {
-        heal -= value;
+    public void decreaseGrower(Double value) {
+        grower -= value;
     }
 
     /**
      * Здоровье приращивается на фазе фокусировки.
      * Значение здоровья не может превышать максимальное.
      */
-    public void heal() {
-        value += heal;
+    public void grow() {
+        value += grower;
 
         if (value > maxValue) {
             value = maxValue;
         }
-    }
-
-    public void setValue(Double value) {
-        this.value = value;
     }
 
     public void setMaxValue(Double maxValue) {
@@ -81,20 +78,15 @@ public class Health implements Healthy {
         this.value -= value;
     }
 
-    @Override
-    public Health getHealth() {
-        return this;
-    }
-
     /**
-     * Удар по здоровью.
+     * Потратить здоровье.
      */
-    @Override
-    public void takeDamage(double damage) {
-        value -= damage;
+    public void decreaseValue(double value) {
+        this.value -= value;
     }
 
-    public void dead() {
+    public void die() {
         value = 0.0;
+        isDead = true;
     }
 }

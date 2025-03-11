@@ -14,7 +14,6 @@ import mechanic.interfaces.Attackable;
  */
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 public class AttackDto {
 
@@ -28,6 +27,17 @@ public class AttackDto {
     DamageDto damageDto;
 
     String message;
+
+    /**
+     * Лёгкий конструктор для успешной атаки
+     *
+     * @param damageDto итоговый
+     * @param message описание события
+     */
+    public AttackDto(DamageDto damageDto, String message) {
+        this.damageDto = damageDto;
+        this.message = message;
+    }
 
     /**
      * Конструктор для успешной атаки
@@ -52,6 +62,6 @@ public class AttackDto {
         this.isFail = true;
         this.attacker = attacker;
         this.message = message;
-        damageDto = new DamageDto(0d, 0d, 0d, 0d);
+        damageDto = new DamageDto();
     }
 }

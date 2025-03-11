@@ -10,6 +10,11 @@ public class Statistic {
     @Getter
     private int wins;
 
+    public Statistic() {
+        level = 1;
+        wins = 0;
+    }
+
     public int plusWin() {
         return this.wins++;
     }

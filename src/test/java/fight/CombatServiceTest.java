@@ -210,37 +210,37 @@ public class CombatServiceTest {
 
         //Чтобы точно попал
         player1.setAccuracy(100D);
-        player1.setEndurance(1D);
+        player1.setEndurancePoint(1D);
         player1.getStaticDamage().setCrushing(1D, 1D);
 
-        player2.getShield().setMaxValue(10D);
-        player2.getShield().setValue(10D);
+        player2.getMagicScreen().setMaxValue(10D);
+        player2.getMagicScreen().setValue(10D);
 
         // Маг атакует, у противника падает маг. щит и блокируется его восстановление
-        while (player2.getShield().getValue() >= 10){
+        while (player2.getMagicScreen().getValue() >= 10){
             fightService.fight();
         }
 
-        assertTrue(player2.getShield().getIsBlocked().get(), "Щит должен быть заблокирован на 1 ход");
+        assertTrue(player2.getMagicScreen().getIsBlocked().get(), "Щит должен быть заблокирован на 1 ход");
 
         player1.setAccuracy(0.0);
-        player1.setEndurance(0.0);
+        player1.setEndurancePoint(0.0);
 
-        var shieldValue = player2.getShield().getValue();
+        var shieldValue = player2.getMagicScreen().getValue();
         //Щит должен быть заблокирован
         fightService.fight();
 
         // Щит всё ещё заблокирован, т.к. был только 1 ход после атаки
-        assertTrue(player2.getShield().getIsBlocked().get(), "Щит должен быть всё еще заблокирован");
-        assertEquals(shieldValue, player2.getShield().getValue(), "Щит не должен восстанавливаться");
+        assertTrue(player2.getMagicScreen().getIsBlocked().get(), "Щит должен быть всё еще заблокирован");
+        assertEquals(shieldValue, player2.getMagicScreen().getValue(), "Щит не должен восстанавливаться");
 
         player1.setAccuracy(0.0);
-        player1.setEndurance(0.0);
+        player1.setEndurancePoint(0.0);
         //Щит должен разблокироваться и восстановиться в конце раунда
         fightService.fight();
 
-        assertFalse(player2.getShield().getIsBlocked().get(), "Щит должен разблокироваться");
-        assertTrue(shieldValue < player2.getShield().getValue(), "Щит должен немного восстановиться после удара");
+        assertFalse(player2.getMagicScreen().getIsBlocked().get(), "Щит должен разблокироваться");
+        assertTrue(shieldValue < player2.getMagicScreen().getValue(), "Щит должен немного восстановиться после удара");
     }
 
 

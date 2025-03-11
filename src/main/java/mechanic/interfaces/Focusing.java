@@ -1,10 +1,10 @@
 package mechanic.interfaces;
 
-public interface Focusing extends Intelligent, Healthy, Restable {
+public interface Focusing extends HasMagicScreen, Healthy, Endured {
 
     default void focus() {
-        heal();
-        shieldGrow();
-        rest();
+        getHealth().grow();
+        getMagicScreen().grow();
+        getEndurance().grow();
     }
 }

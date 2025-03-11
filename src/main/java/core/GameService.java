@@ -1,10 +1,8 @@
 package core;
 
-import dto.hero.HeroRequestDto;
 import fight.FightService;
 import hero.Hero;
 import hero.HeroService;
-import spec.HeroClass;
 
 import static hero.constants.HeroConstants.PLAYER1;
 import static hero.constants.HeroConstants.PLAYER2;

@@ -5,14 +5,14 @@ import dto.attack.AttackDto;
 
 import static constants.GlobalConstants.COST_OF_AUTOATTACK;
 import static constants.GlobalConstants.GLOBAL_CRIT_DAMAGE_MULTIPLIER;
-import static tools.Dice.getChance;
-import static tools.Dice.randomByMinMax;
+import static tools.Dice.byMinMaxChance;
+import static tools.Dice.tryTo;
 
 /**
  * Всё что может атаковать и может быть атаковано в ответ.
  * Вызывается в фазу атаки.
  */
-public interface Attackable extends Restable, Accuracy, Damageable {
+public interface Attackable extends Endured, Accuracy, Damageable {
 
     String getRestMessage();
 
@@ -24,6 +24,7 @@ public interface Attackable extends Restable, Accuracy, Damageable {
 
     /**
      * Метод отдыха по умолчанию.
+     * Если персонаж пропускает ход без действий вызывается этот метод.
      */
     default AttackDto doRestEvent(){
         return new AttackDto(this,
@@ -38,25 +39,26 @@ public interface Attackable extends Restable, Accuracy, Damageable {
         var crushingDamage = heroDamage.getCrushing();
         var cuttingDamage = heroDamage.getCutting();
         var fireDamage = heroDamage.getFire();
-
+        var electricDamage = heroDamage.getElectric();
 
         //MinMax калькуляцая
         var damageDto = new DamageDto(
-                randomByMinMax(piercingDamage),
-                randomByMinMax(crushingDamage),
-                randomByMinMax(cuttingDamage),
-                randomByMinMax(fireDamage)
+                byMinMaxChance(piercingDamage),
+                byMinMaxChance(crushingDamage),
+                byMinMaxChance(cuttingDamage),
+                byMinMaxChance(fireDamage),
+                byMinMaxChance(electricDamage)
         );
 
         boolean isCritical = false;
-        double tryToCrit = getChance();
 
-        if (getCritChance() >= tryToCrit) {
+        if (tryTo(getCritChance())) {
             //Критический удар
             damageDto.setCrushing(damageDto.getCrushing() * GLOBAL_CRIT_DAMAGE_MULTIPLIER);
             damageDto.setCutting(damageDto.getCutting() * GLOBAL_CRIT_DAMAGE_MULTIPLIER);
             damageDto.setPiercing(damageDto.getPiercing() * GLOBAL_CRIT_DAMAGE_MULTIPLIER);
             damageDto.setFire(damageDto.getFire() * GLOBAL_CRIT_DAMAGE_MULTIPLIER);
+            damageDto.setElectric(damageDto.getElectric() * GLOBAL_CRIT_DAMAGE_MULTIPLIER);
 
            isCritical = true;
         }
@@ -75,12 +77,15 @@ public interface Attackable extends Restable, Accuracy, Damageable {
     }
 
     default AttackDto attack(Defensible defensible) {
-        if (getEndurance() >= COST_OF_AUTOATTACK) {
 
-            setEndurance(getEndurance() - COST_OF_AUTOATTACK);
+        if (getEndurance().getValue() >= COST_OF_AUTOATTACK) {
+
+            getEndurance().decreaseValue(getEndurance().getValue() - COST_OF_AUTOATTACK);
+
             return doAttackEvent();
+
         } else {
-            return doRestEvent();
+            throw new RuntimeException("Не хватает выносливости");
         }
     }
 

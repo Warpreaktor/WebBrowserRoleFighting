@@ -11,9 +11,9 @@
     <div class="battle-container">
         <!-- Левая панель (HP и Маг. щит) -->
         <div class="stats-container">
-            <div class="shield-bar-container">
-                <div id="shieldBar1" class="shield-bar"></div>
-                <div id="shieldValue1">Загрузка...</div>
+            <div class="magic-screen-bar-container">
+                <div id="magicScreenBar1" class="magic-screen-bar"></div>
+                <div id="magicScreenValue1">Загрузка...</div>
             </div>
             <div class="hp-bar-container">
                 <div id="hpBar1" class="hp-bar"></div>
@@ -24,36 +24,59 @@
         <!-- Игрок 1 -->
         <div class="player-container">
             <div class="player-name" id="player1Name">Имя героя</div>
+
+            <!-- Контейнер выносливости (теперь содержит кружки) -->
             <div class="endurance-bar-container">
-                <div id="enduranceP1" class="endurance-bar"></div>
+                <div id="enduranceP1" class="endurance-container"></div>
             </div>
+
             <div class="player-box" id="player1"></div>
+
+            <!-- Блок способностей -->
+            <div class="abilities-container">
+                <div class="ability-slot" id="ability1" data-ability="1"></div>
+                <div class="ability-slot" id="ability2" data-ability="2"></div>
+                <div class="ability-slot" id="ability3" data-ability="3"></div>
+                <div class="ability-slot" id="ability4" data-ability="4"></div>
+            </div>
         </div>
 
         <!-- Игрок 2 -->
         <div class="player-container">
             <div class="player-name" id="player2Name">Имя героя</div>
+
+            <!-- Контейнер выносливости (теперь содержит кружки) -->
             <div class="endurance-bar-container">
-                <div id="enduranceP2" class="endurance-bar"></div>
+                <div id="enduranceP2" class="endurance-container"></div>
             </div>
+
             <div class="player-box" id="player2"></div>
+
+            <!-- Блок способностей -->
+            <div class="abilities-container">
+                <div class="ability-slot" id="ability5" data-ability="5"></div>
+                <div class="ability-slot" id="ability6" data-ability="6"></div>
+                <div class="ability-slot" id="ability7" data-ability="7"></div>
+                <div class="ability-slot" id="ability8" data-ability="8"></div>
+            </div>
         </div>
-    
+
+
         <!-- Правая панель (HP и щит) -->
         <div class="stats-container">
             <div class="hp-bar-container">
                 <div id="hpBar2" class="hp-bar"></div>
                 <div id="hpValue2">Загрузка...</div>
             </div>
-            <div class="shield-bar-container">
-                <div id="shieldBar2" class="shield-bar"></div>
-                <div id="shieldValue2">Загрузка...</div>
+            <div class="magic-screen-bar-container">
+                <div id="magicScreenBar2" class="magic-screen-bar"></div>
+                <div id="magicScreenValue2">Загрузка...</div>
             </div>
         </div>
     </div>
     <!-- Кнопка боя -->
     <form id="fightForm">
-        <button type="submit" class="fight-button">Бой!</button>
+        <button type="submit" class="fight-button">Ход</button>
         <button id="restButton" class="rest-button" style="display: none;">Отдохнуть</button>
     </form>
     

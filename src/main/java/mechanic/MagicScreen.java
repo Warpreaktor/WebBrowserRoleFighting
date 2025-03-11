@@ -1,12 +1,11 @@
 package mechanic;
 
+import core.GameMaster;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.util.concurrent.atomic.AtomicBoolean;
+import mechanic.interfaces.Switchable;
 
 @Getter
-public class Shield {
+public class MagicScreen implements Switchable {
 
     private Double value = 0D;
 
@@ -21,14 +20,19 @@ public class Shield {
      */
     private Double maxValue = 0D;
 
-    private AtomicBoolean isBlocked = new AtomicBoolean(false);
+    private boolean isActive = false;
+
+    @Override
+    public boolean isActive() {
+        return isActive;
+    }
 
     public void setValue(Double value) {
         this.value = value;
     }
 
     public void setIsBlocked(boolean blocked) {
-        isBlocked.set(blocked);
+        isActive = blocked;
     }
 
     public void setMaxValue(Double maxValue) {
@@ -48,11 +52,11 @@ public class Shield {
         this.value -= value;
     }
 
-    public void addShieldGrower(Double value) {
+    public void addMagicScreenGrower(Double value) {
         shieldGrower += value;
     }
 
-    public void decreaseShieldGrower(Double value) {
+    public void decreaseMagicScreenGrower(Double value) {
         shieldGrower -= value;
     }
 
@@ -64,8 +68,8 @@ public class Shield {
      * Щит приращивается на фазе фокусировки.
      * Значение щита не может превышать максимальное.
      */
-    public void shieldGrow() {
-        if (isBlocked.get()) {
+    public void grow() {
+        if (isActive) {
             return;
         }
 
@@ -96,6 +100,19 @@ public class Shield {
         // Вычисляем остаток урона
         double remainingDamage = damage - value;
         value = 0.0;
+
+        GameMaster.getInstance().switchOn(this, 1);
+        
         return remainingDamage;
+    }
+
+    @Override
+    public void switchOn() {
+        this.isActive = true;
+    }
+
+    @Override
+    public void switchOff() {
+
     }
 }
