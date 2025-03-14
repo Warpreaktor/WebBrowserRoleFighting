@@ -25,7 +25,7 @@ public interface HeroInfo {
 
     Double getEvasion();
 
-    DamageDto getDamageDto();
+    DamageDto getDamageInfo();
 
     Statistic getStatistic();
 
@@ -58,8 +58,8 @@ public interface HeroInfo {
                 .accuracy(getAccuracy())
                 .evasion(getEvasion())
                 .damage(new DamageResponseDto(
-                        getDamageDto().getAllPhysical(),
-                        getDamageDto().getFire()))
+                        getDamageInfo().getAllPhysical(),
+                        getDamageInfo().getFire()))
                 .build();
     }
 }

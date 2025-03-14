@@ -1,12 +1,13 @@
 package item.weapon;
 
 import config.ApplicationProperties;
+import hero.Hero;
 import item.weapon.abstracts.Weapon;
 import lombok.Getter;
 
 import java.util.UUID;
 
-import static constants.GlobalDamage.GRANDPAS_RUSTY_SWORD;
+import static constants.WeaponGlobalDamage.GRANDPAS_RUSTY_SWORD;
 
 /**
  * Grandpa’s Rusty Sword - Дедов ржавый меч
@@ -27,8 +28,8 @@ public class GrandpasRustySword extends Weapon {
     @Getter
     private static final String picturePath = ApplicationProperties.getHost() + "/images/weapon/blade/grandpas_rusty_sword.png";
 
-    public GrandpasRustySword() {
-        super(UUID.randomUUID().toString(), "Короткий меч", picturePath, GRANDPAS_RUSTY_SWORD);
+    public GrandpasRustySword(Hero owner) {
+        super(UUID.randomUUID().toString(), "Короткий меч", picturePath, GRANDPAS_RUSTY_SWORD, owner);
 
         getDamage().setPiercing(0.9, 1.5);
         getDamage().setCrushing(1.0, 1.0);
@@ -38,5 +39,15 @@ public class GrandpasRustySword extends Weapon {
 
         // Позволяет использовать меч в любой руке (dual wielding)
         setAsDualWearable();
+    }
+
+    @Override
+    public void equiped(Hero owner) {
+        owner.addAbilities(getAbilities());
+    }
+
+    @Override
+    public void unequiped(Hero owner) {
+        owner.getAbilities().removeAll(getAbilities());
     }
 }

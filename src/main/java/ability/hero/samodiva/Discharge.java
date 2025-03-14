@@ -4,12 +4,15 @@ import config.ApplicationProperties;
 import dto.attack.AttackDto;
 import dto.damage.DamageDto;
 import enums.AbilityType;
+import hero.Hero;
+import hero.classes.Samodiva;
 import lombok.Getter;
-import mechanic.Ability;
+import ability.Ability;
 import mechanic.Damage;
-import mechanic.interfaces.Defensible;
+import effect.Shock;
 
-import static constants.GlobalDamage.DISCHARGE;
+import static constants.AbilityGameWeight.DISCHARGE_GW;
+import static constants.AbilityGlobalDamage.DISCHARGE;
 import static enums.AbilityType.ENEMY_TARGET;
 import static tools.Dice.byMinMaxChance;
 import static tools.Dice.tryTo;
@@ -33,12 +36,20 @@ public class Discharge extends Ability {
 
     private static final int COOL_DOWN = 0;
 
+    /**
+     * Игровой вес умения. По сути это то, на сколько оценивается мощь и полезность этого умения в бою.
+     */
+    @Getter
+    private final int gameWeight = DISCHARGE_GW;
+
+    /**
+     * Ссылка на владельца способности.
+     */
+    @Getter
+    private final Samodiva owner;
+
     //==================================================//
-    //   ▄█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▄    //
-    //  ▄█                                          █▄  //
     // ███       💢 СПЕЦИАЛЬНЫЕ СВОЙСТВА 💢        ███ //
-    //  ▀█                                          █▀  //
-    //   ▀█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▀    //
     //==================================================//
     /**
      * Информация об уроне.
@@ -54,21 +65,21 @@ public class Discharge extends Ability {
     /**
      * Длительность шока
      */
-    private int shockLength = 1;
+    private int shockDuration = 1;
 
 
-    public Discharge() {
+    public Discharge(Samodiva owner) {
         super(PICTURE_PATH, NAME, TYPE, DESCRIPTION, COST, COOL_DOWN);
 
+        this.owner = owner;
         this.damage = DISCHARGE;
     }
 
     @Override
-    public void apply(Defensible target) {
+    public void apply(Hero target) {
 
         if (tryTo(chanceToShock)) {
-            var shock = target.getState().getShock();
-            target.getState().switchOn(shock, shockLength);
+            target.getEffectStack().impose(new Shock(), shockDuration);
         }
 
         var damageDto = new DamageDto();
@@ -77,5 +88,11 @@ public class Discharge extends Ability {
 
         target.defense(attack);
 
+        coolDown();
+    }
+
+    @Override
+    public void trigger() {
+        //do nothing
     }
 }

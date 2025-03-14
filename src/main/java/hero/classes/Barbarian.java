@@ -34,13 +34,13 @@ public class Barbarian extends Hero {
     private static final int STRENGTH = 9;
     private static final int DEXTERITY = 5;
 
-    private static final double HEALTH = 70;
+    private static final double HEALTH = 25;
     private static final double MAGIC_SCREEN = 0;
     
     private static final double ACCURACY = 0.65;
     private static final double EVASION = 0.1;
-    private static final double ENDURANCE = 3.5;
-    private static final double ENDURANCE_GROWER = 0.4;
+    private static final int ENDURANCE = 3;
+    private static final int ENDURANCE_GROWER = 1;
     private static final double BLOCK_CHANCE = 0.5;
     private static final double CRIT_CHANCE = 0.15;
 
@@ -70,9 +70,9 @@ public class Barbarian extends Hero {
         setCritChance(CRIT_CHANCE);
         setBlockChance(BLOCK_CHANCE);
 
-        getInventory().put(new GrandpasRustySword());
-        getInventory().put(new Knife());
-        getInventory().put(new WoodenShield());
+        getInventory().put(new GrandpasRustySword(this));
+        getInventory().put(new Knife(this));
+        getInventory().put(new WoodenShield(this));
 
         getHealth().fillUp();
         getMagicScreen().fillUp();

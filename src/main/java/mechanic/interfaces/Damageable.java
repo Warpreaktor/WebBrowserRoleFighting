@@ -4,5 +4,6 @@ import mechanic.Damage;
 
 public interface Damageable {
 
-    Damage getStaticDamage();
+    Damage getPassiveDamage();
+
 }

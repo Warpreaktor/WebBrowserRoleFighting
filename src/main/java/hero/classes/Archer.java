@@ -29,13 +29,13 @@ public class Archer extends Hero {
     private static final int STRENGTH = 4;
     private static final int DEXTERITY = 8;
 
-    private static final double HEALTH = 50;
+    private static final double HEALTH = 25;
     private static final double MAGIC_SCREEN = 0;
 
     private static final double ACCURACY = 0.7;
     private static final double EVASION = 0.3;
-    private static final double ENDURANCE = 3.8;
-    private static final double ENDURANCE_GROWER = 0.65;
+    private static final int ENDURANCE = 4;
+    private static final int ENDURANCE_GROWER = 1;
     private static final double BLOCK_CHANCE = 0.1;
     private static final double CRIT_CHANCE = 0.25;
 
@@ -68,7 +68,7 @@ public class Archer extends Hero {
         setCritChance(CRIT_CHANCE);
         setBlockChance(BLOCK_CHANCE);
 
-        getInventory().put(new ShortestBow());
+        getInventory().put(new ShortestBow(this));
 
         getHealth().fillUp();
         getMagicScreen().fillUp();

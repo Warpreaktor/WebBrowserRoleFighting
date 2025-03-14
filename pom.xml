@@ -6,7 +6,7 @@
     <!-- Укажите groupId, artifactId и версию вашего проекта -->
     <groupId>com.example</groupId>
     <artifactId>my-project</artifactId>
-    <version>0.15.0</version>
+    <version>0.16.0</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

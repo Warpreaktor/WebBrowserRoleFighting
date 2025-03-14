@@ -1,17 +1,16 @@
 package controller;
 
+import dto.ability.AbilityDto;
 import equip.EquipSlot;
 import hero.Hero;
 import hero.HeroService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import mechanic.Ability;
+import ability.Ability;
 import spark.Route;
 import spark.Spark;
 import spec.HeroClass;
 import item.ItemService;
-
-import static hero.constants.HeroConstants.PLAYER1;
 
 public class HeroController {
 
@@ -161,9 +160,7 @@ public class HeroController {
         String ability = jsonObject.get("ability").getAsString();
         String target = jsonObject.get("target").getAsString();
 
-        var defensible = heroService.get(target);
-
-        var abilityDto = heroService.get(PLAYER1).useAbility(ability, defensible);
+        AbilityDto abilityDto = heroService.useAbility(target, ability);
 
         res.status(200);
         return gson.toJson(abilityDto);

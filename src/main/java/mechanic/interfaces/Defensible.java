@@ -2,7 +2,7 @@ package mechanic.interfaces;
 
 import dto.attack.AttackDto;
 import dto.defense.DefenseDto;
-import hero.State;
+import hero.EffectStack;
 import mechanic.Health;
 import mechanic.MagicScreen;
 
@@ -13,7 +13,7 @@ import static tools.Dice.getChance;
  */
 public interface Defensible extends Evasion {
 
-    State getState();
+    EffectStack getEffectStack();
 
     double getBlockChance();
 

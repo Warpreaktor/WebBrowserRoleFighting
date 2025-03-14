@@ -1,4 +1,4 @@
-package hero.classes.samodiva;
+package hero.classes;
 
 import ability.hero.samodiva.Discharge;
 import hero.Hero;
@@ -33,12 +33,12 @@ public class Samodiva extends Hero {
     private static final int DEXTERITY = 5;
 
     //Стартовые характеристики
-    private static final double HEALTH = 25d;
-    private static final double MAGIC_SCREEN = 10d;
+    private static final double HEALTH = 13;
+    private static final double MAGIC_SCREEN = 5;
     private static final double ACCURACY = 0.4;
     private static final double EVASION = 0.6;
-    private static final double ENDURANCE = 3d;
-    private static final double ENDURANCE_GROWER = 0.5;
+    private static final int ENDURANCE = 3;
+    private static final int ENDURANCE_GROWER = 1;
     private static final double BLOCK_CHANCE = 0d;
     private static final double CRIT_CHANCE = 0.3;
 
@@ -71,7 +71,7 @@ public class Samodiva extends Hero {
         setBlockChance(BLOCK_CHANCE);
         setCritChance(CRIT_CHANCE);
 
-        addAbilities(List.of(new Discharge()));
+        addAbilities(List.of(new Discharge(this)));
 
         getHealth().fillUp();
         getMagicScreen().fillUp();

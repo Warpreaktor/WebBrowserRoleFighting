@@ -45,7 +45,7 @@ public class Equipment {
 
     public Equipment(Hero owner) {
         this.owner = owner;
-        this.fist = new Fist();
+        this.fist = new Fist(owner);
         equipRightHand(fist);
         leftHand = null;
         bothHands = null;
@@ -62,6 +62,7 @@ public class Equipment {
         switch (slot) {
             case RIGHT_HAND:
                 if (item instanceof Weapon weapon) {
+                    weapon.equiped(owner);
                     return equipRightHand(weapon);
                 } else {
                     log.info("Этот предмет нельзя экипировать в правую руку");

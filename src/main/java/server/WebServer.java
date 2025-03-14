@@ -4,6 +4,7 @@ import config.ApplicationProperties;
 import controller.HeroController;
 import controller.FightController;
 import controller.InventoryController;
+import controller.JournalController;
 import controller.LootBoxController;
 import controller.GameController;
 import controller.ItemController;
@@ -57,6 +58,7 @@ public class WebServer {
         new ItemController().registerRoutes();
         new InventoryController().registerRoutes();
         new LootBoxController().registerRoutes();
+        new JournalController().registerRoutes();
     }
 }
 

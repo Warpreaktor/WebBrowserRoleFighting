@@ -187,19 +187,24 @@ body {
 }
 
 #roundResult {
-    white-space: normal;
-    word-wrap: break-word;
-    background-color: rgba(0, 0, 0, 0.7); /* Темный полупрозрачный фон */
-    color: white; /* Белый текст */
-    padding: 10px; /* Отступы внутри */
-    border-radius: 8px; /* Скругленные углы */
-    text-align: center; /* Центрируем текст */
-    border: 2px solid red; /* Красная рамка */
-    font-size: 18px; /* Увеличенный размер шрифта */
-    font-weight: bold; /* Жирный текст */
+    width: 400px;      /* или любой нужный размер */
+    height: 250px;     /* фиксируем высоту */
+    overflow-y: auto;  /* прокрутка по вертикали */
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid red;
+    font-size: 18px;
+    font-weight: bold;
+    /* Остальные стили, которые у тебя были */
 }
 
-
+#roundResult {
+    display: flex;
+    flex-direction: column-reverse; /* «Переворачиваем» порядок элементов */
+    ...
+}
 
 /* Модальное окно награды начало */
 /* Оверлей, перекрывающий весь экран */

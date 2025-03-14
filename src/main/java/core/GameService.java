@@ -32,7 +32,6 @@ public class GameService {
      *
      */
     public void startNewGame() {
-        FightService.newInstance();
 
         heroService.createLevelingHeroes(10);
 
@@ -40,6 +39,9 @@ public class GameService {
                 .saveCharacter(PLAYER2,
                         heroService.getLevelingHero(0));
 
+        FightService.newInstance();
+
+        FightService.getInstance().fight();
     }
 
     /**

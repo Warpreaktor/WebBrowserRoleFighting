@@ -1,24 +1,22 @@
 package ability.item;
 
+import ability.WeaponAbility;
 import config.ApplicationProperties;
-import dto.MinMax;
 import dto.attack.AttackDto;
-import dto.damage.DamageDto;
 import enums.AbilityType;
-import item.weapon.abstracts.Weapon;
+import fight.FightService;
+import hero.Hero;
+import item.weapon.Knife;
 import lombok.Getter;
-import mechanic.Ability;
-import mechanic.Damage;
-import mechanic.interfaces.Defensible;
 
-import static constants.GlobalDamage.KNIFE_STRIKE;
+import static constants.AbilityGameWeight.KNIFE_STRIKE_GW;
 import static enums.AbilityType.ENEMY_TARGET;
 import static tools.Dice.byMinMaxChance;
 
 /**
  * Удар ножом
  */
-public class KnifeStrike extends Ability {
+public class KnifeStrike extends WeaponAbility {
 
     private static final String PICTURE_PATH = ApplicationProperties.getHost() + "/images/ability/item/knife_strike.png";
 
@@ -32,6 +30,12 @@ public class KnifeStrike extends Ability {
 
     private static final int COOL_DOWN = 0;
 
+    /**
+     * Игровой вес умения. По сути это то, на сколько оценивается мощь и полезность этого умения в бою.
+     */
+    @Getter
+    private final int gameWeight = KNIFE_STRIKE_GW;
+
     //==================================================//
     //   ▄█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▄    //
     //  ▄█                                          █▄  //
@@ -39,27 +43,33 @@ public class KnifeStrike extends Ability {
     //  ▀█                                          █▀  //
     //   ▀█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▀    //
     //==================================================//
-    /**
-     * Информация о предмете которому принадлежит способность.
-     */
-    @Getter
-    private final Weapon weapon;
 
-    public KnifeStrike(Weapon abilityOwner) {
-        super(PICTURE_PATH, NAME, TYPE, DESCRIPTION, COST, COOL_DOWN);
-
-        this.weapon = abilityOwner;
+    public KnifeStrike(Knife abilityOwner) {
+        super(PICTURE_PATH, NAME, TYPE, DESCRIPTION, COST, COOL_DOWN, abilityOwner);
 
     }
 
     @Override
-    public void apply(Defensible target) {
+    public void apply(Hero target) {
+        var journal = FightService.getInstance().getResult();
 
-        var damageDto = byMinMaxChance(weapon.getDamage());
+        var damageDto = byMinMaxChance(getOwner().getDamage());
 
         var attack = new AttackDto(damageDto, "ПЫРЬ ножом!!");
 
-        target.defense(attack);
+        journal.addEventAndLog(attack.getMessage());
+
+        var defense = target.defense(attack);
+
+        journal.addEventAndLog(defense.getMessage());
+
+        coolDown();
+
+    }
+
+    @Override
+    public void trigger() {
+        // do nothing
     }
 
 }

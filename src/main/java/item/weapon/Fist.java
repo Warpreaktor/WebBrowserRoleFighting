@@ -1,14 +1,13 @@
 package item.weapon;
 
 import ability.item.FistStrike;
+import hero.Hero;
 import item.weapon.abstracts.Weapon;
 import lombok.Getter;
-import mechanic.Ability;
 
-import java.util.List;
 import java.util.UUID;
 
-import static constants.GlobalDamage.FIST_STRIKE;
+import static constants.WeaponGlobalDamage.FIST_STRIKE;
 
 @Getter
 public class Fist extends Weapon {
@@ -21,8 +20,8 @@ public class Fist extends Weapon {
 
     private static final String NAME = "Кулак";
 
-    public Fist() {
-        super(UUID.randomUUID().toString(), NAME, PICTURE_PATH, FIST_STRIKE);
+    public Fist(Hero owner) {
+        super(UUID.randomUUID().toString(), NAME, PICTURE_PATH, FIST_STRIKE, owner);
 
         getAbilities().add(new FistStrike(this));
 
@@ -33,4 +32,17 @@ public class Fist extends Weapon {
         setTwoHand(false);
     }
 
+    @Override
+    public void equiped(Hero owner) {
+        owner.addAbilities(getAbilities());
+    }
+
+    @Override
+    public void unequiped(Hero owner) {
+        owner.getAbilities().removeAll(getAbilities());
+    }
+
+    public void exhaustion(double cost) {
+        getOwner().exhaustion(cost);
+    }
 }

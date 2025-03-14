@@ -511,11 +511,41 @@ function useAbility(ability, target) {
     })
     .then(data => {
         console.log("Ответ сервера на способность:", data);
+
         refreshAll();
+
+        loadJournal();
+
         return data;
     })
     .catch(err => {
         console.error("Ошибка при использовании способности:", err);
         throw err;
     });
+}
+
+function loadJournal() {
+    fetch(`${HOST}/journal/getMessage`)
+        .then(response => response.json())
+        .then(data => {
+            // data — это массив строк
+            console.log("Журнал боя:", data);
+
+            let roundResult = document.getElementById("roundResult");
+            if (!roundResult) {
+                console.error("Ошибка: контейнер #roundResult не найден!");
+                return;
+            }
+
+            // Очищаем старое содержимое
+            roundResult.innerHTML = "";
+
+            // Выводим каждую строку журнала
+            data.forEach(line => {
+                let p = document.createElement("p");
+                p.textContent = line;
+                roundResult.appendChild(p);
+            });
+        })
+        .catch(err => console.error("Ошибка при загрузке журнала боя:", err));
 }

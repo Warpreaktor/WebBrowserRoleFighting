@@ -1,5 +1,6 @@
 package item.weapon.abstracts;
 
+import hero.Hero;
 import mechanic.Damage;
 import item.WearableItem;
 import lombok.Getter;
@@ -23,8 +24,8 @@ public abstract class Weapon extends WearableItem {
     @Setter
     private Boolean throwing;
 
-    public Weapon(String id, String name, String picturePath, Damage damage) {
-        super(id, name, picturePath);
+    public Weapon(String id, String name, String picturePath, Damage damage, Hero owner) {
+        super(id, name, picturePath, owner);
         this.damage = damage;
 
         // По умолчанию оружие можно держать в правой руке

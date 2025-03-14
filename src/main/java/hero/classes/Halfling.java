@@ -18,13 +18,13 @@ public class Halfling extends Hero {
     private static final int STRENGTH = 3;
     private static final int DEXTERITY = 9;
 
-    private static final double HEALTH = 45;
+    private static final double HEALTH = 23;
     private static final double MAGIC_SCREEN = 0;
 
     private static final double ACCURACY = 0.6;
     private static final double EVASION = 0.4;
-    private static final double ENDURANCE = 4.0;
-    private static final double ENDURANCE_GROWER = 0.7;
+    private static final int ENDURANCE = 4;
+    private static final int ENDURANCE_GROWER = 1;
     private static final double BLOCK_CHANCE = 0.15;
     private static final double CRIT_CHANCE = 0.25;
 
@@ -52,7 +52,7 @@ public class Halfling extends Hero {
         setCritChance(CRIT_CHANCE);
         setBlockChance(BLOCK_CHANCE);
 
-        getInventory().put(new SlingshotFromBranch());
+        getInventory().put(new SlingshotFromBranch(this));
 
         getHealth().fillUp();
         getMagicScreen().fillUp();

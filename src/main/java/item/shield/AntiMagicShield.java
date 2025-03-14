@@ -1,6 +1,7 @@
 package item.shield;
 
 import config.ApplicationProperties;
+import hero.Hero;
 import item.shield.abstracts.Shield;
 
 import java.util.UUID;
@@ -26,11 +27,21 @@ public class AntiMagicShield extends Shield {
 
     private static final String picturePath = ApplicationProperties.getHost() + "/images/shield/anti_magic_shield.png";
 
-    public AntiMagicShield() {
-        super(UUID.randomUUID().toString(), "Магический щит", picturePath);
+    public AntiMagicShield(Hero owner) {
+        super(UUID.randomUUID().toString(), "Магический щит", picturePath, owner);
 
         setPhysicalBlock(0.2);
         setMagicBlock(0.5);
         setEvasionBonus(0.1);  // +10% к уклонению (магический щит легче)
+    }
+
+    @Override
+    public void equiped(Hero owner) {
+        owner.addAbilities(getAbilities());
+    }
+
+    @Override
+    public void unequiped(Hero owner) {
+        owner.getAbilities().removeAll(getAbilities());
     }
 }

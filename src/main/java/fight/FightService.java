@@ -6,6 +6,7 @@ import core.GameMaster;
 import dto.attack.AttackDto;
 import dto.defense.DefenseDto;
 import dto.fightresult.FightResultDto;
+import lombok.Getter;
 
 import java.util.Objects;
 
@@ -25,6 +26,7 @@ public class FightService {
 
     private final HeroService heroService;
 
+    @Getter
     private final FightResult result;
 
     private final GameMaster gameMaster;
@@ -70,10 +72,6 @@ public class FightService {
             return result.getResultDto();
         }
 
-        result.clear();
-
-        result.setRoundCount(gameMaster.nextRound());
-
         return combatMoves();
     }
 
@@ -83,47 +81,19 @@ public class FightService {
 
         var playebleHero = gameMaster.nextTurn();
 
-        //TODO продумать как именно будет проходить фаза атаки человеческого игрока.
         if (Objects.equals(playebleHero, player1)) {
             player1.focus();
             return result.getResultDto();
         }
 
-        AttackDto attackResult = computerAttack(player2, player1);
-
-        if (attackResult.isFail()) {
-            return result.getResultDto();
-        }
-
-        if (attackResult.isCritical()) {
-            result.addEventAndLog(String.format(
-                    "%s. !!!КРИТИЧЕСКИ УРОН!!! [%s]",
-                    attackResult.getMessage(),
-                    attackResult.getDamageDto().getSumDamage()));
-        } else {
-            result.addEventAndLog(String.format(
-                    "%s. урон[%s]",
-                    attackResult.getMessage(),
-                    attackResult.getDamageDto().getSumDamage()));
-        }
-
-        DefenseDto defenseResult = defensePhase(attackResult, player1);
+        player2.getTactic().turn(player1, result);
 
         player2.focus();
 
-        result.addEventAndLog(defenseResult.getMessage());
+        //Компьютерный игрок передаёт ход
+        fight();
 
         return result.getResultDto();
-    }
-
-    // TODO Продумать алгоритм того, как будет проходить фаза атаки у компьютерного игрока
-    public AttackDto computerAttack(Hero attacker, Hero defender) {
-
-        if (gameMaster.isHit(attacker, defender)) {
-            return attacker.attack(defender);
-        } else {
-            return attacker.doMissedEvent();
-        }
     }
 
     private DefenseDto defensePhase(AttackDto attack, Hero defender) {

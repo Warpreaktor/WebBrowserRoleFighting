@@ -1,6 +1,7 @@
 package item.weapon;
 
 import config.ApplicationProperties;
+import hero.Hero;
 import item.offhand.Offhand;
 
 import java.util.UUID;
@@ -15,13 +16,23 @@ public class Torch extends Offhand {
     /**
      * Создает факел, который можно держать в левой руке
      */
-    public Torch() {
-        super(UUID.randomUUID().toString(), "Факел", picturePath);
+    public Torch(Hero owner) {
+        super(UUID.randomUUID().toString(), "Факел", picturePath, owner);
 
         // Факел дает небольшой бонус к урону огнем
         setMagicDamageBonus(2.0);
 
         // Может слегка замедлять атаку, так как занимает руку
         setAttackSpeed(0.95);
+    }
+
+    @Override
+    public void equiped(Hero owner) {
+        owner.addAbilities(getAbilities());
+    }
+
+    @Override
+    public void unequiped(Hero owner) {
+        owner.getAbilities().removeAll(getAbilities());
     }
 }

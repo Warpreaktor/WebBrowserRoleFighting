@@ -1,10 +1,10 @@
-package mechanic;
+package ability;
 
+import core.GameMaster;
 import dto.ability.AbilityDto;
-import dto.damage.DamageDto;
 import enums.AbilityType;
+import hero.Hero;
 import lombok.Getter;
-import mechanic.interfaces.Defensible;
 import mechanic.interfaces.Switchable;
 
 public abstract class Ability implements Switchable {
@@ -57,7 +57,6 @@ public abstract class Ability implements Switchable {
                       int cost,
                       int coolDown
     ) {
-
         this.picturePath = picturePath;
         this.name = name;
         this.type = type;
@@ -69,7 +68,7 @@ public abstract class Ability implements Switchable {
     /**
      * Применить способность
      */
-    public abstract void apply(Defensible target);
+    public abstract void apply(Hero target);
 
     /**
      * Возвращает текущее состояние способности. Активна ли она.
@@ -105,6 +104,12 @@ public abstract class Ability implements Switchable {
                 .cost(cost)
                 .isActive(isActive)
                 .build();
+    }
+
+    public abstract int getGameWeight();
+
+    public void coolDown() {
+        GameMaster.getInstance().switchOff(this, coolDown);
     }
 
 }

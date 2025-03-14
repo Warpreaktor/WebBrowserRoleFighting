@@ -32,13 +32,13 @@ public class Mage extends Hero {
     private static final int STRENGTH = 2;
     private static final int DEXTERITY = 4;
 
-    private static final double HEALTH = 35;
-    private static final double MAGIC_SCREEN = 20;
+    private static final double HEALTH = 18;
+    private static final double MAGIC_SCREEN = 10;
 
     private static final double ACCURACY = 0.8;
     private static final double EVASION = 0.15;
-    private static final double ENDURANCE = 2.5;
-    private static final double ENDURANCE_GROWER = 0.5;
+    private static final int ENDURANCE = 2;
+    private static final int ENDURANCE_GROWER = 1;
     private static final double BLOCK_CHANCE = 0d;
     private static final double CRIT_CHANCE = 0.3;
 
@@ -72,7 +72,7 @@ public class Mage extends Hero {
 
         getMagicScreen().addMagicScreenGrower(1d);
 
-        getInventory().put(new MagicWandOfNewbie());
+        getInventory().put(new MagicWandOfNewbie(this));
 
         getMagicScreen().fillUp();
         getHealth().fillUp();

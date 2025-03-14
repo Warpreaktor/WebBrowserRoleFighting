@@ -1,7 +1,7 @@
 package hero;
 
 import dto.damage.DamageDto;
-import mechanic.Ability;
+import ability.Ability;
 import mechanic.Damage;
 import equip.EquipSlot;
 import equip.Equipment;
@@ -14,8 +14,10 @@ import mechanic.Endurance;
 import mechanic.Health;
 import mechanic.Intelligence;
 import mechanic.MagicScreen;
+import mechanic.Psych;
 import mechanic.Strength;
 import mechanic.interfaces.Heroic;
+import tactic.Tactic;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +49,7 @@ public abstract class Hero implements Heroic {
     private Statistic statistic;
 
     @Getter
-    private State state;
+    private EffectStack effectStack;
 
     //==================================================//
     //                  ОДЁЖКА                          //
@@ -99,6 +101,12 @@ public abstract class Hero implements Heroic {
     private Health health;
 
     /**
+     * Психическое состояние героя. Чем оно ниже, тем больше он будет дурить.
+     */
+    @Getter
+    private Psych psych;
+
+    /**
      * Выносливость персонажа.
      */
     @Getter
@@ -128,7 +136,7 @@ public abstract class Hero implements Heroic {
     private double blockChance;
 
     /**
-     * Шанс критического удара. Проверка на критический удар проходит во время фазы атаки.
+     * Шанс критического удара.
      */
     @Getter
     @Setter
@@ -137,9 +145,16 @@ public abstract class Hero implements Heroic {
     @Getter
     private List<Ability> abilities;
 
+    @Getter
+    @Setter
+    private Tactic tactic;
+
+    @Getter
+    private Damage passiveDamage;
+
     public Hero() {
         statistic = new Statistic();
-        state = new State();
+        effectStack = new EffectStack(this);
         intelligence = new Intelligence(0);
         strength = new Strength(0);
         dexterity = new Dexterity(0);
@@ -153,6 +168,7 @@ public abstract class Hero implements Heroic {
         critChance = 0.0;
         abilities = new ArrayList<>(4);
         equipment = new Equipment(this);
+        passiveDamage = new Damage();
     }
 
     public void setIntelligence(Integer value) {
@@ -276,48 +292,16 @@ public abstract class Hero implements Heroic {
     }
 
     /**
-     * Урон героя как есть, включая все модификаторы экипировки.
-     */
-    @Override
-    public Damage getStaticDamage() {
-        //TODO Здесь предполагается код, который будет опрашивать всю экипировку и действующие на героя модификаторы
-        var rightHand = getEquipment().getRightHand().getDamage();
-
-        var piercingDamage = rightHand.getPiercing();
-        var crushingDamage = rightHand.getCrushing();
-        var cuttingDamage = rightHand.getCutting();
-        var fireDamage = rightHand.getFire();
-        var electricDamage = rightHand.getElectric();
-
-        return new Damage(
-        piercingDamage,
-        crushingDamage,
-        cuttingDamage,
-        fireDamage,
-                electricDamage
-        );
-    }
-
-    /**
      * Урон героя для отображения в статистике. Берутся средние значения.
      */
     @Override
-    public DamageDto getDamageDto() {
-        //TODO Здесь предполагается код, который будет опрашивать всю экипировку и действующие на героя модификаторы
-        var rightHand = getEquipment().getRightHand().getDamage();
-
-        var piercingDamage = rightHand.getPiercing();
-        var crushingDamage = rightHand.getCrushing();
-        var cuttingDamage = rightHand.getCutting();
-        var fireDamage = rightHand.getFire();
-        var electricDamage = rightHand.getElectric();
-
+    public DamageDto getDamageInfo() {
         return new DamageDto(
-                average(List.of(piercingDamage.getMin(), piercingDamage.getMax())),
-                average(List.of(crushingDamage.getMin(), crushingDamage.getMax())),
-                average(List.of(cuttingDamage.getMin(), cuttingDamage.getMax())),
-                average(List.of(fireDamage.getMin(), fireDamage.getMax())),
-                average(List.of(electricDamage.getMin(), electricDamage.getMax()))
+                average(List.of(passiveDamage.getPiercing().getMin(), passiveDamage.getPiercing().getMax())),
+                average(List.of(passiveDamage.getCrushing().getMin(), passiveDamage.getCrushing().getMax())),
+                average(List.of(passiveDamage.getCutting().getMin(), passiveDamage.getCutting().getMax())),
+                average(List.of(passiveDamage.getFire().getMin(), passiveDamage.getFire().getMax())),
+                average(List.of(passiveDamage.getElectric().getMin(), passiveDamage.getElectric().getMax()))
         );
     }
 
@@ -434,7 +418,7 @@ public abstract class Hero implements Heroic {
                         // Сохраняем attackSpeed перед снятием
                         double attackSpeed = equipment.getLeftHand().getAttackSpeed();
                         // Возвращаем agility обратно
-                        endurance.setGrower(endurance.getGrower() / attackSpeed);
+                        endurance.setGrower((int) (endurance.getGrower() / attackSpeed));
                         equipment.unequipLeftHand();
                     } else {
                         throw new RuntimeException("Предмет не найден по идентификатору: [" + objectId + "]");
@@ -455,4 +439,10 @@ public abstract class Hero implements Heroic {
         this.abilities.addAll(ability);
     }
 
+    /**
+     * Удаляет все способности героя
+     */
+    public void clearAbilities() {
+        this.abilities.clear();
+    }
 }

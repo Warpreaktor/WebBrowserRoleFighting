@@ -8,6 +8,8 @@ import item.weapon.Knife;
 import lombok.Getter;
 import lombok.NonNull;
 import spec.HeroClass;
+import tactic.SkeletonTactic;
+import tactic.Tactic;
 
 import static hero.constants.messages.SkeletonMessages.ATTACK_MESSAGES;
 import static hero.constants.messages.SkeletonMessages.BLOCKED_MESSAGES;
@@ -39,13 +41,13 @@ public class Skeleton extends Hero {
     private static final int STRENGTH = 5;
     private static final int DEXTERITY = 7;
 
-    private static final double HEALTH = 40;
+    private static final double HEALTH = 20;
     private static final double MAGIC_SCREEN = 0;
 
     private static final double ACCURACY = 0.35;
     private static final double EVASION = 0.25;
-    private static final double ENDURANCE = 3.0;
-    private static final double ENDURANCE_GROWER = 0.6;
+    private static final int ENDURANCE = 3;
+    private static final int ENDURANCE_GROWER = 1;
     private static final double BLOCK_CHANCE = 0.2;
     private static final double CRIT_CHANCE = 0.2;
 
@@ -92,8 +94,10 @@ public class Skeleton extends Hero {
         setCritChance(CRIT_CHANCE);
         setBlockChance(BLOCK_CHANCE);
 
-        getInventory().put(new Knife());
-        getInventory().put(new WoodenShield());
+        getInventory().put(new Knife(this));
+        getInventory().put(new WoodenShield(this));
+
+        setTactic(new SkeletonTactic(this));
 
         getHealth().fillUp();
         getMagicScreen().fillUp();
@@ -116,8 +120,8 @@ public class Skeleton extends Hero {
         //TODO нужно будет добавить методы add-еры
         setAccuracy(ACCURACY + ACCURACY_GROWTH * (newLevel - 1));
         setEvasion(EVASION + EVASION_GROWTH * (newLevel - 1));
-        getEndurance().setMaxValue(ENDURANCE + ENDURANCE_GROWTH * (newLevel - 1));
-        getEndurance().setGrower(ENDURANCE_GROWER + ENDURANCE_GROWER_GROWTH * (newLevel - 1));
+        getEndurance().setMaxValue((int) (ENDURANCE + ENDURANCE_GROWTH * (newLevel - 1)));
+        getEndurance().setGrower((int) (ENDURANCE_GROWER + ENDURANCE_GROWER_GROWTH * (newLevel - 1)));
         setBlockChance(BLOCK_CHANCE + BLOCK_CHANCE_GROWTH * (newLevel - 1));
         setCritChance(CRIT_CHANCE + CRIT_CHANCE_GROWTH * (newLevel - 1));
     }

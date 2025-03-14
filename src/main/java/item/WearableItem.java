@@ -1,11 +1,9 @@
 package item;
 
 import equip.EquipSlot;
+import hero.Hero;
 import lombok.Getter;
 import lombok.Setter;
-import mechanic.Ability;
-
-import java.util.List;
 
 /**
  * Это класс для всех предметов, которые можно экипировать.
@@ -37,8 +35,8 @@ public abstract class WearableItem extends Item {
      */
     private double attackSpeed;
 
-    public WearableItem(String id, String name, String picturePath) {
-        super(id, name, picturePath);
+    public WearableItem(String id, String name, String picturePath, Hero owner) {
+        super(id, name, picturePath, owner);
     }
 
     /**

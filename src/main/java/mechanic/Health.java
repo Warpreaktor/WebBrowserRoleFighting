@@ -89,4 +89,13 @@ public class Health {
         value = 0.0;
         isDead = true;
     }
+
+    /**
+     * Возвращает остаточный процент здоровья.
+     *
+     * @return 1 значит 100% здоровья 0.5 значит 50%
+     */
+    public double getRatio() {
+        return value / maxValue;
+    }
 }

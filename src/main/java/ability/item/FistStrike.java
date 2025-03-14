@@ -1,13 +1,16 @@
 package ability.item;
 
 import config.ApplicationProperties;
+import core.GameMaster;
 import dto.attack.AttackDto;
 import enums.AbilityType;
-import item.weapon.abstracts.Weapon;
+import fight.FightService;
+import hero.Hero;
+import item.weapon.Fist;
 import lombok.Getter;
-import mechanic.Ability;
-import mechanic.interfaces.Defensible;
+import ability.Ability;
 
+import static constants.AbilityGameWeight.FIST_STRIKE_GW;
 import static enums.AbilityType.ENEMY_TARGET;
 import static tools.Dice.byMinMaxChance;
 
@@ -28,33 +31,49 @@ public class FistStrike extends Ability {
 
     private static final int COOL_DOWN = 0;
 
+    /**
+     * Игровой вес умения. По сути это то, на сколько оценивается мощь и полезность этого умения в бою.
+     */
+    @Getter
+    private final int gameWeight = FIST_STRIKE_GW;
+
     //==================================================//
-    //   ▄█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▄    //
-    //  ▄█                                          █▄  //
     // ███       💢 СПЕЦИАЛЬНЫЕ СВОЙСТВА 💢        ███ //
-    //  ▀█                                          █▀  //
-    //   ▀█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▀    //
     //==================================================//
     /**
      * Информация о предмете которому принадлежит способность.
      */
     @Getter
-    private final Weapon weapon;
+    private final Fist owner;
 
-    public FistStrike(Weapon abilityOwner) {
+    public FistStrike(Fist abilityOwner) {
         super(PICTURE_PATH, NAME, TYPE, DESCRIPTION, COST, COOL_DOWN);
 
-        this.weapon = abilityOwner;
+        this.owner = abilityOwner;
     }
 
     @Override
-    public void apply(Defensible target) {
+    public void apply(Hero target) {
+        var journal = FightService.getInstance().getResult();
 
-        var damageDto = byMinMaxChance(weapon.getDamage());
+        var damageDto = byMinMaxChance(owner.getDamage());
 
         var attack = new AttackDto(damageDto, "ДЫЩ кулаком!");
 
-        target.defense(attack);
+        journal.addEventAndLog(attack.getMessage());
+
+        var defense = target.defense(attack);
+
+        journal.addEventAndLog(defense.getMessage());
+
+        owner.exhaustion(getCost());
+
+        coolDown();
+
     }
 
+    @Override
+    public void trigger() {
+        // do nothing
+    }
 }

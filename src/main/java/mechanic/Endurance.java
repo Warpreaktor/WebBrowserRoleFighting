@@ -12,26 +12,26 @@ public class Endurance {
      * Значение выносливости. Выносливость влияет на очки выносливости.
      */
     @Getter
-    private double maxValue;
+    private int maxValue;
 
     /**
      * Очки выносливости персонажа. Каждый раз когда он действует они тратятся.
      */
     @Setter
     @Getter
-    private double value;
+    private int value;
 
     /**
      * Скорость восстановления. Влияет на сколько очков за раунд поднимается endurancePoint.
      */
     @Setter
     @Getter
-    private Double grower;
+    private int grower;
 
     public Endurance() {
-        maxValue = 0.0 * ENDURANCE_VALUE_PER_DEXTERITY_MULTIPLIER;
-        value = 0.0;
-        grower = 0.0 * ENDURANCE_GROWER_PER_DEXTERITY_MULTIPLIER;
+        maxValue = (int) (0 * ENDURANCE_VALUE_PER_DEXTERITY_MULTIPLIER);
+        value = 0;
+        grower = (int) (0 * ENDURANCE_GROWER_PER_DEXTERITY_MULTIPLIER);
     }
 
     public void addGrower(Double value) {
@@ -54,7 +54,7 @@ public class Endurance {
         }
     }
 
-    public void setMaxValue(Double maxValue) {
+    public void setMaxValue(int maxValue) {
         this.maxValue = maxValue;
 
         if (this.maxValue < this.value) {
@@ -69,11 +69,11 @@ public class Endurance {
         value = maxValue;
     }
 
-    public void addMaxValue(Double value) {
+    public void addMaxValue(int value) {
         maxValue += value;
     }
 
-    public void decreaseMaxValue(Double value) {
+    public void decreaseMaxValue(int value) {
         maxValue -= value;
         this.maxValue -= value;
     }

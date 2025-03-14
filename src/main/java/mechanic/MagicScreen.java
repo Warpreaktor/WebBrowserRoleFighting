@@ -113,6 +113,11 @@ public class MagicScreen implements Switchable {
 
     @Override
     public void switchOff() {
+        this.isActive = false;
+    }
 
+    @Override
+    public void trigger() {
+        //do nothing
     }
 }

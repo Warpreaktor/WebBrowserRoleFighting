@@ -56,8 +56,8 @@ public class LootBoxService {
     public Weapon weaponLootRandom() {
 
         Weapon[] weapons = {
-                new Knife(),
-                new MagicWandOfNewbie()
+                new Knife(null),
+                new MagicWandOfNewbie(null)
         };
 
         return weapons[Dice.randomInt(weapons.length)];
@@ -65,7 +65,7 @@ public class LootBoxService {
 
     public Shield shieldLootRandom() {
         Shield[] shields = {
-                new WoodenShield()
+                new WoodenShield(null)
         };
         return shields[Dice.randomInt(shields.length)];
     }
