@@ -12,17 +12,19 @@ public class HeroCharacteristicDto {
 
     private String heroClass;
 
-    private double health;
+    private double healthValue;
 
-    private double maxHealth;
+    private double healthMaxValue;
 
-    private double shield;
+    private double magicScreenValue;
 
-    private double maxShield;
+    private double magicScreenMaxValue;
+
+    private double enduranceMaxValue;
+
+    private double enduranceValue;
 
     private double accuracy;
-
-    private double agility;
 
     private double evasion;
 

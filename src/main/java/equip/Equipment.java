@@ -1,5 +1,6 @@
 package equip;
 
+import hero.Hero;
 import item.Item;
 import item.WearableItem;
 import lombok.Getter;
@@ -15,6 +16,11 @@ import java.util.Objects;
 @Slf4j
 @Getter
 public class Equipment {
+
+    /**
+     * Владелец экипировки
+     */
+    private final Hero owner;
 
     /**
      * Кулак всегда один и он сохраняется как объект на персонаже.
@@ -37,9 +43,10 @@ public class Equipment {
      */
     private Weapon bothHands;
 
-    public Equipment() {
-        fist = new Fist();
-        rightHand = fist;
+    public Equipment(Hero owner) {
+        this.owner = owner;
+        this.fist = new Fist(owner);
+        equipRightHand(fist);
         leftHand = null;
         bothHands = null;
     }
@@ -55,6 +62,7 @@ public class Equipment {
         switch (slot) {
             case RIGHT_HAND:
                 if (item instanceof Weapon weapon) {
+                    weapon.equiped(owner);
                     return equipRightHand(weapon);
                 } else {
                     log.info("Этот предмет нельзя экипировать в правую руку");
@@ -93,6 +101,9 @@ public class Equipment {
         }
 
         rightHand = weapon.getRightHand() ? weapon : fist;
+
+        owner.addAbilities(weapon.getAbilities());
+
         return true;
     }
 
@@ -134,11 +145,9 @@ public class Equipment {
         leftHand = null;
     }
 
-    /**
-     * Взять оружие в правую руку
-     */
-    public void takeWeapon(Weapon weapon) {
-        rightHand = Objects.requireNonNullElse(weapon, fist);
+    public void unequipRightHand() {
+        owner.getAbilities().removeAll(rightHand.getAbilities());
+        rightHand = fist;
     }
 
     public EquipmentDto getEquipmentDto() {

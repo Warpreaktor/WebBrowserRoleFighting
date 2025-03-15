@@ -1,11 +1,9 @@
 package hero.classes;
 
 import hero.Hero;
-import item.weapon.MagicWand;
+import item.weapon.MagicWandOfNewbie;
 import lombok.Getter;
 import spec.HeroClass;
-
-import java.util.List;
 
 import static hero.constants.messages.MageMessages.ATTACK_MESSAGES;
 import static hero.constants.messages.MageMessages.BLOCKED_MESSAGES;
@@ -34,13 +32,13 @@ public class Mage extends Hero {
     private static final int STRENGTH = 2;
     private static final int DEXTERITY = 4;
 
-    private static final double HEALTH = 35;
-    private static final double SHIELD = 20;
+    private static final double HEALTH = 18;
+    private static final double MAGIC_SCREEN = 10;
 
     private static final double ACCURACY = 0.8;
     private static final double EVASION = 0.15;
-    private static final double AGILITY = 0.5;
-    private static final double ENDURANCE = 2.5;
+    private static final int ENDURANCE = 2;
+    private static final int ENDURANCE_GROWER = 1;
     private static final double BLOCK_CHANCE = 0d;
     private static final double CRIT_CHANCE = 0.3;
 
@@ -61,22 +59,24 @@ public class Mage extends Hero {
         setCritChance(CRIT_CHANCE);
 
         getHealth().addMaxValue(HEALTH);
-        getShield().addMaxValue(SHIELD);
+        getMagicScreen().addMaxValue(MAGIC_SCREEN);
 
         setAccuracy(ACCURACY);
         setEvasion(EVASION);
-        setEndurance(ENDURANCE);
-        setAgility(AGILITY);
+
+        getEndurance().setMaxValue(ENDURANCE);
+        getEndurance().setGrower(ENDURANCE_GROWER);
 
         setCritChance(CRIT_CHANCE);
         setBlockChance(BLOCK_CHANCE);
 
-        getShield().addShieldGrower(1d);
+        getMagicScreen().addMagicScreenGrower(1d);
 
-        getInventory().put(new MagicWand());
+        getInventory().put(new MagicWandOfNewbie(this));
 
-        getShield().fillUp();
+        getMagicScreen().fillUp();
         getHealth().fillUp();
+        getEndurance().fillUp();
     }
 
     @Override
@@ -85,7 +85,7 @@ public class Mage extends Hero {
         return String.format(BLOCKED_MESSAGES.get(index), getName());
     }
     @Override
-    public String getShieldAbsorbMessage() {
+    public String getMagicScreenAbsorbMessage() {
         int index = randomInt(DEFEND_MESSAGES.size());
         return String.format(DEFEND_MESSAGES.get(index), getName());
     }

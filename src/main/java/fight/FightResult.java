@@ -34,10 +34,6 @@ public class FightResult {
         this.log = new ArrayList<>();
     }
 
-    public List<String> getMessage() {
-        return this.message;
-    }
-
     public void addEventAndLog(String message) {
         log(message);
         this.message.add(message);
@@ -49,6 +45,7 @@ public class FightResult {
     }
 
     public FightResultDto getResultDto() {
+
         return new FightResultDto(
                 isOver,
                 winner,

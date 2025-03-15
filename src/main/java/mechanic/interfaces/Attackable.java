@@ -2,17 +2,18 @@ package mechanic.interfaces;
 
 import dto.damage.DamageDto;
 import dto.attack.AttackDto;
+import fight.FightService;
 
-import static constants.GlobalConstants.COST_OF_AUTOATTACK;
+import static constants.GlobalConstants.COST_OF_WEAPON_ATTACK;
 import static constants.GlobalConstants.GLOBAL_CRIT_DAMAGE_MULTIPLIER;
-import static tools.Dice.randomByMinMax;
+import static tools.Dice.byMinMaxChance;
 import static tools.Dice.tryTo;
 
 /**
  * Всё что может атаковать и может быть атаковано в ответ.
  * Вызывается в фазу атаки.
  */
-public interface Attackable extends Restable, Accuracy, Damageable {
+public interface Attackable extends Endured, Accuracy, Damageable {
 
     String getRestMessage();
 
@@ -33,7 +34,7 @@ public interface Attackable extends Restable, Accuracy, Damageable {
 
     default AttackDto doAttackEvent() {
 
-        var heroDamage = getStaticDamage();
+        var heroDamage = getPassiveDamage();
 
         var piercingDamage = heroDamage.getPiercing();
         var crushingDamage = heroDamage.getCrushing();
@@ -43,11 +44,11 @@ public interface Attackable extends Restable, Accuracy, Damageable {
 
         //MinMax калькуляцая
         var damageDto = new DamageDto(
-                randomByMinMax(piercingDamage),
-                randomByMinMax(crushingDamage),
-                randomByMinMax(cuttingDamage),
-                randomByMinMax(fireDamage),
-                randomByMinMax(electricDamage)
+                byMinMaxChance(piercingDamage),
+                byMinMaxChance(crushingDamage),
+                byMinMaxChance(cuttingDamage),
+                byMinMaxChance(fireDamage),
+                byMinMaxChance(electricDamage)
         );
 
         boolean isCritical = false;
@@ -77,12 +78,16 @@ public interface Attackable extends Restable, Accuracy, Damageable {
     }
 
     default AttackDto attack(Defensible defensible) {
-        if (getEndurance() >= COST_OF_AUTOATTACK) {
 
-            setEndurance(getEndurance() - COST_OF_AUTOATTACK);
+        if (getEndurance().getValue() >= COST_OF_WEAPON_ATTACK) {
+
+            getEndurance().decreaseValue(getEndurance().getValue() - COST_OF_WEAPON_ATTACK);
+
             return doAttackEvent();
+
         } else {
-            return doRestEvent();
+            FightService.getInstance().getResult().addEventAndLog("Не хватает выносливости");
+            throw new RuntimeException("Не хватает выносливости");
         }
     }
 

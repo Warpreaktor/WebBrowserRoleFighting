@@ -25,6 +25,6 @@ public enum AbilityType {
     /**
      * Целью способности может быть только ты сам.
      */
-    YOUR_SELF
+    SELF
 
 }

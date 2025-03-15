@@ -1,11 +1,9 @@
 package hero.classes;
 
 import hero.Hero;
-import item.weapon.ShortBow;
+import item.weapon.ShortestBow;
 import lombok.Getter;
 import spec.HeroClass;
-
-import java.util.List;
 
 import static hero.constants.messages.ArcherMessages.ATTACK_MESSAGES;
 import static hero.constants.messages.ArcherMessages.BLOCKED_MESSAGES;
@@ -31,13 +29,13 @@ public class Archer extends Hero {
     private static final int STRENGTH = 4;
     private static final int DEXTERITY = 8;
 
-    private static final double HEALTH = 50;
-    private static final double SHIELD = 0;
+    private static final double HEALTH = 25;
+    private static final double MAGIC_SCREEN = 0;
 
     private static final double ACCURACY = 0.7;
     private static final double EVASION = 0.3;
-    private static final double AGILITY = 0.65;
-    private static final double ENDURANCE = 3.8;
+    private static final int ENDURANCE = 4;
+    private static final int ENDURANCE_GROWER = 1;
     private static final double BLOCK_CHANCE = 0.1;
     private static final double CRIT_CHANCE = 0.25;
 
@@ -59,20 +57,22 @@ public class Archer extends Hero {
         setCritChance(CRIT_CHANCE);
 
         getHealth().addMaxValue(HEALTH);
-        getShield().addMaxValue(SHIELD);
+        getMagicScreen().addMaxValue(MAGIC_SCREEN);
 
         setAccuracy(ACCURACY);
         setEvasion(EVASION);
-        setEndurance(ENDURANCE);
-        setAgility(AGILITY);
+
+        getEndurance().setMaxValue(ENDURANCE);
+        getEndurance().setGrower(ENDURANCE_GROWER);
 
         setCritChance(CRIT_CHANCE);
         setBlockChance(BLOCK_CHANCE);
 
-        getInventory().put(new ShortBow());
+        getInventory().put(new ShortestBow(this));
 
         getHealth().fillUp();
-        getShield().fillUp();
+        getMagicScreen().fillUp();
+        getEndurance().fillUp();
     }
 
     public String getPainMessage() {
@@ -80,7 +80,7 @@ public class Archer extends Hero {
         return String.format(PAIN_MESSAGES.get(index), getName());
     }
 
-    public String getShieldAbsorbMessage() {
+    public String getMagicScreenAbsorbMessage() {
         int index = randomInt(SHIELD_ABSORB_MESSAGES.size());
         return String.format(SHIELD_ABSORB_MESSAGES.get(index), getName());
     }

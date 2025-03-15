@@ -35,7 +35,7 @@ public class ItemService {
     }
 
     public Weapon generate() {
-        return new Knife();
+        return new Knife(null);
     }
 
     public void putAll(List<Item> items) {

@@ -1,8 +1,11 @@
-package hero.classes.samodiva;
+package hero.classes;
 
+import ability.hero.samodiva.Discharge;
 import hero.Hero;
 import lombok.Getter;
 import spec.HeroClass;
+
+import java.util.List;
 
 import static hero.constants.messages.SamodivaMessages.ATTACK_MESSAGES;
 import static hero.constants.messages.SamodivaMessages.BLOCKED_MESSAGES;
@@ -30,12 +33,12 @@ public class Samodiva extends Hero {
     private static final int DEXTERITY = 5;
 
     //Стартовые характеристики
-    private static final double HEALTH = 25d;
-    private static final double SHIELD = 10d;
+    private static final double HEALTH = 13;
+    private static final double MAGIC_SCREEN = 5;
     private static final double ACCURACY = 0.4;
     private static final double EVASION = 0.6;
-    private static final double ENDURANCE = 3d;
-    private static final double AGILITY = 0.5;
+    private static final int ENDURANCE = 3;
+    private static final int ENDURANCE_GROWER = 1;
     private static final double BLOCK_CHANCE = 0d;
     private static final double CRIT_CHANCE = 0.3;
 
@@ -57,19 +60,22 @@ public class Samodiva extends Hero {
         setCritChance(CRIT_CHANCE);
 
         getHealth().addMaxValue(HEALTH);
-        getShield().addMaxValue(SHIELD);
+        getMagicScreen().addMaxValue(MAGIC_SCREEN);
 
         setAccuracy(ACCURACY);
         setEvasion(EVASION);
-        setAgility(AGILITY);
-        setEndurance(ENDURANCE);
+
+        getEndurance().setMaxValue(ENDURANCE);
+        getEndurance().setGrower(ENDURANCE_GROWER);
+
         setBlockChance(BLOCK_CHANCE);
         setCritChance(CRIT_CHANCE);
 
-        addAbility(new LightningStrike());
+        addAbilities(List.of(new Discharge(this)));
 
-        getShield().fillUp();
         getHealth().fillUp();
+        getMagicScreen().fillUp();
+        getEndurance().fillUp();
     }
 
     public String getPainMessage() {
@@ -77,7 +83,7 @@ public class Samodiva extends Hero {
         return String.format(PAIN_MESSAGES.get(index), getName());
     }
 
-    public String getShieldAbsorbMessage() {
+    public String getMagicScreenAbsorbMessage() {
         int index = randomInt(SHIELD_ABSORB_MESSAGES.size());
         return String.format(SHIELD_ABSORB_MESSAGES.get(index), getName());
     }

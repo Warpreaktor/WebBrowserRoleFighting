@@ -1,9 +1,9 @@
 package core;
 
+import fight.FightResult;
+import fight.FightService;
 import hero.Hero;
 import hero.HeroTable;
-import mechanic.interfaces.Attackable;
-import mechanic.interfaces.Defensible;
 import mechanic.interfaces.Switchable;
 
 import java.util.ArrayList;
@@ -11,7 +11,6 @@ import java.util.List;
 
 import static hero.constants.HeroConstants.PLAYER1;
 import static hero.constants.HeroConstants.PLAYER2;
-import static tools.Dice.rollHundred;
 
 public class GameMaster {
 
@@ -35,6 +34,7 @@ public class GameMaster {
         turnOrder = new ArrayList<>(2);
         turnOrder.add(heroTable.get(PLAYER1));
         turnOrder.add(heroTable.get(PLAYER2));
+        turnOrderCursor = 0;
     }
 
     public static GameMaster getInstance() {
@@ -51,31 +51,29 @@ public class GameMaster {
         return getInstance();
     }
 
-    /*
-     * Логарифмическая формула: шанс попадания зависит от разницы точности и ловкости
-     * Если accuracy намного выше agility, шанс попадания приближается к 100%.
-     * Если agility выше, шанс уменьшается.
-     * Если значения равны, шанс будет около 50%.
+    /**
+     * Метод определяет кто следующий ходит
      */
-    public double hitChance(Attackable attacker, Defensible defender) {
-        var accuracy = attacker.getAccuracy();
-        var evasion = defender.getEvasion();
+    public Hero nextTurn() {
 
-        return 100 / (Math.exp((evasion - accuracy) / 10.0));
+        var hero = turnOrder.get(turnOrderCursor);
+
+        hero.getEffectStack().activate();
+
+        checkEffects();
+
+        turnOrderCursor++;
+
+        if (turnOrderCursor > turnOrder.size() - 1) {
+            FightService.getInstance().getResult().setRoundCount(currentRound += 1);
+            turnOrderCursor = 0;
+            FightService.getInstance().getResult().clear();
+        }
+
+        return hero;
     }
 
-    public boolean isHit(Attackable attacker, Defensible defender) {
-        double roll = rollHundred();
-
-        return roll <= hitChance(attacker, defender);
-    }
-
-    public int nextRound() {
-        goodMorning();
-        return currentRound += 1;
-    }
-
-    private void goodMorning() {
+    private void checkEffects() {
         var iterator = eventTimers.iterator();
 
         while (iterator.hasNext()) {
@@ -111,18 +109,6 @@ public class GameMaster {
     public void switchOff(Switchable switchObject, int roundCount) {
         switchObject.switchOff();
         eventTimers.add(new EventTimer(switchObject, roundCount));
-    }
-
-    /**
-     * Метод определяет кто следующий ходит
-     */
-    public Hero nextTurn() {
-        if (turnOrderCursor > 1) {
-            turnOrderCursor = 0;
-        }
-        var hero = turnOrder.get(turnOrderCursor);
-        turnOrderCursor++;
-        return hero;
     }
 
     private static class EventTimer {

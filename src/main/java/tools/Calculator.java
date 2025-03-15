@@ -1,5 +1,7 @@
 package tools;
 
+import dto.MinMax;
+
 import java.util.List;
 
 public class Calculator {
@@ -15,6 +17,14 @@ public class Calculator {
         }
 
         return sum / numbers.size();
+    }
+
+    public static double average(MinMax minMax) {
+        if (minMax == null || minMax.getMin() == null || minMax.getMax() == null) {
+            throw new IllegalArgumentException("Список чисел не должен быть пустым или null");
+        }
+
+        return (minMax.getMin() + minMax.getMax()) / 2;
     }
 
 }

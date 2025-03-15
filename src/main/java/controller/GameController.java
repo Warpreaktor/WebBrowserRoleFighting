@@ -20,8 +20,6 @@ public class GameController {
     }
 
     private final Route startNewGame = (req, res) -> {
-        Gson gson = new Gson();
-        HeroRequestDto player = gson.fromJson(req.body(), HeroRequestDto.class);
 
         gameService.startNewGame();
 

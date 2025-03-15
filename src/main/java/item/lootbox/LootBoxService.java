@@ -6,7 +6,7 @@ import item.shield.WoodenShield;
 import item.shield.abstracts.Shield;
 import item.weapon.Knife;
 import item.weapon.abstracts.Weapon;
-import item.weapon.MagicWand;
+import item.weapon.MagicWandOfNewbie;
 import lombok.Getter;
 import tools.Dice;
 
@@ -56,8 +56,8 @@ public class LootBoxService {
     public Weapon weaponLootRandom() {
 
         Weapon[] weapons = {
-                new Knife(),
-                new MagicWand()
+                new Knife(null),
+                new MagicWandOfNewbie(null)
         };
 
         return weapons[Dice.randomInt(weapons.length)];
@@ -65,7 +65,7 @@ public class LootBoxService {
 
     public Shield shieldLootRandom() {
         Shield[] shields = {
-                new WoodenShield()
+                new WoodenShield(null)
         };
         return shields[Dice.randomInt(shields.length)];
     }

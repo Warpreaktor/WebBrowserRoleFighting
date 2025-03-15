@@ -8,6 +8,8 @@ import item.weapon.Knife;
 import lombok.Getter;
 import lombok.NonNull;
 import spec.HeroClass;
+import tactic.SkeletonTactic;
+import tactic.Tactic;
 
 import static hero.constants.messages.SkeletonMessages.ATTACK_MESSAGES;
 import static hero.constants.messages.SkeletonMessages.BLOCKED_MESSAGES;
@@ -39,13 +41,13 @@ public class Skeleton extends Hero {
     private static final int STRENGTH = 5;
     private static final int DEXTERITY = 7;
 
-    private static final double HEALTH = 40;
-    private static final double SHIELD = 0;
+    private static final double HEALTH = 20;
+    private static final double MAGIC_SCREEN = 0;
 
     private static final double ACCURACY = 0.35;
     private static final double EVASION = 0.25;
-    private static final double AGILITY = 0.6;
-    private static final double ENDURANCE = 3.0;
+    private static final int ENDURANCE = 3;
+    private static final int ENDURANCE_GROWER = 1;
     private static final double BLOCK_CHANCE = 0.2;
     private static final double CRIT_CHANCE = 0.2;
 
@@ -59,33 +61,10 @@ public class Skeleton extends Hero {
     private static final double HEALTH_GROWTH = 3.0;
     private static final double ACCURACY_GROWTH = 0.015;
     private static final double EVASION_GROWTH = 0.01;
-    private static final double AGILITY_GROWTH = 0.03;
+    private static final double ENDURANCE_GROWER_GROWTH = 0.03;
     private static final double ENDURANCE_GROWTH = 0.2;
     private static final double BLOCK_CHANCE_GROWTH = 0.01;
     private static final double CRIT_CHANCE_GROWTH = 0.015;
-
-    // Метод повышения уровня
-    public void levelUp() {
-        setLevel(getStatistic().getLevel() + 1);
-    }
-
-    public void setLevel(int newLevel) {
-        if (newLevel < 1) {
-            throw new IllegalArgumentException("Уровень не может быть меньше 1");
-        }
-        getStatistic().setLevel(newLevel);
-
-        getHealth().addMaxValue(HEALTH_GROWTH * (newLevel - 1));
-
-        //TODO нужно будет добавить методы add-еры
-        setAccuracy(ACCURACY + ACCURACY_GROWTH * (newLevel - 1));
-        setEvasion(EVASION + EVASION_GROWTH * (newLevel - 1));
-        setAgility(AGILITY + AGILITY_GROWTH * (newLevel - 1));
-        setEndurance(ENDURANCE + ENDURANCE_GROWTH * (newLevel - 1));
-        setBlockChance(BLOCK_CHANCE + BLOCK_CHANCE_GROWTH * (newLevel - 1));
-        setCritChance(CRIT_CHANCE + CRIT_CHANCE_GROWTH * (newLevel - 1));
-    }
-
 
     /**
      * Создаёт нового скелета с заданным именем и базовыми характеристиками.
@@ -104,21 +83,47 @@ public class Skeleton extends Hero {
         setCritChance(CRIT_CHANCE);
 
         getHealth().addMaxValue(HEALTH);
-        getShield().addMaxValue(SHIELD);
+        getMagicScreen().addMaxValue(MAGIC_SCREEN);
 
         setAccuracy(ACCURACY);
         setEvasion(EVASION);
-        setEndurance(ENDURANCE);
-        setAgility(AGILITY);
+
+        getEndurance().setMaxValue(ENDURANCE);
+        getEndurance().setGrower(ENDURANCE_GROWER);
 
         setCritChance(CRIT_CHANCE);
         setBlockChance(BLOCK_CHANCE);
 
-        getInventory().put(new Knife());
-        getInventory().put(new WoodenShield());
+        getInventory().put(new Knife(this));
+        getInventory().put(new WoodenShield(this));
+
+        setTactic(new SkeletonTactic(this));
 
         getHealth().fillUp();
-        getShield().fillUp();
+        getMagicScreen().fillUp();
+        getEndurance().fillUp();
+    }
+
+    // Метод повышения уровня
+    public void autoLevelUp() {
+        setAutoLevel(getStatistic().getLevel() + 1);
+    }
+
+    public void setAutoLevel(int newLevel) {
+        if (newLevel < 1) {
+            throw new IllegalArgumentException("Уровень не может быть меньше 1");
+        }
+        getStatistic().setLevel(newLevel);
+
+        getHealth().addMaxValue(HEALTH_GROWTH * (newLevel - 1));
+
+        //TODO нужно будет добавить методы add-еры
+        setAccuracy(ACCURACY + ACCURACY_GROWTH * (newLevel - 1));
+        setEvasion(EVASION + EVASION_GROWTH * (newLevel - 1));
+        getEndurance().setMaxValue((int) (ENDURANCE + ENDURANCE_GROWTH * (newLevel - 1)));
+        getEndurance().setGrower((int) (ENDURANCE_GROWER + ENDURANCE_GROWER_GROWTH * (newLevel - 1)));
+        setBlockChance(BLOCK_CHANCE + BLOCK_CHANCE_GROWTH * (newLevel - 1));
+        setCritChance(CRIT_CHANCE + CRIT_CHANCE_GROWTH * (newLevel - 1));
     }
 
     /**
@@ -131,16 +136,16 @@ public class Skeleton extends Hero {
     public DefenseDto defense(@NonNull AttackDto attack) {
         // Скелет игнорирует 10% урона благодаря отсутствию плоти
         double reduceDamage = attack.getDamageDto().getSumDamage() * 0.9;
-        double pain = getShield().takeDamage(reduceDamage);
+        double pain = getMagicScreen().takeDamage(reduceDamage);
 
         if (pain > 0) {
-            takeDamage(pain);
+            getHealth().decreaseValue(pain);
             return new DefenseDto(pain,
                     getPainMessage());
         }
 
         return new DefenseDto(0.0,
-                getShieldAbsorbMessage());
+                getMagicScreenAbsorbMessage());
     }
 
     public String getBlockedMessage() {
@@ -148,7 +153,7 @@ public class Skeleton extends Hero {
         return String.format(BLOCKED_MESSAGES.get(index), getName());
     }
 
-    public String getShieldAbsorbMessage() {
+    public String getMagicScreenAbsorbMessage() {
         int index = randomInt(SHIELD_ABSORB_MESSAGES.size());
         return String.format(SHIELD_ABSORB_MESSAGES.get(index), getName());
     }

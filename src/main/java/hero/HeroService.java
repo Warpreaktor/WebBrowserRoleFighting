@@ -1,9 +1,10 @@
 package hero;
 
+import dto.ability.AbilityDto;
 import hero.classes.Archer;
 import hero.classes.Halfling;
 import hero.classes.Mage;
-import hero.classes.samodiva.Samodiva;
+import hero.classes.Samodiva;
 import hero.classes.Skeleton;
 import hero.classes.Barbarian;
 import spec.HeroClass;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static hero.constants.HeroConstants.PLAYER1;
 import static hero.constants.names.HeroNames.ARCHER_NAMES;
 import static hero.constants.names.HeroNames.HALFLING_NAMES;
 import static hero.constants.names.HeroNames.MAGE_NAMES;
@@ -194,7 +196,8 @@ public class HeroService {
 
         for (int level = 0; level < maxLevel; level++) {
             Skeleton skeleton = new Skeleton("Скелет Ур. " + (level + 1));
-            skeleton.setLevel(level + 1);
+            skeleton.setAutoLevel(level + 1);
+//            skeleton.getEquipment().takeInRightHand(new Knife());
             levelingCreatures.add(skeleton);
         }
 
@@ -205,5 +208,12 @@ public class HeroService {
     public Hero getLevelingHero(int creatureLevel) {
 
         return levelingHeroList.get(creatureLevel);
+    }
+
+    public AbilityDto useAbility(String target, String ability) {
+        var defensible = get(target);
+
+        return get(PLAYER1).useAbility(ability, defensible);
+
     }
 }

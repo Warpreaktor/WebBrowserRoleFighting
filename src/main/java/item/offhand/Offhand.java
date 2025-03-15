@@ -1,5 +1,6 @@
 package item.offhand;
 
+import hero.Hero;
 import item.WearableItem;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,8 +28,8 @@ public abstract class Offhand extends WearableItem {
      */
     private Double regenerationBonus;
 
-    public Offhand(String id, String name, String picturePath) {
-        super(id, name, picturePath);
+    public Offhand(String id, String name, String picturePath, Hero owner) {
+        super(id, name, picturePath, owner);
 
         // Предметы для левой руки по умолчанию экипируются только в левую руку
         setRightHand(false);

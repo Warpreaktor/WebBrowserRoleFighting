@@ -6,6 +6,7 @@ import core.GameMaster;
 import dto.attack.AttackDto;
 import dto.defense.DefenseDto;
 import dto.fightresult.FightResultDto;
+import lombok.Getter;
 
 import java.util.Objects;
 
@@ -19,17 +20,18 @@ import static hero.constants.HeroConstants.PLAYER2;
  * Обмены ударами происходят вне этого сервиса.
  * Этот сервис лишь следит за фазами боя и содержит вызовы для компьютерного игрока.
  */
-public class FightServiceV2 {
+public class FightService {
 
-    private static FightServiceV2 instance;
+    private static FightService instance;
 
     private final HeroService heroService;
 
+    @Getter
     private final FightResult result;
 
     private final GameMaster gameMaster;
 
-    public FightServiceV2(
+    public FightService(
             HeroService heroService,
             FightResult fightResult,
             GameMaster gameMaster
@@ -39,9 +41,9 @@ public class FightServiceV2 {
         this.gameMaster = gameMaster;
     }
 
-    public static FightServiceV2 getInstance() {
+    public static FightService getInstance() {
         if (instance == null) {
-            instance = new FightServiceV2(
+            instance = new FightService(
                     HeroService.getInstance(),
                     new FightResult(),
                     GameMaster.newInstance()
@@ -53,7 +55,7 @@ public class FightServiceV2 {
         return instance;
     }
 
-    public static FightServiceV2 newInstance() {
+    public static FightService newInstance() {
         instance = null;
         return getInstance();
     }
@@ -70,10 +72,6 @@ public class FightServiceV2 {
             return result.getResultDto();
         }
 
-        result.clear();
-
-        result.setRoundCount(gameMaster.nextRound());
-
         return combatMoves();
     }
 
@@ -83,62 +81,21 @@ public class FightServiceV2 {
 
         var playebleHero = gameMaster.nextTurn();
 
-        //TODO продумать как именно будет проходить фаза атаки человеческого игрока.
         if (Objects.equals(playebleHero, player1)) {
+            player1.focus();
             return result.getResultDto();
         }
 
-        AttackDto attackResult = attackCpu(player2, player1);
+        player2.getTactic().turn(player1, result);
 
-        if (attackResult.isFail()) {
-            return result.getResultDto();
-        }
+        player2.focus();
 
-        if (attackResult.isCritical()) {
-            result.addEventAndLog(String.format(
-                    "%s. !!!КРИТИЧЕСКИ УРОН!!! [%s]",
-                    attackResult.getMessage(),
-                    attackResult.getDamageDto().getSumDamage()));
-        } else {
-            result.addEventAndLog(String.format(
-                    "%s. урон[%s]",
-                    attackResult.getMessage(),
-                    attackResult.getDamageDto().getSumDamage()));
-        }
-
-        DefenseDto defenseResult = defensePhase(attackResult, player1);
-
-        gameMaster.switchOn(player1.getShield(), 1);
-
-        result.addEventAndLog(defenseResult.getMessage());
+        //Компьютерный игрок передаёт ход
+        fight();
 
         return result.getResultDto();
     }
 
-    //==================================================//
-//   ▄█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▄    //
-//  ▄█                                          █▄  //
-// ███          💢 ФАЗА АТАКИ 💢                ███ //
-//  ▀█                                          █▀  //
-//   ▀█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▀    //
-//==================================================//
-    // TODO Продумать алгоритм того, как будет проходить фаза атаки у компьютерного игрока
-    public AttackDto attackCpu(Hero attacker, Hero defender) {
-
-        if (gameMaster.isHit(attacker, defender)) {
-            return attacker.attack(defender);
-        } else {
-            return attacker.doMissedEvent();
-        }
-    }
-
-    //==================================================//
-//   ▄█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▀█▄    //
-//  ▄█                                          █▄  //
-// ███          ⚔️ ФАЗА ЗАЩИТЫ ⚔️               ███ //
-//  ▀█                                          █▀  //
-//   ▀█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▀    //
-//==================================================//
     private DefenseDto defensePhase(AttackDto attack, Hero defender) {
         return defender.defense(attack);
     }

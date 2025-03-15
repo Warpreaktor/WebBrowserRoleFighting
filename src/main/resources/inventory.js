@@ -136,13 +136,18 @@ function updateCharacterStats(data) {
 
     document.getElementById("char-name").textContent = characteristic.name;
     document.getElementById("char-class").textContent = characteristic.heroClass;
-    document.getElementById("char-hp").textContent = Math.floor(characteristic.health);
-    document.getElementById("char-max-hp").textContent = Math.floor(characteristic.maxHealth);
-    document.getElementById("char-mage-shield").textContent = Math.floor(characteristic.shield);
-    document.getElementById("char-max-mage-shield").textContent = Math.floor(characteristic.maxShield);
+    document.getElementById("char-level").textContent = statistic.level;
+
+    document.getElementById("char-health").textContent =
+    `${Math.floor(characteristic.healthValue)} / ${Math.floor(characteristic.healthMaxValue)}`;
+
+    document.getElementById("char-magic-screen").textContent =
+    `${Math.floor(characteristic.magicScreenValue)} / ${Math.floor(characteristic.magicScreenMaxValue)}`;
+
+    document.getElementById("char-endurance").textContent =
+    `${characteristic.enduranceValue.toFixed(1)} / ${characteristic.enduranceMaxValue.toFixed(1)}`;
 
     document.getElementById("char-accuracy").textContent = characteristic.accuracy.toFixed(1);
-    document.getElementById("char-agility").textContent = characteristic.agility.toFixed(1);
     document.getElementById("char-evasion").textContent = characteristic.evasion.toFixed(1);
     document.getElementById("char-sumDamage").textContent = Math.floor(characteristic.damage.sumDamage);
     document.getElementById("char-physicalDamage").textContent = Math.floor(characteristic.damage.physicalDamage);
@@ -228,7 +233,7 @@ function drop(event) {
 
     console.log(`Отправка запроса /hero/dropItem: oldSlot ${oldSlot}, newSlot ${newSlot}`);
 
-    fetch(`${HOST}/hero/dropItem/`, {
+    fetch(`${HOST}/hero/moveItem`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

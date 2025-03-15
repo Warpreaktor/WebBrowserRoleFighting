@@ -1,17 +1,16 @@
 package controller;
 
+import dto.ability.AbilityDto;
 import equip.EquipSlot;
 import hero.Hero;
 import hero.HeroService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import mechanic.Ability;
+import ability.Ability;
 import spark.Route;
 import spark.Spark;
 import spec.HeroClass;
 import item.ItemService;
-
-import static hero.constants.HeroConstants.PLAYER1;
 
 public class HeroController {
 
@@ -32,7 +31,7 @@ public class HeroController {
         Spark.get("/getPlayer/statistic/:id", getPlayerStatistic);
         Spark.get("/getPlayer/abilities/:id", getPlayerAbilities);
 
-        Spark.post("/hero/dropItem", dropItem);
+        Spark.post("/hero/moveItem", moveItem);
 
         Spark.post("/hero/useAbility", useAbility);
 
@@ -95,7 +94,8 @@ public class HeroController {
         return gson.toJson(jsonResponse);
     };
 
-    private final Route dropItem = (req, res) -> {
+    private final Route moveItem = (req, res) -> {
+
         Gson gson = new Gson();
         JsonObject jsonObject = gson.fromJson(req.body(), JsonObject.class);
 
@@ -123,13 +123,11 @@ public class HeroController {
 
         Hero hero = heroService.get(playerId);
 
-        if (hero.moveItem(objectId, oldSlot, newSlot)) {
-            res.status(200);
-            return gson.toJson("Предмет перемещен в ячейку инвентаря [" + newSlot + "]");
-        } else {
-            res.status(400);
-            return gson.toJson("Предмет не перемещён");
-        }
+        hero.moveItem(objectId, oldSlot, newSlot);
+
+        res.status(200);
+        return gson.toJson("Предмет перемещен в ячейку инвентаря [" + newSlot + "]");
+
     };
 
     /**
@@ -162,11 +160,9 @@ public class HeroController {
         String ability = jsonObject.get("ability").getAsString();
         String target = jsonObject.get("target").getAsString();
 
-        var defensible = heroService.get(target);
-
-        heroService.get(PLAYER1).useAbility(ability, defensible);
+        AbilityDto abilityDto = heroService.useAbility(target, ability);
 
         res.status(200);
-        return gson.toJson("Способность [" + ability + "] применена");
+        return gson.toJson(abilityDto);
     };
 }

@@ -1,7 +1,7 @@
 package controller;
 
 import com.google.gson.Gson;
-import fight.FightServiceV2;
+import fight.FightService;
 import spark.Route;
 import spark.Spark;
 
@@ -17,7 +17,7 @@ public class FightController {
     public final Route fight = (req, res) -> {
         res.type("application/json");
 
-        return new Gson().toJson(FightServiceV2.getInstance().fight());
+        return new Gson().toJson(FightService.getInstance().fight());
     };
 
 }

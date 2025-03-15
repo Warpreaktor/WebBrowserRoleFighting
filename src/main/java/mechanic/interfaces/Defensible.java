@@ -2,9 +2,9 @@ package mechanic.interfaces;
 
 import dto.attack.AttackDto;
 import dto.defense.DefenseDto;
-import hero.State;
+import hero.EffectStack;
 import mechanic.Health;
-import mechanic.Shield;
+import mechanic.MagicScreen;
 
 import static tools.Dice.getChance;
 
@@ -13,17 +13,17 @@ import static tools.Dice.getChance;
  */
 public interface Defensible extends Evasion {
 
-    State getState();
+    EffectStack getEffectStack();
 
     double getBlockChance();
 
-    Shield getShield();
+    MagicScreen getMagicScreen();
 
     Health getHealth();
 
     String getPainMessage();
 
-    String getShieldAbsorbMessage();
+    String getMagicScreenAbsorbMessage();
 
     String getBlockedMessage();
 
@@ -37,16 +37,16 @@ public interface Defensible extends Evasion {
 
         double pain = attack.getDamageDto().getSumDamage();
 
-        pain = getShield().takeDamage(pain);
+        pain = getMagicScreen().takeDamage(pain);
 
         if (pain > 0) {
 
-            getHealth().takeDamage(pain);
+            getHealth().decreaseValue(pain);
 
             return new DefenseDto(attack.getDamageDto().getSumDamage(), getPainMessage());
 
         } else {
-            return new DefenseDto(pain, getShieldAbsorbMessage());
+            return new DefenseDto(pain, getMagicScreenAbsorbMessage());
         }
     }
 

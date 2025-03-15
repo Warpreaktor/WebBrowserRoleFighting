@@ -1,7 +1,11 @@
 package mechanic.interfaces;
 
 import core.GameMaster;
-import mechanic.Ability;
+import dto.ability.AbilityDto;
+import fight.FightService;
+import hero.Hero;
+import ability.Ability;
+import mechanic.Endurance;
 
 import java.util.List;
 import java.util.Objects;
@@ -12,30 +16,33 @@ public interface UseAbility {
 
     void exhaustion(double cost);
 
-    Double getEndurance();
+    Endurance getEndurance();
 
     /**
      * Применения способности к цели
      *
-     * @param abilityId идентификатор способности
+     * @param abilityName идентификатор способности
      * @param defensible цель применяемой способности
      */
-    default void useAbility(String abilityId, Defensible defensible) {
+    default AbilityDto useAbility(String abilityName, Hero defensible) {
         var ability = getAbilities()
                 .stream()
-                .filter(ab -> Objects.equals(ab.getName(), abilityId))
+                .filter(ab -> Objects.equals(ab.getName(), abilityName))
                 .findFirst()
                 .orElseThrow();
 
-        if (getEndurance() < ability.getCost() || !ability.isActive()) {
-            return;
+        if (getEndurance().getValue() < ability.getCost()) {
+            FightService.getInstance().getResult().addEventAndLog("Не хватает выносливости");
+            throw new RuntimeException("Не хватает выносливости");
+        }
+
+        if (!ability.isActive()) {
+            FightService.getInstance().getResult().addEventAndLog("Эту способность сейчас нельзя использовать");
+            throw new RuntimeException("Эту способность сейчас нельзя использовать");
         }
 
         ability.apply(defensible);
 
-        GameMaster.getInstance()
-                .switchOff(ability, ability.getCoolDown());
-
-        exhaustion(ability.getCost());
+        return ability.toDto();
     }
 }
