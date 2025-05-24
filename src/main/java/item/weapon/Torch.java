@@ -22,8 +22,6 @@ public class Torch extends Offhand {
         // Факел дает небольшой бонус к урону огнем
         setMagicDamageBonus(2.0);
 
-        // Может слегка замедлять атаку, так как занимает руку
-        setAttackSpeed(0.95);
     }
 
     @Override

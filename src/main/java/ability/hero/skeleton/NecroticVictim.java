@@ -3,13 +3,14 @@ package ability.hero.skeleton;
 import ability.BuffAbility;
 import config.ApplicationProperties;
 import effect.DamageBoost;
-import enums.AbilityType;
+import enums.AbilityTarget;
 import fight.FightService;
 import hero.Hero;
 import hero.classes.Skeleton;
 import lombok.Getter;
-import mechanic.interfaces.Effect;
 
+import static ability.AbilityCosts.NECROTIC_VICTIM_COOL_DOWN;
+import static ability.AbilityCosts.NECROTIC_VICTIM_COST;
 import static constants.AbilityGameWeight.NECROTIC_VICTIM_GW;
 
 /**
@@ -38,23 +39,13 @@ public class NecroticVictim extends BuffAbility {
     /**
      * Тип способности.
      */
-    private static final AbilityType TYPE = AbilityType.SELF;
+    private static final AbilityTarget TYPE = AbilityTarget.SELF;
 
     /**
      * Описание способности.
      */
     private static final String DESCRIPTION =
             "Скелет жертвует частью своей энергии, обретая кратковременную мощь или восстанавливая здоровье.";
-
-    /**
-     * Стоимость использования способности в единицах выносливости.
-     */
-    private static final int COST = 3;
-
-    /**
-     * Сколько ходов нужно ждать после применения, чтобы применить снова.
-     */
-    private static final int COOL_DOWN = 3;
 
     /**
      * Игровой вес умения. По сути это то, на сколько оценивается мощь и полезность этого умения в бою.
@@ -79,7 +70,7 @@ public class NecroticVictim extends BuffAbility {
     private final double healthSacrificePercent = 0.1;
 
     public NecroticVictim(Skeleton owner) {
-        super(owner,PICTURE_PATH, NAME, TYPE, DESCRIPTION, COST, COOL_DOWN);
+        super(owner,PICTURE_PATH, NAME, DESCRIPTION, TYPE, NECROTIC_VICTIM_COST, NECROTIC_VICTIM_COOL_DOWN);
         this.effect = new DamageBoost();
     }
 

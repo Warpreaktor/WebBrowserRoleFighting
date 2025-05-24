@@ -18,11 +18,7 @@ public class JustAStone extends Weapon {
     public JustAStone(Hero owner) {
         super(UUID.randomUUID().toString(), "Камень", picturePath, JUST_A_STONE, owner);
 
-        setAttackSpeed(1.3);
-
         setThrowing(true);
-
-        setTwoHand(false);
     }
 
     @Override

@@ -73,6 +73,7 @@ public class Archer extends Hero {
         getHealth().fillUp();
         getMagicScreen().fillUp();
         getEndurance().fillUp();
+        getPsych().fillUp();
     }
 
     public String getPainMessage() {

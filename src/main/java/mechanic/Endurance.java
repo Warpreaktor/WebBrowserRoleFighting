@@ -74,7 +74,6 @@ public class Endurance {
     }
 
     public void decreaseMaxValue(int value) {
-        maxValue -= value;
         this.maxValue -= value;
     }
 

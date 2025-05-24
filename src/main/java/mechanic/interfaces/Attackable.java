@@ -4,7 +4,6 @@ import dto.damage.DamageDto;
 import dto.attack.AttackDto;
 import fight.FightService;
 
-import static constants.GlobalConstants.COST_OF_WEAPON_ATTACK;
 import static constants.GlobalConstants.GLOBAL_CRIT_DAMAGE_MULTIPLIER;
 import static tools.Dice.byMinMaxChance;
 import static tools.Dice.tryTo;
@@ -34,7 +33,7 @@ public interface Attackable extends Endured, Accuracy, Damageable {
 
     default AttackDto doAttackEvent() {
 
-        var heroDamage = getPassiveDamage();
+        var heroDamage = getBaseDamage();
 
         var piercingDamage = heroDamage.getPiercing();
         var crushingDamage = heroDamage.getCrushing();
@@ -74,21 +73,26 @@ public interface Attackable extends Endured, Accuracy, Damageable {
     }
 
    default AttackDto doMissedEvent() {
-        return new AttackDto(this, getMissedMessage());
+
+        var attack = new AttackDto(this, getMissedMessage());
+
+        FightService.getInstance().getResult().addEventAndLog(attack.getMessage());
+
+        return attack;
     }
 
-    default AttackDto attack(Defensible defensible) {
-
-        if (getEndurance().getValue() >= COST_OF_WEAPON_ATTACK) {
-
-            getEndurance().decreaseValue(getEndurance().getValue() - COST_OF_WEAPON_ATTACK);
-
-            return doAttackEvent();
-
-        } else {
-            FightService.getInstance().getResult().addEventAndLog("Не хватает выносливости");
-            throw new RuntimeException("Не хватает выносливости");
-        }
-    }
+//    default AttackDto attack(Defensible defensible) {
+//
+//        if (getEndurance().getValue() >= COST_OF_WEAPON_ATTACK) {
+//
+//            getEndurance().decreaseValue(getEndurance().getValue() - COST_OF_WEAPON_ATTACK);
+//
+//            return doAttackEvent();
+//
+//        } else {
+//            FightService.getInstance().getResult().addEventAndLog("Не хватает выносливости");
+//            throw new RuntimeException("Не хватает выносливости");
+//        }
+//    }
 
 }

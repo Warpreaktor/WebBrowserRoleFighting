@@ -150,7 +150,7 @@ public abstract class Hero implements Heroic {
     private Tactic tactic;
 
     @Getter
-    private Damage passiveDamage;
+    private Damage baseDamage;
 
     public Hero() {
         statistic = new Statistic();
@@ -161,6 +161,8 @@ public abstract class Hero implements Heroic {
         inventory = new Inventory();
         magicScreen = new MagicScreen();
         health = new Health();
+        psych = new Psych();
+        baseDamage = new Damage();
         accuracy = 0.0;
         evasion = 0.0;
         endurance = new Endurance();
@@ -168,7 +170,6 @@ public abstract class Hero implements Heroic {
         critChance = 0.0;
         abilities = new ArrayList<>(4);
         equipment = new Equipment(this);
-        passiveDamage = new Damage();
     }
 
     public void setIntelligence(Integer value) {
@@ -297,11 +298,11 @@ public abstract class Hero implements Heroic {
     @Override
     public DamageDto getDamageInfo() {
         return new DamageDto(
-                average(List.of(passiveDamage.getPiercing().getMin(), passiveDamage.getPiercing().getMax())),
-                average(List.of(passiveDamage.getCrushing().getMin(), passiveDamage.getCrushing().getMax())),
-                average(List.of(passiveDamage.getCutting().getMin(), passiveDamage.getCutting().getMax())),
-                average(List.of(passiveDamage.getFire().getMin(), passiveDamage.getFire().getMax())),
-                average(List.of(passiveDamage.getElectric().getMin(), passiveDamage.getElectric().getMax()))
+                average(List.of(baseDamage.getPiercing().getMin(), baseDamage.getPiercing().getMax())),
+                average(List.of(baseDamage.getCrushing().getMin(), baseDamage.getCrushing().getMax())),
+                average(List.of(baseDamage.getCutting().getMin(), baseDamage.getCutting().getMax())),
+                average(List.of(baseDamage.getFire().getMin(), baseDamage.getFire().getMax())),
+                average(List.of(baseDamage.getElectric().getMin(), baseDamage.getElectric().getMax()))
         );
     }
 
@@ -415,10 +416,7 @@ public abstract class Hero implements Heroic {
 
                 case LEFT_HAND -> {
                     if (equipment.getLeftHand() != null && Objects.equals(equipment.getLeftHand().getId(), objectId)) {
-                        // Сохраняем attackSpeed перед снятием
-                        double attackSpeed = equipment.getLeftHand().getAttackSpeed();
-                        // Возвращаем agility обратно
-                        endurance.setGrower((int) (endurance.getGrower() / attackSpeed));
+
                         equipment.unequipLeftHand();
                     } else {
                         throw new RuntimeException("Предмет не найден по идентификатору: [" + objectId + "]");

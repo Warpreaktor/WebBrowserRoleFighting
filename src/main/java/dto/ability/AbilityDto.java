@@ -1,6 +1,6 @@
 package dto.ability;
 
-import enums.AbilityType;
+import enums.AbilityTarget;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +16,7 @@ public class AbilityDto {
     private String name;
 
     @Getter
-    private AbilityType type;
+    private AbilityTarget type;
 
     @Getter
     private String description;

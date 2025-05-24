@@ -1,6 +1,6 @@
 package ability;
 
-import enums.AbilityType;
+import enums.AbilityTarget;
 import item.weapon.abstracts.Weapon;
 import lombok.Getter;
 import mechanic.Damage;
@@ -15,13 +15,13 @@ public abstract class WeaponAbility extends Ability {
 
     protected WeaponAbility(String picturePath,
                             String name,
-                            AbilityType type,
                             String description,
+                            AbilityTarget type,
                             int cost,
                             int coolDown,
                             Weapon owner) {
 
-        super(picturePath, name, type, description, cost, coolDown);
+        super(picturePath, name, description, type,  cost, coolDown);
 
         this.owner = owner;
     }

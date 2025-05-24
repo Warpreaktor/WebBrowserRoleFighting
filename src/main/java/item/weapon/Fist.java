@@ -25,11 +25,7 @@ public class Fist extends Weapon {
 
         getAbilities().add(new FistStrike(this));
 
-        setAttackSpeed(1.0);
-
         setThrowing(false);
-
-        setTwoHand(false);
     }
 
     @Override

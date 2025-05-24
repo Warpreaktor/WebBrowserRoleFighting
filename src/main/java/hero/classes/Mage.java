@@ -77,6 +77,7 @@ public class Mage extends Hero {
         getMagicScreen().fillUp();
         getHealth().fillUp();
         getEndurance().fillUp();
+        getPsych().fillUp();
     }
 
     @Override

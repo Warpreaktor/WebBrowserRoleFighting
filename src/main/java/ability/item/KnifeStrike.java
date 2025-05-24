@@ -3,14 +3,16 @@ package ability.item;
 import ability.WeaponAbility;
 import config.ApplicationProperties;
 import dto.attack.AttackDto;
-import enums.AbilityType;
+import enums.AbilityTarget;
 import fight.FightService;
 import hero.Hero;
 import item.weapon.Knife;
 import lombok.Getter;
 
+import static ability.AbilityCosts.KNIFE_STRIKE_COOL_DOWN;
+import static ability.AbilityCosts.KNIFE_STRIKE_COST;
 import static constants.AbilityGameWeight.KNIFE_STRIKE_GW;
-import static enums.AbilityType.ENEMY_TARGET;
+import static enums.AbilityTarget.ENEMY;
 import static tools.Dice.byMinMaxChance;
 
 /**
@@ -22,13 +24,9 @@ public class KnifeStrike extends WeaponAbility {
 
     private static final String NAME = "Удар ножом";
 
-    private static final AbilityType TYPE = ENEMY_TARGET;
+    private static final AbilityTarget TYPE = ENEMY;
 
     private static final String DESCRIPTION = "Наносит противнику колющий урон";
-
-    private static final int COST = 1;
-
-    private static final int COOL_DOWN = 0;
 
     /**
      * Игровой вес умения. По сути это то, на сколько оценивается мощь и полезность этого умения в бою.
@@ -45,7 +43,7 @@ public class KnifeStrike extends WeaponAbility {
     //==================================================//
 
     public KnifeStrike(Knife abilityOwner) {
-        super(PICTURE_PATH, NAME, TYPE, DESCRIPTION, COST, COOL_DOWN, abilityOwner);
+        super(PICTURE_PATH, NAME, DESCRIPTION, TYPE, KNIFE_STRIKE_COST, KNIFE_STRIKE_COOL_DOWN, abilityOwner);
 
     }
 

@@ -19,11 +19,7 @@ public class ShortestBow extends Weapon {
     public ShortestBow(Hero owner) {
         super(UUID.randomUUID().toString(), "Самый короткий лук", picturePath, SHORTEST_BOW, owner);
 
-        setAttackSpeed(0.75);
-
         setThrowing(true);
-
-        setTwoHand(true);
     }
 
     @Override

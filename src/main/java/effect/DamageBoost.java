@@ -44,14 +44,14 @@ public class DamageBoost implements Effect {
 
     @Override
     public void switchOn() {
-        owner.getPassiveDamage().localMultiplierPlus(damageBoost);
+        owner.getBaseDamage().localMultiplierPlus(damageBoost);
 
         this.isActive = true;
     }
 
     @Override
     public void switchOff() {
-        owner.getPassiveDamage().localMultiplierMinus(damageBoost);
+        owner.getBaseDamage().localMultiplierMinus(damageBoost);
         this.isActive = false;
     }
 

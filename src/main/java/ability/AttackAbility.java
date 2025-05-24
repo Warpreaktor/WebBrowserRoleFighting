@@ -1,6 +1,6 @@
 package ability;
 
-import enums.AbilityType;
+import enums.AbilityTarget;
 import hero.Hero;
 import lombok.Getter;
 import mechanic.interfaces.Effect;
@@ -22,14 +22,14 @@ public abstract class AttackAbility extends Ability {
     protected AttackAbility(Hero owner,
                             String picturePath,
                             String name,
-                            AbilityType type,
                             String description,
+                            AbilityTarget type,
                             int cost,
                             int coolDown,
                             Effect effect
     ) {
 
-        super(picturePath, name, type, description, cost, coolDown);
+        super(picturePath, name, description,type, cost, coolDown);
         this.owner = owner;
         this.effect = effect;
     }

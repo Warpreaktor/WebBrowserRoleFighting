@@ -13,7 +13,7 @@ public class FightResultDto {
 
     private boolean isOver;
 
-    private Hero winner;
+    private String winnerName;
 
     private List<String> message;
 

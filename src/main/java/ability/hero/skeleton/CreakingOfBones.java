@@ -2,13 +2,15 @@ package ability.hero.skeleton;
 
 import config.ApplicationProperties;
 import dto.MinMax;
-import enums.AbilityType;
+import enums.AbilityTarget;
 import fight.FightService;
 import hero.Hero;
 import hero.classes.Skeleton;
 import lombok.Getter;
 import ability.Ability;
 
+import static ability.AbilityCosts.CREAKING_OF_BONES_COOL_DOWN;
+import static ability.AbilityCosts.CREAKING_OF_BONES_COST;
 import static constants.AbilityGameWeight.CREAKING_OF_BONES_GW;
 import static tools.Dice.byMinMaxChance;
 import static tools.Dice.tryTo;
@@ -39,25 +41,13 @@ public class CreakingOfBones extends Ability {
     /**
      * Тип способности.
      */
-    private static final AbilityType TYPE = AbilityType.ENEMY_TARGET;
+    private static final AbilityTarget TYPE = AbilityTarget.ENEMY;
 
     /**
      * Описание способности.
      */
     private static final String DESCRIPTION =
             "Скелет издаёт душераздирающий скрежет, понижая боевой дух и меткость всех врагов.";
-
-    /**
-     * Стоимость использования способности в единицах выносливости.
-     */
-    @Getter
-    private static final int COST = 2;
-
-    /**
-     * Сколько ходов нужно ждать после применения, чтобы применить снова.
-     */
-    @Getter
-    private static final int COOL_DOWN = 2;
 
     /**
      * Игровой вес умения. По сути это то, на сколько оценивается мощь и полезность этого умения в бою.
@@ -89,7 +79,7 @@ public class CreakingOfBones extends Ability {
 
 
     public CreakingOfBones(Skeleton owner) {
-        super(PICTURE_PATH, NAME, TYPE, DESCRIPTION, COST, COOL_DOWN);
+        super(PICTURE_PATH, NAME, DESCRIPTION, TYPE,  CREAKING_OF_BONES_COST, CREAKING_OF_BONES_COOL_DOWN);
         this.owner = owner;
     }
 

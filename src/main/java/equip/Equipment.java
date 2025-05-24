@@ -2,13 +2,11 @@ package equip;
 
 import hero.Hero;
 import item.Item;
-import item.WearableItem;
+import item.offhand.Offhand;
 import lombok.Getter;
 import item.weapon.Fist;
 import item.weapon.abstracts.Weapon;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Objects;
 
 /**
  * Экипировка персонажа
@@ -36,7 +34,7 @@ public class Equipment {
     /**
      * В левой руке может быть щит, offhand предмет или оружие (если его можно держать в левой руке)
      */
-    private WearableItem leftHand;
+    private Offhand leftHand;
 
     /**
      * Двуручное оружие занимает обе руки
@@ -69,19 +67,13 @@ public class Equipment {
                     return false;
                 }
             case LEFT_HAND:
-                if (item instanceof WearableItem wearableItem && wearableItem.canEquipToSlot(EquipSlot.LEFT_HAND)) {
-                    return equipLeftHand(wearableItem);
+                if (item instanceof Offhand offhand) {
+                    return equipLeftHand(offhand);
                 } else {
                     log.info("Этот предмет нельзя экипировать в левую руку");
                     return false;
                 }
-            case BOTH_HANDS:
-                if (item instanceof Weapon weapon && weapon.getTwoHand()) {
-                    return equipBothHands(weapon);
-                } else {
-                    log.info("Этот предмет не является двуручным");
-                    return false;
-                }
+
             default:
                 return false;
         }
@@ -95,14 +87,12 @@ public class Equipment {
             bothHands = null;
         }
 
-        // Если это двуручное оружие, используем метод для двуручного
-        if (weapon.getTwoHand()) {
-            return equipBothHands(weapon);
+        if (rightHand == fist) {
+            rightHand = weapon;
         }
 
-        rightHand = weapon.getRightHand() ? weapon : fist;
-
         owner.addAbilities(weapon.getAbilities());
+        owner.getBaseDamage().plusDamage(weapon.getDamage());
 
         return true;
     }
@@ -110,34 +100,12 @@ public class Equipment {
     /**
      * Экипировать предмет в левую руку
      */
-    private boolean equipLeftHand(WearableItem item) {
+    private boolean equipLeftHand(Offhand item) {
         if (bothHands != null) {
             bothHands = null;
         }
 
-        if (item instanceof Weapon weapon) {
-            if (!weapon.getLeftHand()) {
-                log.info("Это оружие нельзя держать в левой руке");
-                return false;
-            }
-        }
-
         leftHand = item;
-        return true;
-    }
-
-    /**
-     * Экипировать двуручное оружие
-     */
-    private boolean equipBothHands(Weapon weapon) {
-        if (!weapon.getTwoHand()) {
-            log.info("Это оружие не является двуручным");
-            return false;
-        }
-
-        rightHand = null;
-        leftHand = null;
-        bothHands = weapon;
         return true;
     }
 
@@ -146,15 +114,16 @@ public class Equipment {
     }
 
     public void unequipRightHand() {
+        Weapon weapon = rightHand;
         owner.getAbilities().removeAll(rightHand.getAbilities());
         rightHand = fist;
+        owner.getBaseDamage().minusDamage(weapon.getDamage());
     }
 
     public EquipmentDto getEquipmentDto() {
         return EquipmentDto.builder()
-                .rightHand(rightHand == fist ? null : rightHand)
+                .rightHand(rightHand)
                 .leftHand(leftHand)
-                .bothHands(bothHands)
                 .build();
     }
 }

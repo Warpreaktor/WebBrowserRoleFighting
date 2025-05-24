@@ -34,11 +34,8 @@ public class GrandpasRustySword extends Weapon {
         getDamage().setPiercing(0.9, 1.5);
         getDamage().setCrushing(1.0, 1.0);
 
-        setAttackSpeed(1.0);
         setThrowing(false);
 
-        // Позволяет использовать меч в любой руке (dual wielding)
-        setAsDualWearable();
     }
 
     @Override
