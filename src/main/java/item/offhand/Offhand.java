@@ -1,7 +1,7 @@
 package item.offhand;
 
 import hero.Hero;
-import item.WearableItem;
+import item.Item;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +11,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public abstract class Offhand extends WearableItem {
+public abstract class Offhand extends Item {
 
     /**
      * Магический урон, который может давать предмет для левой руки
@@ -30,10 +30,5 @@ public abstract class Offhand extends WearableItem {
 
     public Offhand(String id, String name, String picturePath, Hero owner) {
         super(id, name, picturePath, owner);
-
-        // Предметы для левой руки по умолчанию экипируются только в левую руку
-        setRightHand(false);
-        setLeftHand(true);
-        setTwoHand(false);
     }
 }

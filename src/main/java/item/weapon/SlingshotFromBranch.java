@@ -18,11 +18,7 @@ public class SlingshotFromBranch extends Weapon {
     public SlingshotFromBranch(Hero owner) {
         super(UUID.randomUUID().toString(), "Рогатка из ветки", picturePath, SLINGSHOT_FROM_BRANCH, owner);
 
-        setAttackSpeed(1.5);
-
         setThrowing(true);
-
-        setTwoHand(false);
     }
 
     @Override

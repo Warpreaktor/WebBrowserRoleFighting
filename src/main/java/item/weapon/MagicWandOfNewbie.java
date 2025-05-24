@@ -19,11 +19,7 @@ public class MagicWandOfNewbie extends Weapon {
     public MagicWandOfNewbie(Hero owner) {
         super(UUID.randomUUID().toString(), "Волшебная палочка", picturePath, MAGIC_WAND_OF_NEWBIE, owner);
 
-        setAttackSpeed(0.5);
-
         setThrowing(true);
-
-        setTwoHand(false);
     }
 
     @Override

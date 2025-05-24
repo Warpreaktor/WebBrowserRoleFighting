@@ -48,7 +48,6 @@ public class MagicScreen implements Switchable {
     }
 
     public void decreaseMaxValue(Double value) {
-        maxValue -= value;
         this.value -= value;
     }
 

@@ -19,7 +19,6 @@ public class WoodenShield extends Shield {
         setPhysicalBlock(0.3);
         setEvasionBonus(0.05);
 
-        setLeftHand(true);
     }
 
     @Override

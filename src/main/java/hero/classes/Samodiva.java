@@ -76,6 +76,7 @@ public class Samodiva extends Hero {
         getHealth().fillUp();
         getMagicScreen().fillUp();
         getEndurance().fillUp();
+        getPsych().fillUp();
     }
 
     public String getPainMessage() {

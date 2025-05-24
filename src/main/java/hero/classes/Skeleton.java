@@ -102,6 +102,7 @@ public class Skeleton extends Hero {
         getHealth().fillUp();
         getMagicScreen().fillUp();
         getEndurance().fillUp();
+        getPsych().fillUp();
     }
 
     // Метод повышения уровня

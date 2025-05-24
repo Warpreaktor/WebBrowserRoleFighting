@@ -18,11 +18,7 @@ public class Sling extends Weapon {
     public Sling(Hero owner) {
         super(UUID.randomUUID().toString(), "Праща", picturePath, SLING_FROM_ROPE, owner);
 
-        setAttackSpeed(0.9);
-
         setThrowing(true);
-
-        setTwoHand(false);
     }
 
     @Override

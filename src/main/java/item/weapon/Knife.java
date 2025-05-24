@@ -21,11 +21,7 @@ public class Knife extends Weapon {
     public Knife(Hero owner) {
         super(UUID.randomUUID().toString(), "Нож", picturePath, KNIFE_STRIKE, owner);
 
-        setAttackSpeed(1.2);
-
         setThrowing(false);
-
-        setTwoHand(false);
     }
 
     @Override

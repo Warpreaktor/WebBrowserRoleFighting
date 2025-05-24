@@ -77,6 +77,7 @@ public class Barbarian extends Hero {
         getHealth().fillUp();
         getMagicScreen().fillUp();
         getEndurance().fillUp();
+        getPsych().fillUp();
     }
 
     @Override

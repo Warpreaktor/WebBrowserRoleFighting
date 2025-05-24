@@ -4,8 +4,6 @@ import dto.MinMax;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
-import static constants.GlobalConstants.GLOBAL_DAMAGE_MULTIPLIER;
-
 @AllArgsConstructor
 @Builder
 public class Damage {
@@ -57,31 +55,28 @@ public class Damage {
      * @param value значение огненного урона
      */
     public void setElectric(MinMax value) {
-        electric = new MinMax(value)
-                .multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER);
+        electric = new MinMax(value);
     }
 
     /**
      * Устанавливает значение урона заменяя его на новое с учетом глобального множителя
      */
     public void setElectric(double min, double max) {
-        electric = new MinMax(min, max)
-                .multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER);
+        electric = new MinMax(min, max);
     }
 
     /**
      * Добавляет урон к текущему с учетом глобального множителя
      */
     public void addElectric(MinMax value) {
-        electric.plus(value.multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER));
+        electric.plus(value);
     }
 
     /**
      * Добавляет значение урона к текущему с учетом глобального множителя
      */
     public void addElectric(double value) {
-        addElectric(new MinMax(value, value)
-                .multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER));
+        addElectric(new MinMax(value, value));
     }
 
     /**
@@ -90,8 +85,7 @@ public class Damage {
      * @param value значение огненного урона
      */
     public void setFire(MinMax value) {
-        fire = new MinMax(value)
-                .multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER);
+        fire = new MinMax(value);
     }
 
     /**
@@ -101,8 +95,7 @@ public class Damage {
      * @param max максимальное значение
      */
     public void setFire(double min, double max) {
-        fire = new MinMax(min, max)
-                .multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER);
+        fire = new MinMax(min, max);
     }
 
     /**
@@ -111,7 +104,7 @@ public class Damage {
      * @param value значение огненного урона
      */
     public void addFire(MinMax value) {
-        fire.plus(value.multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER));
+        fire.plus(value);
     }
 
     /**
@@ -120,8 +113,7 @@ public class Damage {
      * @param value значение огненного урона
      */
     public void addFire(double value) {
-        addFire(new MinMax(value, value)
-                .multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER));
+        addFire(new MinMax(value, value));
     }
 
     /**
@@ -130,8 +122,7 @@ public class Damage {
      * @param value значение колющего урона
      */
     public void setPiercing(MinMax value) {
-        piercing = new MinMax(value)
-                .multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER);
+        piercing = new MinMax(value);
     }
 
     /**
@@ -141,8 +132,7 @@ public class Damage {
      * @param max максимальное значение
      */
     public void setPiercing(double min, double max) {
-        piercing = new MinMax(min, max)
-                .multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER);
+        piercing = new MinMax(min, max);
     }
 
     /**
@@ -151,7 +141,7 @@ public class Damage {
      * @param value значение колющего урона
      */
     public void addPiercing(MinMax value) {
-        piercing.plus(value.multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER));
+        piercing.plus(value);
     }
 
     /**
@@ -160,17 +150,7 @@ public class Damage {
      * @param value значение колющего урона
      */
     public void addPiercing(double value) {
-        addPiercing(new MinMax(value, value).multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER));
-    }
-
-    /**
-     * Устанавливает дробящий урон с учетом глобального множителя
-     *
-     * @param value значение дробящего урона
-     */
-    public void setCrushing(MinMax value) {
-        crushing = new MinMax(value)
-                .multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER);
+        addPiercing(new MinMax(value, value));
     }
 
     /**
@@ -180,8 +160,7 @@ public class Damage {
      * @param max максимальное значение
      */
     public void setCrushing(double min, double max) {
-        crushing = new MinMax(min, max)
-                .multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER);
+        crushing = new MinMax(min, max);
     }
 
     /**
@@ -190,7 +169,7 @@ public class Damage {
      * @param value значение дробящего урона
      */
     public void addCrushing(MinMax value) {
-        crushing.plus(value.multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER));
+        crushing.plus(value);
     }
 
     /**
@@ -199,7 +178,34 @@ public class Damage {
      * @param value значение дробящего урона
      */
     public void addCrushing(double value) {
-        addCrushing(new MinMax(value, value).multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER));
+        addCrushing(new MinMax(value, value));
+    }
+
+    /**
+     * Добавляет режущий урон к текущему с учетом глобального множителя
+     *
+     * @param value значение режущего урона
+     */
+    public void addCutting(MinMax value) {
+        cutting.plus(value);
+    }
+
+    /**
+     * Добавляет значение режущего урона к текущему с учетом глобального множителя
+     *
+     * @param value значение режущего урона
+     */
+    public void addCutting(double value) {
+        addCutting(new MinMax(value, value));
+    }
+
+    /**
+     * Устанавливает дробящий урон с учетом глобального множителя
+     *
+     * @param value значение дробящего урона
+     */
+    public void setCrushing(MinMax value) {
+        crushing = new MinMax(value);
     }
 
     /**
@@ -208,8 +214,7 @@ public class Damage {
      * @param value значение режущего урона
      */
     public void setCutting(MinMax value) {
-        cutting = new MinMax(value)
-                .multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER);
+        cutting = new MinMax(value);
     }
 
     /**
@@ -219,26 +224,7 @@ public class Damage {
      * @param max максимальное значение
      */
     public void setCutting(double min, double max) {
-        cutting = new MinMax(min, max)
-                .multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER);
-    }
-
-    /**
-     * Добавляет режущий урон к текущему с учетом глобального множителя
-     *
-     * @param value значение режущего урона
-     */
-    public void addCutting(MinMax value) {
-        cutting.plus(value.multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER));
-    }
-
-    /**
-     * Добавляет значение режущего урона к текущему с учетом глобального множителя
-     *
-     * @param value значение режущего урона
-     */
-    public void addCutting(double value) {
-        addCutting(new MinMax(value, value).multiply(localDamageMultiplier * GLOBAL_DAMAGE_MULTIPLIER));
+        cutting = new MinMax(min, max);
     }
 
     /**
@@ -247,7 +233,7 @@ public class Damage {
      * @return копия MinMax объекта piercing
      */
     public MinMax getPiercing() {
-        return new MinMax(piercing);
+        return new MinMax(piercing).multiply(localDamageMultiplier);
     }
 
     /**
@@ -256,7 +242,7 @@ public class Damage {
      * @return копия MinMax объекта cutting
      */
     public MinMax getCutting() {
-        return new MinMax(cutting);
+        return new MinMax(cutting).multiply(localDamageMultiplier);
     }
 
     /**
@@ -265,21 +251,21 @@ public class Damage {
      * @return копия MinMax объекта crushing
      */
     public MinMax getCrushing() {
-        return new MinMax(crushing);
+        return new MinMax(crushing).multiply(localDamageMultiplier);
     }
 
     /**
      * Возвращает копию объекта.
      */
     public MinMax getFire() {
-        return new MinMax(fire);
+        return new MinMax(fire).multiply(localDamageMultiplier);
     }
 
     /**
      * Возвращает копию объекта.
      */
     public MinMax getElectric() {
-        return new MinMax(electric);
+        return new MinMax(electric).multiply(localDamageMultiplier);
     }
 
     /**
@@ -299,7 +285,7 @@ public class Damage {
     /**
      * Класс возвращает копию смиксованного урона по всем типам учитывая мультипликаторы
      */
-    public Damage mixed(Damage damage) {
+    public Damage getMixed(Damage damage) {
         return Damage
                 .builder()
                 .piercing(piercing.plus(damage.getPiercing()).multiply(localDamageMultiplier))
@@ -308,5 +294,27 @@ public class Damage {
                 .electric(electric.plus(damage.getElectric()).multiply(localDamageMultiplier))
                 .fire(fire.plus(damage.getFire()).multiply(localDamageMultiplier))
                 .build();
+    }
+
+    /**
+     * Добавить весь Damage к текущему урону.
+     */
+    public void plusDamage(Damage damage) {
+        piercing.plus(damage.getPiercing());
+        crushing.plus(damage.getCrushing());
+        cutting.plus(damage.getCutting());
+        electric.plus(damage.getElectric());
+        fire.plus(damage.getFire());
+    }
+
+    /**
+     * Отнять весь Damage от текущего урона.
+     */
+    public void minusDamage(Damage damage) {
+        piercing.minus(damage.getPiercing());
+        crushing.minus(damage.getCrushing());
+        cutting.minus(damage.getCutting());
+        electric.minus(damage.getElectric());
+        fire.minus(damage.getFire());
     }
 }

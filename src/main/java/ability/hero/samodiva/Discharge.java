@@ -3,7 +3,7 @@ package ability.hero.samodiva;
 import config.ApplicationProperties;
 import dto.attack.AttackDto;
 import dto.damage.DamageDto;
-import enums.AbilityType;
+import enums.AbilityTarget;
 import hero.Hero;
 import hero.classes.Samodiva;
 import lombok.Getter;
@@ -11,9 +11,11 @@ import ability.Ability;
 import mechanic.Damage;
 import effect.Shock;
 
+import static ability.AbilityCosts.DISCHARGE_COOL_DOWN;
+import static ability.AbilityCosts.DISCHARGE_COST;
 import static constants.AbilityGameWeight.DISCHARGE_GW;
 import static constants.AbilityGlobalDamage.DISCHARGE;
-import static enums.AbilityType.ENEMY_TARGET;
+import static enums.AbilityTarget.ENEMY;
 import static tools.Dice.byMinMaxChance;
 import static tools.Dice.tryTo;
 
@@ -22,19 +24,14 @@ import static tools.Dice.tryTo;
  */
 public class Discharge extends Ability {
 
-    @Getter
-    private static final String PICTURE_PATH = ApplicationProperties.getHost() + "/images/ability/hero/samodiva/lightning_strike.png";
+    private static final String PICTURE_PATH = ApplicationProperties.getHost() + "/images/ability/hero/samodiva/discharge.png";
 
     private static final String NAME = "Разряд";
-
-    private static final AbilityType TYPE = ENEMY_TARGET;
 
     private static final String DESCRIPTION = "Самодива призывает к стихиям грома и бьёт врага электрическим разрядом. "
             + "С некоторой вероятностью, может ввести врага в состояние шока.";
 
-    private static final int COST = 1;
-
-    private static final int COOL_DOWN = 0;
+    private static final AbilityTarget TYPE = ENEMY;
 
     /**
      * Игровой вес умения. По сути это то, на сколько оценивается мощь и полезность этого умения в бою.
@@ -69,7 +66,7 @@ public class Discharge extends Ability {
 
 
     public Discharge(Samodiva owner) {
-        super(PICTURE_PATH, NAME, TYPE, DESCRIPTION, COST, COOL_DOWN);
+        super(PICTURE_PATH, NAME, DESCRIPTION, TYPE,  DISCHARGE_COST, DISCHARGE_COOL_DOWN);
 
         this.owner = owner;
         this.damage = DISCHARGE;
@@ -88,6 +85,7 @@ public class Discharge extends Ability {
 
         target.defense(attack);
 
+        owner.exhaustion(getCost());
         coolDown();
     }
 

@@ -3,7 +3,7 @@ package ability.hero.skeleton;
 import ability.Effectable;
 import config.ApplicationProperties;
 import dto.attack.AttackDto;
-import enums.AbilityType;
+import enums.AbilityTarget;
 import fight.FightService;
 import hero.Hero;
 import hero.classes.Skeleton;
@@ -12,6 +12,8 @@ import ability.Ability;
 import mechanic.Damage;
 import effect.Strangulation;
 
+import static ability.AbilityCosts.BONE_GRIP_COOL_DOWN;
+import static ability.AbilityCosts.BONE_GRIP_COST;
 import static constants.AbilityGameWeight.BONE_GRIP_GW;
 import static constants.AbilityGlobalDamage.BONE_GRIP;
 import static tools.Dice.byMinMaxChance;
@@ -35,20 +37,10 @@ public class BoneGrip extends Ability implements Effectable {
 
     private static final String NAME = "Костяная хватка";
 
-    private static final AbilityType TYPE = AbilityType.ENEMY_TARGET;
+    private static final AbilityTarget TYPE = AbilityTarget.ENEMY;
 
     private static final String DESCRIPTION =
             "Скелет резко вытягивает руку и с силой сдавливает конечность противника, оставляя на ней след ледяного прикосновения смерти.";
-
-    /**
-     * Стоимость использования способности в единицах выносливости
-     */
-    private static final int cost = 2;
-
-    /**
-     * Сколько ходов нужно ждать после применения, чтобы применить снова)
-     */
-    private static final int coolDown = 1;
 
     /**
      * Игровой вес умения. По сути это то, на сколько оценивается мощь и полезность этого умения в бою.
@@ -85,7 +77,7 @@ public class BoneGrip extends Ability implements Effectable {
      * Конструктор
      */
     public BoneGrip(Skeleton skeletonOwner) {
-        super(PICTURE_PATH, NAME, TYPE, DESCRIPTION, cost, coolDown);
+        super(PICTURE_PATH, NAME, DESCRIPTION, TYPE, BONE_GRIP_COST, BONE_GRIP_COOL_DOWN);
 
         this.owner = skeletonOwner;
         this.damage = BONE_GRIP;
@@ -111,15 +103,13 @@ public class BoneGrip extends Ability implements Effectable {
             effect.impose(target);
         }
 
+        owner.exhaustion(getCost());
+
         coolDown();
     }
 
     @Override
     public void trigger() {
         //do nothing
-    }
-
-    public Strangulation getEffect() {
-        return effect;
     }
 }

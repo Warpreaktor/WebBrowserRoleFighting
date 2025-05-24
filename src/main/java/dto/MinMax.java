@@ -47,4 +47,10 @@ public class MinMax {
         this.max += value.getMax();
         return this;
     }
+
+    public MinMax minus(MinMax value) {
+        this.min -= value.getMin();
+        this.max -= value.getMax();
+        return this;
+    }
 }

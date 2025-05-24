@@ -1,6 +1,6 @@
 package ability;
 
-import enums.AbilityType;
+import enums.AbilityTarget;
 import hero.Hero;
 import lombok.Getter;
 
@@ -15,13 +15,13 @@ public abstract class BuffAbility extends Ability {
     protected BuffAbility(Hero owner,
                           String picturePath,
                           String name,
-                          AbilityType type,
                           String description,
+                          AbilityTarget type,
                           int cost,
                           int coolDown
     ) {
 
-        super(picturePath, name, type, description, cost, coolDown);
+        super(picturePath, name, description, type,  cost, coolDown);
         this.owner = owner;
     }
 }

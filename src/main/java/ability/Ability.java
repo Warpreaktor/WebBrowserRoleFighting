@@ -2,7 +2,7 @@ package ability;
 
 import core.GameMaster;
 import dto.ability.AbilityDto;
-import enums.AbilityType;
+import enums.AbilityTarget;
 import hero.Hero;
 import lombok.Getter;
 import mechanic.interfaces.Switchable;
@@ -22,16 +22,16 @@ public abstract class Ability implements Switchable {
     private final String name;
 
     /**
-     * Тип применения способности.
-     */
-    @Getter
-    private final AbilityType type;
-
-    /**
      * Описание способности
      */
     @Getter
     private final String description;
+
+    /**
+     * Тип применения способности.
+     */
+    @Getter
+    private final AbilityTarget target;
 
     /**
      * Стоимость способности (в очках выносливости)
@@ -52,15 +52,15 @@ public abstract class Ability implements Switchable {
 
     protected Ability(String picturePath,
                       String name,
-                      AbilityType type,
                       String description,
+                      AbilityTarget target,
                       int cost,
                       int coolDown
     ) {
         this.picturePath = picturePath;
         this.name = name;
-        this.type = type;
         this.description = description;
+        this.target = target;
         this.cost = cost;
         this.coolDown = coolDown;
     }
@@ -99,7 +99,7 @@ public abstract class Ability implements Switchable {
                 .builder()
                 .picturePath(picturePath)
                 .name(name)
-                .type(type)
+                .type(target)
                 .description(description)
                 .cost(cost)
                 .isActive(isActive)

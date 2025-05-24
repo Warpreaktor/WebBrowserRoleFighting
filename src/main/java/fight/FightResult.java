@@ -48,7 +48,7 @@ public class FightResult {
 
         return new FightResultDto(
                 isOver,
-                winner,
+                winner == null ? null : winner.getName(),
                 getMessage(),
                 getLog(),
                 roundCount

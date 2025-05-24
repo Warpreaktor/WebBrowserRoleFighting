@@ -5,8 +5,6 @@ import ability.hero.skeleton.CreakingOfBones;
 import ability.hero.skeleton.NecroticVictim;
 import ability.WeaponAbility;
 import ability.item.KnifeStrike;
-import dto.attack.AttackDto;
-import effect.DamageBoost;
 import equip.EquipSlot;
 import fight.FightResult;
 import fight.FightService;
@@ -91,26 +89,18 @@ public class SkeletonTactic implements Tactic {
         }
     }
 
-
     /**
      * Обычная атака оружием с учётом вероятности попадания
      */
-    public AttackDto weaponAttack(Hero defender, FightResult fightResult) {
-        var journal = FightService.getInstance().getResult();
+    public void weaponAttack(Hero enemy, FightResult fightResult) {
 
-        boolean hit = tryToHit(owner, defender);
-
-        AttackDto attack;
+        boolean hit = tryToHit(owner, enemy);
 
         if (hit) {
-            attack = owner.attack(defender);
+            knifeStrike.apply(enemy);
         } else {
-            attack = owner.doMissedEvent();
+            owner.doMissedEvent();
         }
-
-        journal.addEventAndLog(attack.getMessage());
-
-        return attack;
     }
 
     /**
@@ -131,7 +121,7 @@ public class SkeletonTactic implements Tactic {
         int penalty = 0;
 
         // Оцениваем примерный потенциал урона. Для этого возьмем средний урон.
-        var potentialDamage = Dice.byMinMaxChance(ability.getDamage().mixed(skeleton.getPassiveDamage()));
+        var potentialDamage = Dice.byMinMaxChance(ability.getDamage().getMixed(skeleton.getBaseDamage()));
         double averageDamage = potentialDamage.getSumDamage();
         // Оцениваем шанс попадания.
         double hitChancePercent = hitChance(skeleton, enemy);
@@ -226,7 +216,7 @@ public class SkeletonTactic implements Tactic {
         int buffDuration = necroticVictim.getEffect().getDuration();
 
         // Оцениваем средний урон от "обычной" атаки без баффа
-        double expectedDamageOneAttack = expectedDamage(skeleton.getPassiveDamage(), skeleton, enemy);
+        double expectedDamageOneAttack = expectedDamage(skeleton.getBaseDamage(), skeleton, enemy);
 
         // Суммарный урон за 2 атаки без баффа:
         double totalDamageNoBuff = expectedDamageOneAttack * buffDuration;

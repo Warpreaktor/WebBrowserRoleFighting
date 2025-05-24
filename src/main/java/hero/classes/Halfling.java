@@ -57,6 +57,7 @@ public class Halfling extends Hero {
         getHealth().fillUp();
         getMagicScreen().fillUp();
         getEndurance().fillUp();
+        getPsych().fillUp();
     }
 
     @Override

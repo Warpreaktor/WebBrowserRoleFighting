@@ -1,7 +1,7 @@
 package equip;
 
+import item.offhand.Offhand;
 import item.weapon.abstracts.Weapon;
-import item.WearableItem;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class EquipmentDto {
     /**
      * Предмет в левой руке (щит, offhand или оружие)
      */
-    private WearableItem leftHand;
+    private Offhand leftHand;
 
     /**
      * Двуручное оружие

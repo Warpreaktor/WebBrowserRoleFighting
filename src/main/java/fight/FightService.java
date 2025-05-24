@@ -68,7 +68,7 @@ public class FightService {
 //   ▀█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▄█▀   //
 //==================================================//
     public FightResultDto fight() {
-        if (result.isOver()) {
+        if (fightIsOver()) {
             return result.getResultDto();
         }
 
@@ -86,18 +86,14 @@ public class FightService {
             return result.getResultDto();
         }
 
-        player2.getTactic().turn(player1, result);
-
         player2.focus();
+
+        player2.getTactic().turn(player1, result);
 
         //Компьютерный игрок передаёт ход
         fight();
 
         return result.getResultDto();
-    }
-
-    private DefenseDto defensePhase(AttackDto attack, Hero defender) {
-        return defender.defense(attack);
     }
 
     /**
@@ -107,22 +103,24 @@ public class FightService {
      *
      * @return описание события.
      */
-    public String fightIsOver() {
+    public boolean fightIsOver() {
         Hero player1 = heroService.get(PLAYER1);
         Hero player2 = heroService.get(PLAYER2);
 
         if (player1.getHealth().getValue() <= 0) {
             result.setWinner(player2);
             player2.getStatistic().plusWin();
-            return player1.getName() + " падает замертво";
+            result.addEventAndLog(player1.getName() + " падает замертво");
+            return true;
 
         } else if (player2.getHealth().getValue() <= 0) {
             result.setWinner(player1);
             player1.getStatistic().plusWin();
-            return player2.getName() + " падает замертво";
+            result.addEventAndLog(player2.getName() + " падает замертво");
+            return true;
 
         } else {
-            return "";
+            return false;
         }
     }
 
@@ -130,6 +128,4 @@ public class FightService {
         return player1.getHealth().getIsDead()
                 || player2.getHealth().getIsDead();
     }
-
-
 }

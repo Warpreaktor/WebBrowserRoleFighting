@@ -1,17 +1,18 @@
 package ability.item;
 
 import config.ApplicationProperties;
-import core.GameMaster;
 import dto.attack.AttackDto;
-import enums.AbilityType;
+import enums.AbilityTarget;
 import fight.FightService;
 import hero.Hero;
 import item.weapon.Fist;
 import lombok.Getter;
 import ability.Ability;
 
+import static ability.AbilityCosts.FIST_STRIKE_COOL_DOWN;
+import static ability.AbilityCosts.FIST_STRIKE_COST;
 import static constants.AbilityGameWeight.FIST_STRIKE_GW;
-import static enums.AbilityType.ENEMY_TARGET;
+import static enums.AbilityTarget.ENEMY;
 import static tools.Dice.byMinMaxChance;
 
 /**
@@ -23,13 +24,9 @@ public class FistStrike extends Ability {
 
     private static final String NAME = "Удар кулаком";
 
-    private static final AbilityType TYPE = ENEMY_TARGET;
+    private static final AbilityTarget TYPE = ENEMY;
 
     private static final String DESCRIPTION = "Бьёт кулаком как дробящим уроном!";
-
-    private static final int COST = 1;
-
-    private static final int COOL_DOWN = 0;
 
     /**
      * Игровой вес умения. По сути это то, на сколько оценивается мощь и полезность этого умения в бою.
@@ -47,7 +44,7 @@ public class FistStrike extends Ability {
     private final Fist owner;
 
     public FistStrike(Fist abilityOwner) {
-        super(PICTURE_PATH, NAME, TYPE, DESCRIPTION, COST, COOL_DOWN);
+        super(PICTURE_PATH, NAME, DESCRIPTION, TYPE,  FIST_STRIKE_COST, FIST_STRIKE_COOL_DOWN);
 
         this.owner = abilityOwner;
     }
